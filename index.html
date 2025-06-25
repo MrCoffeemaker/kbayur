@@ -6,50 +6,68 @@
   <title>Kaan Bayur | Link Hub</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <style>
+    :root {
+      --color-bg: #0d1117;
+      --color-fg: #f5f5f5;
+      --color-muted: #999999;
+      --color-accent: #21262d;
+      --color-accent-hover: #30363d;
+      --border-radius: 12px;
+      --font-family: 'Arial', sans-serif;
+
+      --font-size-h1: 1.75rem;
+      --font-size-body: 1rem;
+      --font-size-caption: 0.875rem;
+      --font-size-button: 1rem;
+
+      --spacing-s: 8px;
+      --spacing-m: 16px;
+      --spacing-l: 24px;
+    }
+
     body {
-      background-color: #0d1117;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      text-align: center;
       margin: 0;
-      padding: 20px;
+      padding: var(--spacing-l);
+      font-family: var(--font-family);
+      background-color: var(--color-bg);
+      color: var(--color-fg);
+      text-align: center;
     }
 
     .profile-icon {
-      background-color: #000;
+      background-color: #2c2c2c;
       width: 80px;
       height: 80px;
       line-height: 80px;
       border-radius: 50%;
-      font-size: 32px;
-      margin: 20px auto 10px;
-      border: 2px solid #ffffff;
-
+      font-size: 2rem;
+      margin: var(--spacing-l) auto var(--spacing-s);
     }
 
     h1 {
-      font-size: 2em;
-      margin: 0 0 10px;
+      font-size: var(--font-size-h1);
+      font-weight: bold;
+      margin-bottom: var(--spacing-s);
     }
 
     .bio {
-      margin: 0;
-      line-height: 1.5;
-      font-size: 16px;
+      font-size: var(--font-size-body);
+      line-height: 1.6;
+      margin-bottom: var(--spacing-l);
     }
 
     .social-icons {
       display: flex;
       justify-content: center;
-      gap: 15px;
-      margin: 20px 0;
+      gap: var(--spacing-m);
+      margin-bottom: var(--spacing-l);
     }
 
     .social-icons a {
-      font-size: 20px;
-      color: #fff;
+      font-size: 1.25rem;
+      color: var(--color-fg);
       transition: color 0.3s;
-      padding: 10px;
+      padding: var(--spacing-s);
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -58,29 +76,31 @@
     }
 
     .social-icons a:hover {
-      color: #999;
+      color: var(--color-muted);
     }
 
     .link-button {
       display: block;
       width: 90%;
       max-width: 400px;
-      margin: 16px auto;
-      padding: 18px 18px;
-      background-color: #21262d;
+      margin: var(--spacing-m) auto;
+      padding: 14px 20px;
+      background-color: var(--color-accent);
       border: 2px solid #ffffff;
       border-radius: 30px;
-      font-size: 18px;
-      color: #fff;
+      font-size: var(--font-size-button);
+      font-weight: 500;
+      color: var(--color-fg);
       text-decoration: none;
+      transition: background-color 0.3s;
     }
 
     .link-button:hover {
-      background-color: #30363d;
+      background-color: var(--color-accent-hover);
     }
 
     .locked i {
-      margin-left: 8px;
+      margin-left: 6px;
     }
   </style>
 </head>
@@ -89,8 +109,8 @@
   <div class="profile-icon">KB</div>
   <h1>KAAN BAYUR</h1>
   <p class="bio">
-    Pixels, Code &amp; Coffee<br>
-    Turning ideas into engaging experiences.<br/>
+    Pixels, Code &amp; Coffee<br />
+    Turning ideas into engaging experiences.<br />
     Passionate about UI/UX &amp; creativity.
   </p>
 
@@ -105,7 +125,7 @@
   <a class="link-button" href="https://au.linkedin.com/in/kaanbayur" target="_blank">Connect on LinkedIn</a>
   <a class="link-button" href="https://www.instagram.com/kaan.bayur/" target="_blank">See My Visual Feed</a>
   <a class="link-button locked" href="mailto:kbayur@pm.me?subject=Request%20Code&body=Hi%20Kaan%2C%0D%0A%0D%0AMy%20name%20is%3A%0D%0AEmail%3A%0D%0APhone%3A%0D%0AReason%20for%20requesting%20access%3A%0D%0A%0D%0AThanks!">
-    Request Portfolio Access  <i class="fas fa-lock"></i>
+    Request Portfolio Access <i class="fas fa-lock"></i>
   </a>
 
 </body>
