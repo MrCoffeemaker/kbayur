@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,6 @@
   <title>Kaan Bayur | Link Hub</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
   <style>
     :root {
       --color-bg: #0d1117;
@@ -38,12 +38,10 @@
     }
 
     .profile-icon {
-      background-color: #2c2c2c;
       width: 80px;
       height: 80px;
-      line-height: 80px;
       border-radius: 50%;
-      font-size: 2rem;
+      object-fit: cover;
       margin: var(--spacing-l) auto var(--spacing-s);
     }
 
@@ -106,11 +104,22 @@
     .locked i {
       margin-left: 6px;
     }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.75rem;
+      color: var(--color-muted);
+    }
+
+    footer a {
+      color: var(--color-muted);
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
 
-  <div class="profile-icon">KB</div>
+  <img class="profile-icon" src="https://gravatar.com/avatar/1428910d05010970d2d1fd5bf523e90a?size=256" alt="Kaan Bayur Profile" />
   <h1>Kaan Bayur</h1>
   <p class="bio">
     Design. Motion. Code.<br />
@@ -128,9 +137,16 @@
   <a class="link-button" href="https://kbayur.gumroad.com/" target="_blank">Shop My Digital Goods</a>
   <a class="link-button" href="https://www.linkedin.com/in/kaanbayur/" target="_blank">Connect on LinkedIn</a>
   <a class="link-button" href="https://www.instagram.com/kaan.bayur/" target="_blank">See My Visual Feed</a>
-  <a class="link-button locked" href="mailto:kbayur@pm.me?subject=Request%20Code&body=Hi%20Kaan%2C%0D%0A%0D%0AMy%20name%20is%3A%0D%0AEmail%3A%0D%0APhone%3A%0D%0AReason%20for%20requesting%20access%3A%0D%0A%0D%0AThanks!">
+  <!-- a class="link-button locked" href="mailto:kbayur@pm.me?subject=Request%20Code&body=Hi%20Kaan%2C%0D%0A%0D%0AMy%20name%20is%3A%0D%0AEmail%3A%0D%0APhone%3A%0D%0AReason%20for%20requesting%20access%3A%0D%0A%0D%0AThanks!">
     Request Portfolio Access <i class="fas fa-lock"></i>
-  </a>
+  </a> -->
+
+  <footer>
+    Developed by Kaan Bayur · 
+    <a href="https://github.com/MrCoffeemaker" target="_blank">
+      <i class="fab fa-github"></i> GitHub
+    </a>
+  </footer>
 
 </body>
 </html>
