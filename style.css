@@ -17,7 +17,7 @@
       --spacing-l: 24px;
     }
 
-    html, body {
+    body {
     padding: var(--spacing-l);
     overflow-x: hidden;
     font-family: var(--font-family);
