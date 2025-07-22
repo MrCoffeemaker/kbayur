@@ -117,6 +117,7 @@
     }
   </style>
 </head>
+<!-- ...head ve diğer kodlar aynı kalıyor... -->
 <body>
 
   <img class="profile-icon" src="https://gravatar.com/avatar/1428910d05010970d2d1fd5bf523e90a?size=256" alt="Kaan Bayur Profile" />
@@ -126,21 +127,30 @@
     Building sharp, purposeful experiences.
   </p>
 
- <form action="https://formspree.io/f/yourFormID" method="POST" style="max-width: 400px; margin: 0 auto; text-align: left;">
-  <h2 style="font-size: var(--font-size-h1); margin-bottom: var(--spacing-m); text-align:center;">Contact Me</h2>
+  <div id="form-container">
+    <form id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" style="max-width: 400px; margin: 0 auto; text-align: left;">
+      <h2 style="font-size: var(--font-size-h1); margin-bottom: var(--spacing-m); text-align:center;">Contact Me</h2>
 
-  <label for="name">Name</label><br />
-  <input type="text" name="name" id="name" required style="width: 100%; padding: 10px; border-radius: var(--border-radius); border: none; margin-bottom: var(--spacing-m); background-color: var(--color-accent); color: var(--color-fg);" />
+      <label for="name">Name</label><br />
+      <input type="text" name="name" id="name" required style="width: 100%; padding: 10px; border-radius: var(--border-radius); border: none; margin-bottom: var(--spacing-m); background-color: var(--color-accent); color: var(--color-fg);" />
 
-  <label for="email">Email</label><br />
-  <input type="email" name="email" id="email" required style="width: 100%; padding: 10px; border-radius: var(--border-radius); border: none; margin-bottom: var(--spacing-m); background-color: var(--color-accent); color: var(--color-fg);" />
+      <label for="email">Email</label><br />
+      <input type="email" name="email" id="email" required style="width: 100%; padding: 10px; border-radius: var(--border-radius); border: none; margin-bottom: var(--spacing-m); background-color: var(--color-accent); color: var(--color-fg);" />
 
-  <label for="message">Message</label><br />
-  <textarea name="message" id="message" rows="5" required style="width: 100%; padding: 10px; border-radius: var(--border-radius); border: none; margin-bottom: var(--spacing-m); background-color: var(--color-accent); color: var(--color-fg);"></textarea>
+      <label for="message">Message</label><br />
+      <textarea name="message" id="message" rows="5" required style="width: 100%; padding: 10px; border-radius: var(--border-radius); border: none; margin-bottom: var(--spacing-m); background-color: var(--color-accent); color: var(--color-fg);"></textarea>
 
-  <button type="submit" class="link-button" style="margin: 0 auto; display: block;">Send Message</button>
-</form>
+      <button type="submit" class="link-button" style="margin: 0 auto; display: block;">Send Message</button>
 
+      <a href="/" class="link-button" style="margin-top: var(--spacing-s); background-color: transparent; border: 2px solid #999999;">Back to Home</a>
+    </form>
+  </div>
+
+  <div id="thank-you" style="display: none; max-width: 400px; margin: 0 auto;">
+    <h2 style="font-size: var(--font-size-h1); margin-bottom: var(--spacing-m); text-align:center;">Thank you!</h2>
+    <p style="text-align:center;">Your message has been sent successfully.</p>
+    <a href="/" class="link-button" style="margin-top: var(--spacing-m);">Back to Home</a>
+  </div>
 
   <footer>
     Developed by Kaan Bayur · 
@@ -149,5 +159,35 @@
     </a>
   </footer>
 
+  <script>
+    const form = document.getElementById("contact-form");
+    const formContainer = document.getElementById("form-container");
+    const thankYou = document.getElementById("thank-you");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch(form.action, {
+          method: form.method,
+          headers: { Accept: "application/json" },
+          body: formData
+        });
+
+        if (response.ok) {
+          formContainer.style.display = "none";
+          thankYou.style.display = "block";
+          form.reset();
+        } else {
+          alert("Oops! There was a problem submitting your form.");
+        }
+      } catch (error) {
+        alert("There was an error. Please try again later.");
+      }
+    });
+  </script>
+
 </body>
+
 </html>
