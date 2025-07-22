@@ -171,3 +171,8 @@ hr {
   width: 50%;
   margin: 30px auto;
 }
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
