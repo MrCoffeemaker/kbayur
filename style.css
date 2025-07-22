@@ -17,13 +17,16 @@
       --spacing-l: 24px;
     }
 
-    body {
+    html, body {
     padding: var(--spacing-l);
     overflow-x: hidden;
     font-family: var(--font-family);
     background-color: var(--color-bg);
     color: var(--color-fg);
     text-align: center;
+    max-width: 100vw;
+}
+
     }
 
     .profile-icon {
