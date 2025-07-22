@@ -12,8 +12,8 @@
       --font-size-caption: 0.875rem;
       --font-size-button: 1.125rem;
 
-      --spacing-s: 8px;
-      --spacing-m: 16px;
+      --spacing-s: 6px;
+      --spacing-m: 10px;
       --spacing-l: 24px;
     }
 
@@ -83,7 +83,7 @@
       font-weight: 500;
       color: var(--color-fg);
       text-decoration: none;
-      transition: background-color 0.3s;
+      transition: background-coloror 0.3s;
     }
 
     .link-button:hover {
@@ -104,3 +104,62 @@
       color: var(--color-muted);
       text-decoration: none;
     }
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Contact Form Styling */
+#contact-form {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#contact-form h2 {
+  font-size: var(--font-size-h1);
+  margin-bottom: var(--spacing-m);
+  text-align: center;
+}
+
+#contact-form label {
+  display: block;
+  margin-top: var(--spacing-s);
+}
+
+#contact-form input,
+#contact-form textarea {
+  margin-top: 4px;
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--border-radius);
+  border: none;
+  margin-bottom: var(--spacing-m);
+  background-color: var(--color-accent);
+  color: var(--color-fg);
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+}
+
+#contact-form {
+  resize: none;
+}
+
+#thank-you {
+  display: none;
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+
+
+textarea {
+  resize: vertical;
+}
+
+hr {
+  margin: 30px auto;
+  border-color: #363b42;
+}
