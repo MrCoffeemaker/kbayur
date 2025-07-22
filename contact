@@ -1,1 +1,153 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="only light">
+  <title>Kaan Bayur | Link in Bio</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #0d1117;
+      --color-fg: #f5f5f5;
+      --color-muted: #999999;
+      --color-accent: #21262d;
+      --color-accent-hover: #30363d;
+      --border-radius: 12px;
+      --font-family: 'Inter', sans-serif;
+
+      --font-size-h1: 1.75rem;
+      --font-size-body: 1rem;
+      --font-size-caption: 0.875rem;
+      --font-size-button: 1.125rem;
+
+      --spacing-s: 8px;
+      --spacing-m: 16px;
+      --spacing-l: 24px;
+    }
+
+    body {
+      margin: 0;
+      padding: var(--spacing-l);
+      font-family: var(--font-family);
+      background-color: var(--color-bg);
+      color: var(--color-fg);
+      text-align: center;
+    }
+
+    .profile-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: var(--spacing-l) auto var(--spacing-s);
+    }
+
+    h1 {
+      font-size: var(--font-size-h1);
+      font-weight: bold;
+      margin-bottom: var(--spacing-s);
+      text-transform: capitalize;
+    }
+
+    .bio {
+      font-size: var(--font-size-body);
+      line-height: 1.6;
+      margin-bottom: var(--spacing-m);
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-m);
+      margin-bottom: var(--spacing-l);
+    }
+
+    .social-icons a {
+      font-size: 1.25rem;
+      color: var(--color-fg);
+      transition: color 0.3s;
+      padding: var(--spacing-s);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      text-decoration: none;
+    }
+
+    .social-icons a:hover {
+      color: var(--color-muted);
+    }
+
+    .link-button {
+      display: block;
+      width: 90%;
+      max-width: 400px;
+      margin: 24px auto;
+      padding: 14px 24px;
+      background-color: var(--color-accent);
+      border: 2px solid #ffffff;
+      border-radius: 30px;
+      font-size: var(--font-size-button);
+      font-weight: 500;
+      color: var(--color-fg);
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+
+    .link-button:hover {
+      background-color: var(--color-accent-hover);
+    }
+
+    .locked i {
+      margin-left: 6px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.75rem;
+      color: var(--color-muted);
+    }
+
+    footer a {
+      color: var(--color-muted);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <img class="profile-icon" src="https://gravatar.com/avatar/1428910d05010970d2d1fd5bf523e90a?size=256" alt="Kaan Bayur Profile" />
+  <h1>Kaan Bayur</h1>
+  <p class="bio">
+    Design. Motion. Code.<br />
+    Building sharp, purposeful experiences.
+  </p>
+
+ <form action="https://formspree.io/f/yourFormID" method="POST" style="max-width: 400px; margin: 0 auto; text-align: left;">
+  <h2 style="font-size: var(--font-size-h1); margin-bottom: var(--spacing-m); text-align:center;">Contact Me</h2>
+
+  <label for="name">Name</label><br />
+  <input type="text" name="name" id="name" required style="width: 100%; padding: 10px; border-radius: var(--border-radius); border: none; margin-bottom: var(--spacing-m); background-color: var(--color-accent); color: var(--color-fg);" />
+
+  <label for="email">Email</label><br />
+  <input type="email" name="email" id="email" required style="width: 100%; padding: 10px; border-radius: var(--border-radius); border: none; margin-bottom: var(--spacing-m); background-color: var(--color-accent); color: var(--color-fg);" />
+
+  <label for="message">Message</label><br />
+  <textarea name="message" id="message" rows="5" required style="width: 100%; padding: 10px; border-radius: var(--border-radius); border: none; margin-bottom: var(--spacing-m); background-color: var(--color-accent); color: var(--color-fg);"></textarea>
+
+  <button type="submit" class="link-button" style="margin: 0 auto; display: block;">Send Message</button>
+</form>
+
+
+  <footer>
+    Developed by Kaan Bayur · 
+    <a href="https://github.com/MrCoffeemaker" target="_blank">
+      <i class="fab fa-github"></i> GitHub
+    </a>
+  </footer>
+
+</body>
+</html>
