@@ -19,11 +19,15 @@
 
     body {
       margin: 0;
-      padding: var(--spacing-l);
       font-family: var(--font-family);
       background-color: var(--color-bg);
       color: var(--color-fg);
       text-align: center;
+      body {
+  padding: var(--spacing-l);
+  overflow-x: hidden;
+}
+
     }
 
     .profile-icon {
@@ -83,7 +87,7 @@
       font-weight: 500;
       color: var(--color-fg);
       text-decoration: none;
-      transition: background-coloror 0.3s;
+      transition: background-color 0.3s;
     }
 
     .link-button:hover {
@@ -160,7 +164,10 @@ textarea {
 }
 
 hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  background-color: #363b42;
+  width: 50%;
   margin: 30px auto;
-  border-color: #363b42;
-    width: 50%;
 }
