@@ -20,12 +20,11 @@
     html, body {
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    overflow-x: auto;
     font-family: var(--font-family);
     background-color: var(--color-bg);
     color: var(--color-fg);
     text-align: center;
-    min-width: 100dvh;
     }
 
     .profile-icon {
