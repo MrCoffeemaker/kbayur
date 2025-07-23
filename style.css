@@ -18,14 +18,14 @@
       --spacing-l: 24px;
     }
 
-    html, body {
+    body {
     padding: var(--spacing-s);
     overflow-x: hidden;
     font-family: var(--font-family);
     background-color: var(--color-bg);
     color: var(--color-fg);
     text-align: center;
-    width: 100%;
+    
 }
 
     .profile-icon {
