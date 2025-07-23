@@ -85,8 +85,8 @@
 
     .link-button {
       display: block;
-      width: 90%;
-      max-width: 400px;
+      width: 100%;
+      max-width: 450px;
       margin: 24px auto;
       padding: 14px 24px;
       background-color: var(--color-fg);
