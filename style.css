@@ -93,7 +93,7 @@
       border: 2px solid #ffffff;
       border-radius: 30px;
       font-size: var(--font-size-button);
-      font-weight: 500;
+      font-weight: bold;
       color: var(--color-accent);
       text-decoration: none;
       transition: background-color 0.3s;
