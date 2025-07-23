@@ -7,7 +7,8 @@
       --border-radius: 12px;
       --font-family: 'Inter', sans-serif;
 
-      --font-size-h1: 1.75rem;
+      --font-size-h1: 2.25rem;
+      --font-size-h2: 1.75rem;
       --font-size-body: 1rem;
       --font-size-caption: 0.875rem;
       --font-size-button: 1.125rem;
@@ -24,7 +25,7 @@
     background-color: var(--color-bg);
     color: var(--color-fg);
     text-align: center;
-    max-width: 100vw;
+    width: 100%;
 }
 
     .profile-icon {
@@ -43,8 +44,9 @@
     }
 
     .bio {
+      color: #5b5f65;
       font-size: var(--font-size-body);
-      line-height: 1.6;
+      line-height: 1.5;
       margin-bottom: var(--spacing-m);
     }
 
@@ -71,24 +73,35 @@
       color: var(--color-muted);
     }
 
+
+    .back-button {
+      opacity: 1;
+      background-color: var(--color-accent) !important;
+      color: var(--color-fg) !important;
+      border: 2px solid #999999 !important; 
+      text-align: center;
+      width: 50% !important;
+    }
+
     .link-button {
       display: block;
       width: 90%;
       max-width: 400px;
       margin: 24px auto;
       padding: 14px 24px;
-      background-color: var(--color-accent);
+      background-color: var(--color-fg);
       border: 2px solid #ffffff;
       border-radius: 30px;
       font-size: var(--font-size-button);
       font-weight: 500;
-      color: var(--color-fg);
+      color: var(--color-accent);
       text-decoration: none;
       transition: background-color 0.3s;
     }
 
     .link-button:hover {
       background-color: var(--color-accent-hover);
+      color: var(--color-fg);
     }
 
     .locked i {
@@ -119,7 +132,7 @@ html {
 }
 
 #contact-form h2 {
-  font-size: var(--font-size-h1);
+  font-size: var(--font-size-h2);
   margin-bottom: var(--spacing-m);
   text-align: center;
 }
@@ -161,12 +174,11 @@ textarea {
 }
 
 hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  background-color: #363b42;
-  width: 50%;
-  margin: 30px auto;
+  display: flex;
+  
+  border: 1px solid #363b42;
+  width: 25%;
+  margin: 30px auto 35px auto;
 }
 
 *, *::before, *::after {
