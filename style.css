@@ -19,7 +19,7 @@
     }
 
     html, body {
-    padding: var(--spacing-l);
+    padding: var(--spacing-s);
     overflow-x: hidden;
     font-family: var(--font-family);
     background-color: var(--color-bg);
@@ -80,15 +80,15 @@
       color: var(--color-fg) !important;
       border: 2px solid #999999 !important; 
       text-align: center;
-      width: 50% !important;
+      width: 80% !important;
     }
 
     .link-button {
       display: block;
       width: 100%;
-      max-width: 450px;
+      max-width: 500px;
       margin: 24px auto;
-      padding: 14px 24px;
+      padding: 12px 24px;
       background-color: var(--color-fg);
       border: 2px solid #ffffff;
       border-radius: 30px;
