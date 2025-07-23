@@ -99,10 +99,10 @@
       transition: background-color 0.3s;
     }
 
-    .link-button:hover {
+   /* .link-button:hover {
       background-color: var(--color-accent-hover);
       color: var(--color-fg);
-    }
+    } */
 
     .locked i {
       margin-left: 6px;
