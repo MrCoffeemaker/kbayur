@@ -6,12 +6,19 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    // Temizle
+    // 🔸 Native browser validasyonu tetikle (ör: Firefox Mobile)
+    if (!form.checkValidity()) {
+      form.reportValidity(); // native popup uyarıları gösterir
+      return;
+    }
+
+    // 🔹 Temizle
     form.querySelectorAll('.error-message').forEach(el => el.remove());
     form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
 
     let isValid = true;
 
+    // 🔸 Kendi DOM tabanlı uyarı sistemin (görsel uyarılar)
     form.querySelectorAll("[required]").forEach(field => {
       if (!field.value.trim()) {
         isValid = false;
