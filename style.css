@@ -193,6 +193,17 @@ textarea {
   text-align: left;
 }
 
+.input-error {
+  border: 2px solid #ff4d4f; /* kırmızı çerçeve */
+  background-color: #1e1e1e;
+}
+
+.error-message {
+  font-size: var(--font-size-caption);
+  color: #ff4d4f;
+  margin-top: 4px;
+  margin-bottom: var(--spacing-s);
+}
 
 hr {
   display: flex;
