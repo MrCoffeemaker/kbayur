@@ -31,11 +31,11 @@
     
     }
 
-    body {
+ body {
       margin: 0;
       padding: 0;
       height: 100vh;
-      background: linear-gradient(var(--angle), #050b7d, #fe026b);
+      background: linear-gradient(var(--angle), #0e0b10, #373737);
       transition: background 0.2s ease;
     }
 
