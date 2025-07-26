@@ -17,11 +17,13 @@ document.addEventListener("DOMContentLoaded", function () {
         isValid = false;
         field.classList.add("input-error");
 
-        const error = document.createElement("div");
-        error.classList.add("error-message");
-        error.textContent = "This field is required.";
+       const error = document.createElement("div");
+error.classList.add("error-message");
+error.textContent = "This field is required.";
 
-        field.parentNode.insertBefore(error, field.nextSibling);
+setTimeout(() => {
+  field.parentNode.insertBefore(error, field.nextSibling);
+}, 0);
       }
     });
 
