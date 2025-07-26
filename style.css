@@ -25,12 +25,12 @@
     padding: var(--spacing-s);
     overflow-x: hidden;
     font-family: var(--font-family);
-    /*background-color: var(--color-bg);*/
+    background-color: var(--color-bg);
     color: var(--color-fg);
     text-align: center;
-    height: 100vh;
-    background: linear-gradient(var(--angle), #21262d, #30363d);
-    transition: background 0.2s ease;
+    /*height: 100vh;*/
+    /*background: linear-gradient(var(--angle), #21262d, #30363d);*/
+    /*transition: background 0.2s ease;*/
     
     }
 
