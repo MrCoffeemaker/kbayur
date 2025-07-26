@@ -147,7 +147,8 @@ html {
 }
 
 #contact-form input,
-#contact-form textarea {
+#contact-form textarea,
+#contact-form select {
   margin-top: 4px;
   width: 100%;
   padding: 10px;
