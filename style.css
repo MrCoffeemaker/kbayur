@@ -161,9 +161,9 @@ html {
   font-size: var(--font-size-body);
 }
 
-#contact-form {
+/*#contact-form {
   resize: none;
-}
+}*/
 
 #thank-you {
   display: none;
