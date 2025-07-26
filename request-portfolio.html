@@ -28,24 +28,43 @@
   </div>
   <hr>
   <div id="form-container">
-  <form id="contact-form" action="https://formspree.io/f/xwpqoaez" method="POST">
-    <h2>Request Portfolio</h2>
-    <p>Due to client confidentiality, full portfolio access is restricted.
-Please request access using the form below.</p>
+ <form id="contact-form" action="https://formspree.io/f/xwpqoaez" method="POST">
+  <h2>Request Portfolio</h2>
+  <p class="form-description">
+    Due to client confidentiality, full portfolio access is restricted.
+    Please request access using the form below.
+  </p>
 
-    <label for="name">Name<sup>*</sup></label>
-    <input type="text" name="name" id="name" required />
+  <label for="name">Name<sup>*</sup></label>
+  <input type="text" name="name" id="name" required />
 
-    <label for="email">Email<sup>*</sup></label>
-    <input type="email" name="email" id="email" required />
+  <label for="email">Email<sup>*</sup></label>
+  <input type="email" name="email" id="email" required />
 
-    <label for="message">Message<sup>*</sup></label>
-    <textarea name="message" id="message" rows="5" required></textarea>
+  <label for="company">Company / Organisation (optional)</label>
+  <input type="text" name="company" id="company" />
 
-    <button type="submit" class="link-button">Send Message</button>
-  
-    <a href="index.html" class="link-button back-button">Back to Home</a>
-  </form>
+  <label for="project-type">Project Type<sup>*</sup></label>
+  <select name="project-type" id="project-type" required>
+    <option value="">Select one</option>
+    <option value="freelance">Freelance Project</option>
+    <option value="job">Job Opportunity</option>
+    <option value="collab">Creative Collaboration</option>
+    <option value="consultation">Consultation</option>
+    <option value="other">Other</option>
+  </select>
+
+  <label for="message">Message<sup>*</sup></label>
+  <textarea name="message" id="message" rows="5" required></textarea>
+
+  <p class="form-note">
+    Please include any relevant details or context so I can better understand your request.
+  </p>
+
+  <button type="submit" class="link-button">Send Message</button>
+  <a href="index.html" class="link-button back-button">Back to Home</a>
+</form>
+
 </div>
 
 <div id="thank-you">
