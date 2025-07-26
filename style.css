@@ -175,6 +175,22 @@ textarea {
   resize: vertical;
 }
 
+.form-description {
+  margin-bottom: var(--spacing-m);
+  font-size: var(--font-size-body);
+  color: var(--color-fg);
+  text-align: left;
+}
+
+.form-note {
+  font-size: var(--font-size-caption);
+  color: var(--color-muted);
+  margin-top: var(--spacing-s);
+  margin-bottom: var(--spacing-l);
+  text-align: left;
+}
+
+
 hr {
   display: flex;
   
