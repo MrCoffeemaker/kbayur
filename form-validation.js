@@ -1,12 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("JS YÜKLENDİ");
+
   const form = document.getElementById("contact-form");
+  console.log("form var mı:", form);
+
   const formContainer = document.getElementById("form-container");
   const thankYou = document.getElementById("thank-you");
+
+  if (!form) {
+    console.error("Form bulunamadı! ID yanlış olabilir ya da DOM hazır değil.");
+    return;
+  }
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    // Temizle
     form.querySelectorAll('.error-message').forEach(el => el.remove());
     form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
 
@@ -17,13 +25,13 @@ document.addEventListener("DOMContentLoaded", function () {
         isValid = false;
         field.classList.add("input-error");
 
-       const error = document.createElement("div");
-error.classList.add("error-message");
-error.textContent = "This field is required.";
+        const error = document.createElement("div");
+        error.classList.add("error-message");
+        error.textContent = "This field is required.";
 
-setTimeout(() => {
-  field.parentNode.insertBefore(error, field.nextSibling);
-}, 0);
+        setTimeout(() => {
+          field.parentNode.insertBefore(error, field.nextSibling);
+        }, 0);
       }
     });
 
