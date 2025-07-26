@@ -22,22 +22,19 @@
     }
 
     body {
-      /*padding: var(--spacing-s);*/
-      overflow-x: hidden;
-      font-family: var(--font-family);
-      /*background-color: var(--color-bg);*/
-      color: var(--color-fg);
-      text-align: center;
+    padding: var(--spacing-s);
+    overflow-x: hidden;
+    font-family: var(--font-family);
+    /*background-color: var(--color-bg);*/
+    color: var(--color-fg);
+    text-align: center;
+    height: 100vh;
+    background: linear-gradient(var(--angle), #0e0b10, #373737);
+    transition: background 0.2s ease;
     
     }
 
- body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      background: linear-gradient(var(--angle), #0e0b10, #373737);
-      transition: background 0.2s ease;
-    }
+
 
     .profile-icon {
       width: 80px;
@@ -96,7 +93,7 @@
 
     .link-button {
       display: block;
-      width: 95%;
+      width: 100%;
       max-width: 500px;
       margin: 24px auto;
       padding: 12px 24px;
