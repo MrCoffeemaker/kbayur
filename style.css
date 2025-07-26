@@ -17,8 +17,6 @@
       --spacing-s: 6px;
       --spacing-m: 10px;
       --spacing-l: 24px;
-
-      --angle: 135deg;
     }
 
     body {
@@ -28,13 +26,8 @@
     background-color: var(--color-bg);
     color: var(--color-fg);
     text-align: center;
-    /*height: 100vh;*/
-    /*background: linear-gradient(var(--angle), #21262d, #30363d);*/
-    /*transition: background 0.2s ease;*/
     
-    }
-
-
+}
 
     .profile-icon {
       width: 80px;
