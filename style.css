@@ -17,17 +17,28 @@
       --spacing-s: 6px;
       --spacing-m: 10px;
       --spacing-l: 24px;
+
+        --angle: 135deg;
     }
 
     body {
-    padding: var(--spacing-s);
+    /*padding: var(--spacing-s);*/
     overflow-x: hidden;
     font-family: var(--font-family);
-    background-color: var(--color-bg);
+    /*background-color: var(--color-bg);*/
     color: var(--color-fg);
     text-align: center;
     
 }
+
+
+ body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: linear-gradient(var(--angle), #050b7d, #fe026b);
+      transition: background 0.2s ease;
+    }
 
     .profile-icon {
       width: 80px;
