@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let isValid = true;
 
-    // Manuel validasyon (tüm required alanlar)
+    // Tüm required alanları kontrol et
     form.querySelectorAll("[required]").forEach(field => {
       if (!field.value.trim()) {
         isValid = false;
@@ -20,29 +20,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const error = document.createElement("div");
         error.classList.add("error-message");
-        error.textContent = "This field is required.";
 
-        field.parentNode.insertBefore(error, field.nextSibling);
-      }
+        // Alan adına göre hata mesajı
+        const label = form.querySelector(`label[for="${field.id}"]`);
+        const fieldName = label ? label.innerText.replace("*", "").trim() : "This field";
 
-      // Özel email kontrolü (isteğe bağlı ama daha sağlam olur)
-      if (field.type === "email" && field.value) {
-        const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-        if (!emailPattern.test(field.value)) {
-          isValid = false;
-          field.classList.add("input-error");
+        error.textContent = `${fieldName} is required.`;
 
-          const error = document.createElement("div");
-          error.classList.add("error-message");
-          error.textContent = "Please enter a valid email address.";
-          field.parentNode.insertBefore(error, field.nextSibling);
+        // Aynı uyarı tekrar eklenmesin
+        if (!field.nextElementSibling || !field.nextElementSibling.classList.contains("error-message")) {
+          field.insertAdjacentElement("afterend", error);
         }
       }
     });
 
     if (!isValid) return;
 
-    // Submit işlemi
+    // Gönderim
     const formData = new FormData(form);
 
     try {
