@@ -4,35 +4,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const thankYou = document.getElementById("thank-you");
 
   form.addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    // 🔸 Native browser validasyonu tetikle (ör: Firefox Mobile)
     if (!form.checkValidity()) {
-      form.reportValidity(); // native popup uyarıları gösterir
+      // Burada Firefox Mobile dahil tüm tarayıcılarda native uyarılar gösterilir
+      form.reportValidity();
       return;
     }
 
-    // 🔹 Temizle
-    form.querySelectorAll('.error-message').forEach(el => el.remove());
-    form.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-
-    let isValid = true;
-
-    // 🔸 Kendi DOM tabanlı uyarı sistemin (görsel uyarılar)
-    form.querySelectorAll("[required]").forEach(field => {
-      if (!field.value.trim()) {
-        isValid = false;
-        field.classList.add("input-error");
-
-        const error = document.createElement("div");
-        error.classList.add("error-message");
-        error.textContent = "This field is required.";
-
-        field.parentNode.insertBefore(error, field.nextSibling);
-      }
-    });
-
-    if (!isValid) return;
+    // Artık valid olduğu kesin, engelle ve gönder
+    e.preventDefault();
 
     const formData = new FormData(form);
 
