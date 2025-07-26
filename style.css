@@ -29,7 +29,7 @@
     color: var(--color-fg);
     text-align: center;
     height: 100vh;
-    background: linear-gradient(var(--angle), #0e0b10, #373737);
+    background: linear-gradient(var(--angle), #21262d, #30363d);
     transition: background 0.2s ease;
     
     }
