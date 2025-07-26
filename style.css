@@ -1,4 +1,4 @@
-    :root {
+:root {
       --color-bg: #0d1117;
       --color-fg: #f5f5f5;
       --color-muted: #999999;
@@ -217,3 +217,28 @@ hr {
   box-sizing: border-box;
 }
 
+/* Scrollbar Özelleştirme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-accent);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-muted);
+  border-radius: 10px;
+  border: 2px solid var(--color-accent);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-fg);
+}
+
+/* Firefox için */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-muted) var(--color-accent);
+}
