@@ -1,1 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark">
+  <title>Kaan Bayur | Link in Bio</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+   <link href="style.css" rel="stylesheet">
 
+</head>
+<body>
+
+  <img class="profile-icon" src="https://gravatar.com/avatar/1428910d05010970d2d1fd5bf523e90a?size=256" alt="Kaan Bayur Profile" />
+  <h1>Kaan Bayur</h1>
+  <p class="bio">
+    Design. Motion. Code.<br />
+    Building sharp, purposeful experiences.
+  </p>
+  
+ <div class="social-icons">
+    <a href="https://www.instagram.com/kaanbayur/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="contact.html" aria-label="Contact Page"><i class="fas fa-envelope"></i></a>
+    <a href="https://www.linkedin.com/in/kaanbayur/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    <a href="https://kbayur.gumroad.com/" target="_blank" aria-label="Gumroad"><i class="fas fa-shopping-cart"></i></a>
+  </div>
+  <hr>
+  <div id="form-container">
+  <form id="contact-form" action="https://formspree.io/f/mvgqkzle" method="POST">
+    <h2>Contact Me</h2>
+
+    <label for="name">Name<sup>*</sup></label>
+    <input type="text" name="name" id="name" required />
+
+    <label for="email">Email<sup>*</sup></label>
+    <input type="email" name="email" id="email" required />
+
+    <label for="message">Message<sup>*</sup></label>
+    <textarea name="message" id="message" rows="5" required></textarea>
+
+    <button type="submit" class="link-button">Send Message</button>
+  
+    <a href="index.html" class="link-button back-button">Back to Home</a>
+  </form>
+</div>
+
+<div id="thank-you">
+  <h2>Thank you!</h2>
+  <p>Your message has been sent successfully.</p>
+  <a href="index.html" class="link-button back-button">Back to Home</a>
+</div>
+
+  <footer>
+    Developed by Kaan Bayur · 
+    <a href="https://github.com/MrCoffeemaker" target="_blank">
+      <i class="fab fa-github"></i> GitHub © 2025
+    </a>
+  </footer>
+
+  <script>
+    const form = document.getElementById("contact-form");
+    const formContainer = document.getElementById("form-container");
+    const thankYou = document.getElementById("thank-you");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch(form.action, {
+          method: form.method,
+          headers: { Accept: "application/json" },
+          body: formData
+        });
+
+        if (response.ok) {
+          formContainer.style.display = "none";
+          thankYou.style.display = "block";
+          form.reset();
+        } else {
+          alert("Oops! There was a problem submitting your form.");
+        }
+      } catch (error) {
+        alert("There was an error. Please try again later.");
+      }
+    });
+  </script>
+
+</body>
+</html>
