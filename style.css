@@ -12,6 +12,7 @@
       --font-size-body: 1rem;
       --font-size-caption: 0.875rem;
       --font-size-button: 1.125rem;
+      --font-line-height-body: 1.5;
 
       --spacing-s: 6px;
       --spacing-m: 10px;
@@ -46,7 +47,7 @@
     .bio {
       color: #5b5f65;
       font-size: var(--font-size-body);
-      line-height: 1.5;
+      line-height: var(--font-line-height-body);
       margin-bottom: var(--spacing-m);
     }
 
@@ -179,6 +180,7 @@ textarea {
 .form-description {
   margin-bottom: var(--spacing-m);
   font-size: var(--font-size-body);
+  line-height: var(--font-line-height-body);
   color: var(--color-fg);
   text-align: left;
 }
