@@ -14,13 +14,15 @@ This project is strictly **personal**.
 It is not meant to be reused, forked, or republished.  
 Please **do not** use or copy any part of this codebase, design, or structure without explicit permission.
 
-> ✋ All rights reserved © Kaan Bayur 2025.
+> ✋ All rights reserved © Kaan Bayur 2026.
 
 ## 📁 Folder Structure
 
 ├── images/ → Custom visual assets (icons, favicon, etc.)
 ├── index.html → Main page
 ├── contact.html → Contact section
+├── request-portfolio.html → Portfolio access request form
+├── form.js → Contact/portfolio form validation & submission
 ├── style.css → Custom styling
 ├── CNAME → Domain setup for GitHub Pages
 
