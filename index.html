@@ -78,7 +78,8 @@
       <a class="link-button locked portfolio-button" href="request-portfolio.html">Request Portfolio Access <i class="fas fa-lock"></i></a>
     </section>
 
-    <section class="studio-card" aria-labelledby="cosmicfly-title">
+    <section class="studio-card" aria-labelledby="cosmicfly-title" role="button" tabindex="0" aria-label="Cosmicfly. Coming soon. Activate galaxy animation.">
+      <div class="galaxy-burst" aria-hidden="true"></div>
       <div class="studio-orbit" aria-hidden="true"><span></span><i class="fa-solid fa-star"></i></div>
       <div class="studio-copy">
         <p class="section-kicker">Independent studio</p>
@@ -96,5 +97,31 @@
     </section>
     <footer>Developed by Kaan Bayur · <a href="https://github.com/MrCoffeemaker" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub © 2026</a></footer>
   </main>
+
+  <script>
+    (() => {
+      const card = document.querySelector('.studio-card');
+      if (!card) return;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let resetTimer;
+
+      const triggerGalaxy = () => {
+        if (reducedMotion.matches) return;
+        clearTimeout(resetTimer);
+        card.classList.remove('is-galaxy-active');
+        void card.offsetWidth;
+        card.classList.add('is-galaxy-active');
+        resetTimer = setTimeout(() => card.classList.remove('is-galaxy-active'), 1900);
+      };
+
+      card.addEventListener('click', triggerGalaxy);
+      card.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          triggerGalaxy();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
