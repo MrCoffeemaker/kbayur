@@ -115,10 +115,27 @@ h1 {
 }
 
 .hero-statement span {
-  background: linear-gradient(90deg, var(--color-purple), var(--color-cyan));
+  background: linear-gradient(
+    90deg,
+    var(--color-purple),
+    var(--color-blue),
+    var(--color-cyan),
+    var(--color-purple)
+  );
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: hero-gradient-flow 6s ease-in-out infinite;
+}
+
+@keyframes hero-gradient-flow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .bio {
@@ -503,6 +520,12 @@ hr {
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-muted) var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-statement span {
+    animation: none;
+  }
 }
 
 @media (min-width: 700px) {
