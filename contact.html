@@ -14,7 +14,7 @@
   <meta property="og:url" content="https://www.kaanbayur.com/contact.html" />
 
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
   <link href="style.css" rel="stylesheet">
   <script defer data-domain="kaanbayur.com" src="https://plausible.io/js/script.outbound-links.tagged-events.js"></script>
@@ -31,53 +31,53 @@
   </script>
 </head>
 <body>
+  <main class="page-shell">
+    <header class="profile-hero">
+      <div class="profile-visual">
+        <div class="profile-glow" aria-hidden="true"></div>
+        <img class="profile-icon" src="https://gravatar.com/avatar/1428910d05010970d2d1fd5bf523e90a?size=256" alt="Kaan Bayur" />
+      </div>
+      <p class="eyebrow">UI/UX Designer + Design Engineer</p>
+      <h1>Kaan Bayur</h1>
+      <p class="hero-statement">Let’s make something <span>interesting.</span></p>
+      <p class="bio">Have a question, project idea or just want to get in touch? Send me a message below.</p>
 
-  <img class="profile-icon" src="https://gravatar.com/avatar/1428910d05010970d2d1fd5bf523e90a?size=256" alt="Kaan Bayur" />
-  <h1>Kaan Bayur</h1>
-  <p class="bio">
-    UI/UX Designer + Design Engineer<br />
-    Designing and building digital products, design systems and interactive experiences.
-  </p>
+      <div class="social-icons">
+        <a href="https://www.instagram.com/kaanbayur/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="contact.html" aria-label="Contact Page" aria-current="page"><i class="fas fa-envelope"></i></a>
+        <a href="https://www.linkedin.com/in/kaanbayur/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a href="https://kbayur.gumroad.com/" target="_blank" rel="noopener noreferrer" aria-label="Gumroad"><i class="fas fa-shopping-cart"></i></a>
+      </div>
+    </header>
 
-  <div class="social-icons">
-    <a href="https://www.instagram.com/kaanbayur/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-    <a href="contact.html" aria-label="Contact Page" aria-current="page"><i class="fas fa-envelope"></i></a>
-    <a href="https://www.linkedin.com/in/kaanbayur/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-    <a href="https://kbayur.gumroad.com/" target="_blank" rel="noopener noreferrer" aria-label="Gumroad"><i class="fas fa-shopping-cart"></i></a>
-  </div>
+    <hr>
 
-  <hr>
+    <div id="form-container">
+      <form id="contact-form" action="https://formspree.io/f/mvgqkzle" method="POST" novalidate>
+        <h2>Contact Me</h2>
 
-  <div id="form-container">
-    <form id="contact-form" action="https://formspree.io/f/mvgqkzle" method="POST" novalidate>
-      <h2>Contact Me</h2>
+        <label for="name">Name<sup>*</sup></label>
+        <input type="text" name="name" id="name" autocomplete="name" required />
 
-      <label for="name">Name<sup>*</sup></label>
-      <input type="text" name="name" id="name" autocomplete="name" required />
+        <label for="email">Email<sup>*</sup></label>
+        <input type="email" name="email" id="email" autocomplete="email" required />
 
-      <label for="email">Email<sup>*</sup></label>
-      <input type="email" name="email" id="email" autocomplete="email" required />
+        <label for="message">Message<sup>*</sup></label>
+        <textarea name="message" id="message" rows="5" required></textarea>
 
-      <label for="message">Message<sup>*</sup></label>
-      <textarea name="message" id="message" rows="5" required></textarea>
+        <button type="submit" class="link-button">Send Message</button>
+        <a href="index.html" class="link-button back-button">Back to Home</a>
+      </form>
+    </div>
 
-      <button type="submit" class="link-button">Send Message</button>
+    <div id="thank-you" role="status" aria-live="polite">
+      <h2>Thank you!</h2>
+      <p>Your message has been sent successfully.</p>
       <a href="index.html" class="link-button back-button">Back to Home</a>
-    </form>
-  </div>
+    </div>
 
-  <div id="thank-you" role="status" aria-live="polite">
-    <h2>Thank you!</h2>
-    <p>Your message has been sent successfully.</p>
-    <a href="index.html" class="link-button back-button">Back to Home</a>
-  </div>
-
-  <footer>
-    Developed by Kaan Bayur ·
-    <a href="https://github.com/MrCoffeemaker" target="_blank" rel="noopener noreferrer">
-      <i class="fab fa-github"></i> GitHub © 2026
-    </a>
-  </footer>
+    <footer>© 2026 Kaan Bayur</footer>
+  </main>
   <script src="form.js"></script>
 </body>
 </html>
