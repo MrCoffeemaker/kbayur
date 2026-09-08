@@ -7,12 +7,10 @@
   <title>Contact | Kaan Bayur</title>
   <meta name="description" content="Contact Kaan Bayur, a Sydney-based UI/UX Designer and Design Engineer." />
   <link rel="canonical" href="https://www.kaanbayur.com/contact.html" />
-
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Contact | Kaan Bayur" />
   <meta property="og:description" content="Get in touch with Kaan Bayur." />
   <meta property="og:url" content="https://www.kaanbayur.com/contact.html" />
-
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
@@ -41,7 +39,6 @@
       <h1>Kaan Bayur</h1>
       <p class="hero-statement">Let’s make something <span>interesting.</span></p>
       <p class="bio">Have a question, project idea or just want to get in touch? Send me a message below.</p>
-
       <div class="social-icons">
         <a href="https://www.instagram.com/kaanbayur/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
         <a href="contact.html" aria-label="Contact Page" aria-current="page"><i class="fas fa-envelope"></i></a>
@@ -53,25 +50,25 @@
     <div id="form-container" style="margin-top:48px;">
       <form id="contact-form" action="https://formspree.io/f/mvgqkzle" method="POST" novalidate>
         <h2>Contact Me</h2>
-
         <label for="name">Name<sup>*</sup></label>
         <input type="text" name="name" id="name" autocomplete="name" required />
-
         <label for="email">Email<sup>*</sup></label>
         <input type="email" name="email" id="email" autocomplete="email" required />
-
         <label for="message">Message<sup>*</sup></label>
         <textarea name="message" id="message" rows="5" required></textarea>
-
         <button type="submit" class="link-button">Send Message</button>
-        <a href="index.html" class="link-button back-button">Back to Home</a>
+        <div class="elsewhere contact-navigation">
+          <a href="index.html" class="link-button">Back to Home</a>
+        </div>
       </form>
     </div>
 
     <div id="thank-you" role="status" aria-live="polite">
       <h2>Thank you!</h2>
       <p>Your message has been sent successfully.</p>
-      <a href="index.html" class="link-button back-button">Back to Home</a>
+      <div class="elsewhere contact-navigation">
+        <a href="index.html" class="link-button">Back to Home</a>
+      </div>
     </div>
 
     <footer>© 2026 Kaan Bayur</footer>
