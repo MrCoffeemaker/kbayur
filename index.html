@@ -21,6 +21,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
   <link href="style.css" rel="stylesheet">
+  <link href="cosmic-enhancements.css" rel="stylesheet">
   <script defer data-domain="kaanbayur.com" src="https://plausible.io/js/script.outbound-links.tagged-events.js"></script>
   <style>
     .cosmic-journey{position:relative;height:650vh;width:calc(100% + 32px);margin:0 -16px;background:#03040a}
@@ -38,22 +39,11 @@
     .cosmic-copy{position:absolute;inset:0;z-index:6;display:grid;place-items:center;padding:28px;pointer-events:none}.cosmic-message{position:absolute;max-width:780px;text-align:center;opacity:0;transform:translateY(35px) scale(.96);will-change:transform,opacity}.cosmic-message .kicker{margin:0 0 12px;color:#858899;font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase}.cosmic-message h2{margin:0;font-size:clamp(2.4rem,9vw,6.5rem);line-height:.93;letter-spacing:-.065em;background:linear-gradient(90deg,#9f7aea,#6b8cff,#56d9e8);-webkit-background-clip:text;background-clip:text;color:transparent}.cosmic-message p{max-width:580px;margin:18px auto 0;color:#a7a9b8;font-size:clamp(.92rem,2vw,1.12rem);line-height:1.65}
     .cosmic-vignette{position:absolute;inset:0;z-index:8;pointer-events:none;background:radial-gradient(circle at 50% 50%,transparent 42%,rgba(0,0,0,.68) 100%)}
     .home-ghost{position:absolute;inset:0;z-index:10;display:flex;align-items:flex-start;justify-content:center;padding:28px 16px 0;opacity:0;pointer-events:none;will-change:opacity,transform}.home-ghost-inner{width:100%;max-width:520px;text-align:center}.home-ghost .profile-visual{margin-top:0}.home-ghost .eyebrow{margin-top:0}.home-ghost h1{font-size:var(--font-size-h1)}.home-ghost .bio{margin-bottom:16px}.ghost-social{display:flex;justify-content:center;gap:8px}.ghost-social span{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--color-border);border-radius:50%;background:rgba(255,255,255,.025);color:var(--color-fg)}
-    .cosmic-hint{position:absolute;left:50%;bottom:24px;z-index:12;transform:translateX(-50%);color:rgba(255,255,255,.38);font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:0;transition:opacity .4s ease}
-    .cosmic-journey.is-visible .cosmic-hint{opacity:1}
+    .cosmic-hint{position:absolute;left:50%;bottom:24px;z-index:12;transform:translateX(-50%);color:rgba(255,255,255,.38);font-size:.66rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:0;transition:opacity .4s ease}.cosmic-journey.is-visible .cosmic-hint{opacity:1}
     @media (max-width:600px){.planet-one{width:120px;height:120px;left:-20px}.planet-two{width:210px;height:210px;right:-85px}.planet-three{width:88px;height:88px}.ringed{width:160px;height:160px;margin:-80px}.ringed::before{width:285px;height:68px;border-width:7px}.nebula{filter:blur(48px)}}
     @media (prefers-reduced-motion:reduce){.cosmic-journey{height:220vh}.shooting-star{display:none}}
   </style>
-  <!-- Hotjar Tracking Code for My Website -->
-  <script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:6475789,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-  </script>
+  <script>(function(h,o,t,j,a,r){h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};h._hjSettings={hjid:6475789,hjsv:6};a=o.getElementsByTagName('head')[0];r=o.createElement('script');r.async=1;r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;a.appendChild(r)})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');</script>
 </head>
 <body>
   <main class="page-shell">
@@ -62,52 +52,13 @@
       <p class="eyebrow">UI/UX Designer + Design Engineer</p><h1>Kaan Bayur</h1>
       <p class="hero-statement">I design it. <span>I build it.</span></p>
       <p class="bio">Product design · Design systems · Component tooling · Front-end implementation</p>
-      <div class="social-icons">
-        <a href="https://www.instagram.com/kaanbayur/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="contact.html" aria-label="Contact Page"><i class="fas fa-envelope"></i></a>
-        <a href="https://www.linkedin.com/in/kaanbayur/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-        <a href="https://kbayur.gumroad.com/" target="_blank" rel="noopener noreferrer" aria-label="Gumroad"><i class="fas fa-shopping-cart"></i></a>
-      </div>
+      <div class="social-icons"><a href="https://www.instagram.com/kaanbayur/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a><a href="contact.html" aria-label="Contact Page"><i class="fas fa-envelope"></i></a><a href="https://www.linkedin.com/in/kaanbayur/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a><a href="https://kbayur.gumroad.com/" target="_blank" rel="noopener noreferrer" aria-label="Gumroad"><i class="fas fa-shopping-cart"></i></a></div>
     </header>
-
-    <!-- Selected work and portfolio request temporarily hidden.
-    <section class="work-section" aria-labelledby="selected-work-title"><div class="section-heading"><p class="section-kicker">Selected work</p><h2 id="selected-work-title">Things I design &amp; build.</h2></div><div class="work-list"><article class="work-card work-card-purple"><div class="work-card-icon" aria-hidden="true"><i class="fa-solid fa-cubes"></i></div><div class="work-card-copy"><h3>Component Tooling</h3><p>Plugins · Tokens · UI foundations</p></div><span class="work-number" aria-hidden="true">01</span></article><article class="work-card work-card-blue"><div class="work-card-icon" aria-hidden="true"><i class="fa-solid fa-layer-group"></i></div><div class="work-card-copy"><h3>SharePoint / SPFx</h3><p>Web parts · Internal tools</p></div><span class="work-number" aria-hidden="true">02</span></article><article class="work-card work-card-cyan"><div class="work-card-icon" aria-hidden="true"><i class="fa-solid fa-code"></i></div><div class="work-card-copy"><h3>HubSpot CMS</h3><p>Modules · Responsive UI</p></div><span class="work-number" aria-hidden="true">03</span></article></div><a class="link-button locked portfolio-button" href="request-portfolio.html">Request Portfolio Access <i class="fas fa-lock"></i></a></section>
-    -->
-
-    <section class="studio-card" id="cosmicfly" aria-labelledby="cosmicfly-title" role="button" tabindex="0" aria-label="Cosmicfly. Coming soon. Activate galaxy animation.">
-      <div class="galaxy-burst" aria-hidden="true"></div><div class="studio-orbit" aria-hidden="true"><span></span><i class="fa-solid fa-star"></i></div>
-      <div class="studio-copy"><p class="section-kicker">Independent studio</p><h2 id="cosmicfly-title">Cosmicfly</h2><p>Independent digital studio for creative work, experiments and digital experiences.</p><span class="coming-soon">cosmicfly.com.au · Coming soon</span></div>
-    </section>
-
+    <section class="studio-card" id="cosmicfly" aria-labelledby="cosmicfly-title" role="button" tabindex="0" aria-label="Cosmicfly. Coming soon. Activate galaxy animation."><div class="galaxy-burst" aria-hidden="true"></div><div class="studio-orbit" aria-hidden="true"><span></span><i class="fa-solid fa-star"></i></div><div class="studio-copy"><p class="section-kicker">Independent studio</p><h2 id="cosmicfly-title">Cosmicfly</h2><p>Independent digital studio for creative work, experiments and digital experiences.</p><span class="coming-soon">cosmicfly.com.au · Coming soon</span></div></section>
     <section class="elsewhere" aria-labelledby="elsewhere-title"><p class="section-kicker" id="elsewhere-title">Elsewhere</p><a class="link-button" href="https://www.linkedin.com/in/kaanbayur/" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a><a class="link-button" href="https://kbayur.gumroad.com/" target="_blank" rel="noopener noreferrer">Shop My Digital Goods</a><a class="link-button" href="https://www.instagram.com/kaanbayur/" target="_blank" rel="noopener noreferrer">See My Visual Feed</a></section>
     <footer>© 2026 Kaan Bayur</footer>
   </main>
-
-  <section class="cosmic-journey" id="cosmic-journey" aria-label="Cosmicfly infinite scroll experience">
-    <div class="cosmic-viewport">
-      <div class="cosmic-space" id="cosmic-space"></div>
-      <div class="nebula nebula-a"></div><div class="nebula nebula-b"></div><div class="nebula nebula-c"></div>
-      <div class="stars stars-far"></div><div class="stars stars-mid"></div><div class="stars stars-near"></div>
-      <div class="shooting-star s1"></div><div class="shooting-star s2"></div><div class="shooting-star s3"></div>
-      <div class="planet planet-one"></div><div class="planet planet-two"></div><div class="planet planet-three"></div>
-      <div class="ringed"></div><div class="sun-core"></div>
-      <div class="cosmic-copy">
-        <article class="cosmic-message m1"><p class="kicker">Beyond the interface</p><h2>You found the edge.</h2><p>Keep going. The page is only pretending to end.</p></article>
-        <article class="cosmic-message m2"><p class="kicker">Cosmicfly</p><h2>Build strange things.</h2><p>Move past the obvious. Make digital work feel like somewhere you can actually go.</p></article>
-        <article class="cosmic-message m3"><p class="kicker">Deep orbit</p><h2>Design with gravity.</h2><p>Layers, motion, depth and a little unnecessary obsession.</p></article>
-        <article class="cosmic-message m4"><p class="kicker">Signal detected</p><h2>Make it feel alive.</h2><p>Not everything useful has to sit still.</p></article>
-      </div>
-      <div class="home-ghost" aria-hidden="true">
-        <div class="home-ghost-inner">
-          <div class="profile-visual"><div class="profile-glow"></div><img class="profile-icon" src="https://gravatar.com/avatar/1428910d05010970d2d1fd5bf523e90a?size=256" alt="" /></div>
-          <p class="eyebrow">UI/UX Designer + Design Engineer</p><h1>Kaan Bayur</h1><p class="hero-statement">I design it. <span>I build it.</span></p><p class="bio">Product design · Design systems · Component tooling · Front-end implementation</p>
-          <div class="ghost-social"><span><i class="fab fa-instagram"></i></span><span><i class="fas fa-envelope"></i></span><span><i class="fab fa-linkedin"></i></span><span><i class="fas fa-shopping-cart"></i></span></div>
-        </div>
-      </div>
-      <div class="cosmic-vignette"></div><div class="cosmic-hint">Keep scrolling</div>
-    </div>
-  </section>
-
+  <section class="cosmic-journey" id="cosmic-journey" aria-label="Cosmicfly infinite scroll experience"><div class="cosmic-viewport"><div class="cosmic-space" id="cosmic-space"></div><div class="nebula nebula-a"></div><div class="nebula nebula-b"></div><div class="nebula nebula-c"></div><div class="stars stars-far"></div><div class="stars stars-mid"></div><div class="stars stars-near"></div><div class="shooting-star s1"></div><div class="shooting-star s2"></div><div class="shooting-star s3"></div><div class="planet planet-one"></div><div class="planet planet-two"></div><div class="planet planet-three"></div><div class="ringed"></div><div class="sun-core"></div><div class="cosmic-copy"><article class="cosmic-message m1"><p class="kicker">Beyond the interface</p><h2>You found the edge.</h2><p>Keep going. The page is only pretending to end.</p></article><article class="cosmic-message m2"><p class="kicker">Cosmicfly</p><h2>Build strange things.</h2><p>Move past the obvious. Make digital work feel like somewhere you can actually go.</p></article><article class="cosmic-message m3"><p class="kicker">Deep orbit</p><h2>Design with gravity.</h2><p>Layers, motion, depth and a little unnecessary obsession.</p></article><article class="cosmic-message m4"><p class="kicker">Signal detected</p><h2>Make it feel alive.</h2><p>Not everything useful has to sit still.</p></article></div><div class="home-ghost" aria-hidden="true"><div class="home-ghost-inner"><div class="profile-visual"><div class="profile-glow"></div><img class="profile-icon" src="https://gravatar.com/avatar/1428910d05010970d2d1fd5bf523e90a?size=256" alt="" /></div><p class="eyebrow">UI/UX Designer + Design Engineer</p><h1>Kaan Bayur</h1><p class="hero-statement">I design it. <span>I build it.</span></p><p class="bio">Product design · Design systems · Component tooling · Front-end implementation</p><div class="ghost-social"><span><i class="fab fa-instagram"></i></span><span><i class="fas fa-envelope"></i></span><span><i class="fab fa-linkedin"></i></span><span><i class="fas fa-shopping-cart"></i></span></div></div></div><div class="cosmic-vignette"></div><div class="cosmic-hint">Keep scrolling</div></div></section>
   <script>(()=>{const card=document.querySelector('.studio-card');if(!card)return;const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');let resetTimer;const triggerGalaxy=()=>{if(!reducedMotion.matches){clearTimeout(resetTimer);card.classList.remove('is-galaxy-active');void card.offsetWidth;card.classList.add('is-galaxy-active');resetTimer=setTimeout(()=>card.classList.remove('is-galaxy-active'),1900)}};card.addEventListener('click',triggerGalaxy);card.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();triggerGalaxy()}})})();</script>
   <script>(()=>{const journey=document.getElementById('cosmic-journey');if(!journey)return;const q=s=>journey.querySelector(s),qa=s=>[...journey.querySelectorAll(s)];const far=q('.stars-far'),mid=q('.stars-mid'),near=q('.stars-near'),space=q('.cosmic-space'),nebulas=qa('.nebula'),p1=q('.planet-one'),p2=q('.planet-two'),p3=q('.planet-three'),ring=q('.ringed'),sun=q('.sun-core'),shots=qa('.shooting-star'),msgs=qa('.cosmic-message'),ghost=q('.home-ghost'),hint=q('.cosmic-hint');let looping=false;const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));const fade=(p,a,b,c,d)=>clamp((p-a)/(b-a))*clamp((d-p)/(d-c));const render=()=>{const r=journey.getBoundingClientRect(),travel=journey.offsetHeight-innerHeight,p=clamp(-r.top/Math.max(1,travel));journey.classList.toggle('is-visible',p>.01&&p<.93);far.style.transform=`translate3d(0,${p*-160}px,0) scale(${1+p*.16})`;mid.style.transform=`translate3d(${p*45}px,${p*-360}px,0) scale(${1+p*.45})`;near.style.transform=`translate3d(${p*-70}px,${p*-760}px,0) scale(${1+p*.95})`;space.style.transform=`scale(${1+p*.24}) rotate(${p*1.2}deg)`;nebulas[0].style.transform=`translate3d(${p*170}px,${p*-130}px,0) scale(${1+p*.8})`;nebulas[1].style.transform=`translate3d(${p*-150}px,${p*80}px,0) scale(${1+p*.55})`;nebulas[2].style.transform=`translate3d(${p*45}px,${p*-190}px,0) scale(${1+p*1.1})`;p1.style.transform=`translate3d(${p*140}px,${p*-780}px,0) scale(${.55+p*2.2}) rotate(${p*28}deg)`;p1.style.opacity=fade(p,.02,.1,.38,.52);p2.style.transform=`translate3d(${p*-310}px,${p*510}px,0) scale(${.35+p*2.7}) rotate(${p*-18}deg)`;p2.style.opacity=fade(p,.12,.2,.58,.72);p3.style.transform=`translate3d(${p*-170}px,${p*-610}px,0) scale(${.3+p*3.4})`;p3.style.opacity=fade(p,.34,.43,.72,.82);ring.style.transform=`translate(-50%,-50%) translate3d(${(p-.58)*-620}px,${(p-.58)*120}px,0) scale(${.45+fade(p,.45,.58,.76,.9)*1.55}) rotate(${p*45}deg)`;ring.style.opacity=fade(p,.42,.53,.78,.9);sun.style.transform=`scale(${.25+fade(p,.68,.78,.9,.98)*9})`;sun.style.opacity=fade(p,.64,.75,.9,.985);shots.forEach((s,i)=>{const centers=[.2,.47,.7],f=fade(p,centers[i]-.035,centers[i],centers[i]+.035,centers[i]+.08);s.style.opacity=f;s.style.transform=`translate3d(${f*260}px,${f*-120}px,0) rotate(-26deg)`});const ranges=[[.03,.10,.18,.27],[.23,.31,.40,.49],[.46,.54,.63,.72],[.68,.76,.84,.91]];msgs.forEach((m,i)=>{const [a,b,c,d]=ranges[i],f=fade(p,a,b,c,d);m.style.opacity=f;m.style.transform=`translateY(${(1-f)*38}px) scale(${.94+f*.06})`});const gf=clamp((p-.895)/.085);ghost.style.opacity=gf;ghost.style.transform=`translateY(${(1-gf)*38}px) scale(${.9+gf*.1})`;hint.style.opacity=p<.88?.45:0;if(p>.992&&!looping){looping=true;requestAnimationFrame(()=>{window.scrollTo(0,0);requestAnimationFrame(()=>{looping=false})})}};let ticking=false;const onScroll=()=>{if(!ticking){ticking=true;requestAnimationFrame(()=>{render();ticking=false})}};addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll,{passive:true});render()})();</script>
 </body>
