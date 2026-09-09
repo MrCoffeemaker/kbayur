@@ -22,6 +22,20 @@
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
   <link href="style.css" rel="stylesheet">
   <script defer data-domain="kaanbayur.com" src="https://plausible.io/js/script.outbound-links.tagged-events.js"></script>
+  <style>
+    .edge-reveal{position:fixed;left:0;right:0;bottom:0;height:0;z-index:50;overflow:hidden;pointer-events:none;background:radial-gradient(circle at 50% 100%,rgba(86,217,232,.18),transparent 28%),radial-gradient(circle at 30% 100%,rgba(159,122,234,.2),transparent 34%),linear-gradient(to top,#05050a 0%,#090b12 78%);transition:height .45s cubic-bezier(.2,.8,.2,1),opacity .35s ease;opacity:0}
+    .edge-reveal::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 10% 25%,rgba(255,255,255,.92) 0 1px,transparent 1.5px),radial-gradient(circle at 22% 68%,rgba(86,217,232,.9) 0 1px,transparent 1.6px),radial-gradient(circle at 43% 34%,rgba(159,122,234,.9) 0 1.2px,transparent 1.7px),radial-gradient(circle at 61% 76%,rgba(255,255,255,.85) 0 1px,transparent 1.5px),radial-gradient(circle at 78% 22%,rgba(107,140,255,.9) 0 1.2px,transparent 1.7px),radial-gradient(circle at 91% 62%,rgba(255,255,255,.9) 0 1px,transparent 1.5px);opacity:0;transform:scale(.94);transition:.6s ease}
+    .edge-reveal.is-active{height:168px;opacity:1}
+    .edge-reveal.is-active::before{opacity:1;transform:scale(1.06)}
+    .edge-reveal-inner{position:absolute;inset:0;display:grid;place-items:center;padding-top:20px}
+    .edge-reveal-copy{transform:translateY(22px);opacity:0;transition:.5s .08s cubic-bezier(.2,.8,.2,1)}
+    .edge-reveal.is-active .edge-reveal-copy{transform:translateY(0);opacity:1}
+    .edge-reveal-kicker{margin:0 0 6px;color:#858899;font-size:.66rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+    .edge-reveal-title{margin:0;font-size:1.18rem;letter-spacing:-.035em;background:linear-gradient(90deg,#9f7aea,#6b8cff,#56d9e8);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .edge-reveal-orbit{position:absolute;left:50%;bottom:-68px;width:150px;height:150px;margin-left:-75px;border:1px solid rgba(159,122,234,.28);border-radius:50%;box-shadow:0 0 50px rgba(86,217,232,.08)}
+    .edge-reveal-orbit::before{content:'';position:absolute;inset:30px;border:1px solid rgba(86,217,232,.2);border-radius:50%}
+    @media (prefers-reduced-motion:reduce){.edge-reveal,.edge-reveal::before,.edge-reveal-copy{transition:none}}
+  </style>
   <!-- Hotjar Tracking Code for My Website -->
   <script>
     (function(h,o,t,j,a,r){
@@ -61,6 +75,15 @@
     <section class="elsewhere" aria-labelledby="elsewhere-title"><p class="section-kicker" id="elsewhere-title">Elsewhere</p><a class="link-button" href="https://www.linkedin.com/in/kaanbayur/" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a><a class="link-button" href="https://kbayur.gumroad.com/" target="_blank" rel="noopener noreferrer">Shop My Digital Goods</a><a class="link-button" href="https://www.instagram.com/kaanbayur/" target="_blank" rel="noopener noreferrer">See My Visual Feed</a></section>
     <footer>© 2026 Kaan Bayur</footer>
   </main>
+
+  <div class="edge-reveal" id="edge-reveal" aria-hidden="true">
+    <div class="edge-reveal-inner">
+      <div class="edge-reveal-copy"><p class="edge-reveal-kicker">Beyond the interface</p><p class="edge-reveal-title">You found the edge.</p></div>
+      <div class="edge-reveal-orbit" aria-hidden="true"></div>
+    </div>
+  </div>
+
   <script>(()=>{const card=document.querySelector('.studio-card');if(!card)return;const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');let resetTimer;const triggerGalaxy=()=>{if(!reducedMotion.matches){clearTimeout(resetTimer);card.classList.remove('is-galaxy-active');void card.offsetWidth;card.classList.add('is-galaxy-active');resetTimer=setTimeout(()=>card.classList.remove('is-galaxy-active'),1900)}};card.addEventListener('click',triggerGalaxy);card.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();triggerGalaxy()}})})();</script>
+  <script>(()=>{const reveal=document.getElementById('edge-reveal');if(!reveal)return;let force=0,hideTimer,touchStartY=null;const atBottom=()=>window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-3;const show=()=>{force=0;clearTimeout(hideTimer);reveal.classList.add('is-active');hideTimer=setTimeout(()=>reveal.classList.remove('is-active'),1400)};window.addEventListener('wheel',e=>{if(!atBottom()||e.deltaY<=0){force=0;return}force+=Math.min(e.deltaY,40);if(force>90)show()},{passive:true});window.addEventListener('touchstart',e=>{if(atBottom()&&e.touches.length===1)touchStartY=e.touches[0].clientY;else touchStartY=null},{passive:true});window.addEventListener('touchmove',e=>{if(touchStartY===null||!atBottom()||e.touches.length!==1)return;const delta=touchStartY-e.touches[0].clientY;if(delta>70){touchStartY=null;show()}},{passive:true});window.addEventListener('scroll',()=>{if(!atBottom()){force=0;reveal.classList.remove('is-active')}} ,{passive:true})})();</script>
 </body>
 </html>
