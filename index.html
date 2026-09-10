@@ -35,17 +35,8 @@
     </header>
     <section class="studio-card" id="cosmicfly" aria-labelledby="cosmicfly-title" role="button" tabindex="0" aria-label="Cosmicfly. Coming soon. Activate galaxy animation."><div class="galaxy-burst" aria-hidden="true"></div><div class="studio-orbit" aria-hidden="true"><span></span><i class="fa-solid fa-star"></i></div><div class="studio-copy"><p class="section-kicker">Independent studio</p><h2 id="cosmicfly-title">Cosmicfly</h2><p>Independent digital studio for creative work, experiments and digital experiences.</p><span class="coming-soon">cosmicfly.com.au · Coming soon</span></div></section>
     <section class="elsewhere" aria-labelledby="elsewhere-title"><p class="section-kicker" id="elsewhere-title">Elsewhere</p><a class="link-button" href="https://www.linkedin.com/in/kaanbayur/" target="_blank" rel="noopener noreferrer">Connect on LinkedIn</a><a class="link-button" href="https://kbayur.gumroad.com/" target="_blank" rel="noopener noreferrer">Shop My Digital Goods</a><a class="link-button" href="https://www.instagram.com/kaanbayur/" target="_blank" rel="noopener noreferrer">See My Visual Feed</a></section>
-
-    <section class="signature-section" aria-label="Design philosophy">
-      <div class="signature-line" aria-hidden="true"></div>
-      <p class="signature-kicker">A small design principle</p>
-      <p class="signature-quote">Design should feel obvious <span>after someone obsessed over the details.</span></p>
-      <div class="signature-meta"><span>Kaan Bayur</span><i aria-hidden="true"></i><span>UI/UX Designer + Design Engineer</span></div>
-    </section>
-
     <footer>© 2026 Kaan Bayur</footer>
   </main>
   <script>(()=>{const card=document.querySelector('.studio-card');if(!card)return;const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');let resetTimer;const triggerGalaxy=()=>{if(!reducedMotion.matches){clearTimeout(resetTimer);card.classList.remove('is-galaxy-active');void card.offsetWidth;card.classList.add('is-galaxy-active');resetTimer=setTimeout(()=>card.classList.remove('is-galaxy-active'),1900)}};card.addEventListener('click',triggerGalaxy);card.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();triggerGalaxy()}})})();</script>
-  <script>(()=>{const section=document.querySelector('.signature-section');if(!section||!('IntersectionObserver'in window)){section?.classList.add('is-visible');return}const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target)}})},{threshold:.3});observer.observe(section)})();</script>
 </body>
 </html>
