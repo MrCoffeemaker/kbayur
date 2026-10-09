@@ -108,3 +108,110 @@
 @media(min-width:700px){
   .home-page,.contact-page{padding-top:48px;padding-bottom:36px}
 }
+
+
+/* Adaptive viewport layout shared by Home and Contact.
+   Short screens compress spacing, never hide overflowing content. */
+.home-page,.contact-page{
+  min-height:100vh;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  padding-top:clamp(12px,3.2dvh,38px);
+  padding-bottom:clamp(14px,2.5dvh,28px);
+}
+.home-page .profile-visual,.contact-page .profile-visual{
+  width:clamp(68px,12dvh,112px);
+  height:clamp(68px,12dvh,112px);
+  margin-bottom:clamp(8px,1.5dvh,16px);
+}
+.home-page .profile-icon,.contact-page .profile-icon{
+  width:86%;height:86%;
+}
+.home-page .profile-glow,.contact-page .profile-glow{
+  width:95%;height:95%;
+}
+.home-page h1,.contact-page h1{
+  font-size:clamp(1.75rem,4.4dvh,2.5rem);
+}
+.home-page .bio,.contact-page .bio{
+  margin-top:clamp(4px,.8dvh,8px);
+  font-size:clamp(.82rem,1.85dvh,.96rem);
+}
+.home-page .elsewhere{
+  margin-top:clamp(12px,3dvh,28px);
+  gap:clamp(8px,1.5dvh,14px);
+}
+.home-page .elsewhere > a.link-button{
+  min-height:clamp(44px,6.6dvh,56px);
+}
+.home-page footer,.contact-page footer{
+  margin-top:auto;
+  padding-top:clamp(12px,2dvh,20px);
+}
+.home-page .elsewhere + footer{
+  margin-top:auto;
+}
+.contact-page #form-container{
+  margin-top:clamp(12px,2.8dvh,24px);
+}
+.contact-page #contact-form label{
+  margin-top:clamp(7px,1.35dvh,14px);
+  margin-bottom:4px;
+  font-size:clamp(.75rem,1.65dvh,.85rem);
+}
+.contact-page #contact-form input{
+  height:clamp(44px,6dvh,56px);
+}
+.contact-page #contact-form textarea{
+  height:clamp(78px,15dvh,152px);
+  min-height:78px;
+}
+.contact-page #contact-form button.link-button{
+  min-height:clamp(44px,6.5dvh,56px);
+  margin-top:clamp(12px,2dvh,22px);
+}
+.contact-page .contact-navigation{
+  margin-top:clamp(6px,1.3dvh,12px);
+}
+.contact-page .contact-navigation a.link-button{
+  display:inline-flex;
+  width:auto;
+  max-width:100%;
+  min-height:44px;
+  margin:0;
+  padding:8px 12px;
+  border:0;
+  border-radius:12px;
+  background:transparent;
+  box-shadow:none;
+  color:var(--color-text-secondary);
+  font:600 14px/1.4 var(--font-family);
+}
+.contact-page .contact-navigation a.link-button:hover{
+  border:0;
+  background:rgba(255,255,255,.045);
+  color:var(--color-fg);
+}
+.contact-page footer{
+  margin-top:auto;
+}
+@media(max-height:650px){
+  .home-page,.contact-page{padding-top:10px;padding-bottom:12px}
+  .home-page .profile-visual,.contact-page .profile-visual{
+    width:60px;height:60px;margin-bottom:8px;
+  }
+  .home-page h1,.contact-page h1{font-size:1.75rem}
+  .home-page .bio,.contact-page .bio{font-size:.82rem;line-height:1.35}
+  .home-page .elsewhere{margin-top:12px;gap:8px}
+  .home-page .elsewhere > a.link-button{min-height:44px}
+  .contact-page #form-container{margin-top:10px}
+  .contact-page #contact-form label{margin-top:7px;margin-bottom:3px}
+  .contact-page #contact-form input{height:44px}
+  .contact-page #contact-form textarea{height:78px;min-height:78px}
+  .contact-page #contact-form button.link-button{min-height:44px;margin-top:10px}
+  .contact-page .contact-navigation{margin-top:4px}
+}
+@media(min-width:700px){
+  .home-page,.contact-page{padding-top:clamp(32px,5dvh,48px)}
+}
