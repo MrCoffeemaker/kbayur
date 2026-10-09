@@ -20,7 +20,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-  <link href="style.css?v=20261010-neon-name4" rel="stylesheet">
+  <link href="style.css?v=20261010-neon-name5" rel="stylesheet">
   <script defer data-domain="kaanbayur.com" src="https://plausible.io/js/script.outbound-links.tagged-events.js"></script>
   <script>(function(h,o,t,j,a,r){h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};h._hjSettings={hjid:6475789,hjsv:6};a=o.getElementsByTagName('head')[0];r=o.createElement('script');r.async=1;r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;a.appendChild(r)})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');</script>
 </head>
@@ -28,7 +28,7 @@
   <main class="page-shell home-page editorial-page">
     <div class="editorial-topline"><span>DESIGN × ENGINEERING</span></div>
     <header class="profile-hero">
-      <h1 class="neon-name" aria-label="Kaan Bayur"><span class="neon-word" aria-hidden="true"><span class="neon-letter">K</span><span class="neon-letter">A</span><span class="neon-letter">A</span><span class="neon-letter">N</span></span><span class="neon-word" aria-hidden="true"><span class="neon-letter">B</span><span class="neon-letter">A</span><span class="neon-letter">Y</span><span class="neon-letter">U</span><span class="neon-letter">R</span></span></h1>
+      <h1 class="neon-name" aria-label="Kaan Bayur"><span class="neon-word" data-word="KAAN">KAAN</span><span class="neon-word" data-word="BAYUR">BAYUR</span></h1>
       <p class="bio">UI/UX Designer &amp; Design Engineer</p>
     </header>
     <section class="studio-card" id="cosmicfly" hidden style="display: none;" aria-labelledby="cosmicfly-title" role="button" tabindex="0" aria-label="Cosmicfly. Coming soon. Activate galaxy animation."><div class="galaxy-burst" aria-hidden="true"></div><div class="studio-orbit" aria-hidden="true"><span></span><i class="fa-solid fa-star"></i></div><div class="studio-copy"><p class="section-kicker">Independent studio</p><h2 id="cosmicfly-title">Cosmicfly</h2><p>Independent digital studio for creative work, experiments and digital experiences.</p><span class="coming-soon">cosmicfly.com.au · Coming soon</span></div></section>
@@ -37,6 +37,6 @@
   </main>
   <script>(()=>{const card=document.querySelector('.studio-card');if(!card)return;const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');let resetTimer;const triggerGalaxy=()=>{if(!reducedMotion.matches){clearTimeout(resetTimer);card.classList.remove('is-galaxy-active');void card.offsetWidth;card.classList.add('is-galaxy-active');resetTimer=setTimeout(()=>card.classList.remove('is-galaxy-active'),1900)}};card.addEventListener('click',triggerGalaxy);card.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();triggerGalaxy()}})})();</script>
 
-  <script>(()=>{const letters=[...document.querySelectorAll('.neon-letter')];const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');letters.forEach(letter=>{let timer;letter.addEventListener('pointerdown',()=>{clearTimeout(timer);letter.classList.remove('is-flashing');void letter.offsetWidth;letter.classList.add('is-flashing');timer=setTimeout(()=>letter.classList.remove('is-flashing'),850)})});})();</script>
+  <script>(()=>{const words=document.querySelectorAll('.neon-word');const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');words.forEach(word=>{let timeout;word.addEventListener('pointerdown',()=>{clearTimeout(timeout);word.classList.remove('is-flashing');void word.offsetWidth;word.classList.add('is-flashing');timeout=setTimeout(()=>word.classList.remove('is-flashing'),850)})})})();</script>
 </body>
 </html>
