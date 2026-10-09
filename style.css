@@ -456,3 +456,7 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
 
 /* Match Home footer placement to Contact: pin to viewport bottom on short pages. */
 .home-page.editorial-page footer{margin-top:auto!important}
+
+/* Slightly more breathing room around the homepage name/title group. */
+.home-page.editorial-page .profile-hero{margin-top:clamp(36px,5dvh,52px);padding-bottom:clamp(36px,5dvh,52px)}
+@media(max-height:640px){.home-page.editorial-page .profile-hero{margin-top:30px;padding-bottom:30px}}
