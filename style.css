@@ -480,3 +480,10 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
   .editorial-page .editorial-topline,
   .editorial-page footer { min-height: 32px; }
 }
+
+/* Footer regression fix: override the older Home-specific important margin. */
+.home-page.editorial-page footer,
+.contact-page.editorial-page footer {
+  margin-top: auto !important;
+  flex-shrink: 0;
+}
