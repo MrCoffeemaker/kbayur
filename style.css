@@ -81,3 +81,22 @@
 .contact-page #thank-you h2{font-size:1.4rem}
 .contact-page #thank-you p{color:var(--color-text-secondary)}
 .contact-page footer{margin-top:24px;padding-top:24px}
+
+
+/* Contact page consistency refinements */
+.contact-page .bio{max-width:320px;margin:8px auto 0;font-size:clamp(.85rem,3.6vw,.93rem);line-height:1.5;text-wrap:balance}
+.contact-page #contact-form input,
+.contact-page #contact-form textarea{border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.035)}
+.contact-page #contact-form button.link-button{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;min-height:58px;margin:24px 0 0;padding:12px 20px;
+  border:1px solid rgba(255,255,255,.11);border-radius:999px;
+  background:linear-gradient(110deg,rgba(255,255,255,.035),rgba(255,255,255,.015));
+  color:var(--color-fg);font:600 15px/1.35 var(--font-family);
+}
+.contact-page #contact-form button.link-button:hover{background:rgba(255,255,255,.065);border-color:rgba(159,122,234,.55)}
+.contact-page .contact-navigation .link-button{
+  min-height:58px;border:1px solid rgba(255,255,255,.11);
+  background:linear-gradient(110deg,rgba(255,255,255,.035),rgba(255,255,255,.015));
+  font:600 15px/1.35 var(--font-family);
+}
