@@ -328,3 +328,7 @@ body:has(.editorial-page){background:#101013;color:#f3f0eb}
 .contact-page.editorial-page #contact-form .input-error{border-bottom:1px solid #f08080!important}
 @media(max-height:640px){.editorial-page{padding:12px 18px!important}.home-page.editorial-page .sculpture-visual{height:120px}.home-page.editorial-page .sculpture-body{width:108px;height:108px}.editorial-page h1{font-size:36px}.contact-page.editorial-page .profile-hero{margin-top:14px}.contact-page.editorial-page #form-container{margin-top:12px}.contact-page.editorial-page #contact-form label{margin-top:8px}.contact-page.editorial-page #contact-form textarea{height:55px}.contact-page.editorial-page #contact-form button.link-button{margin-top:12px}}
 @media(prefers-reduced-motion:reduce){.editorial-page .sculpture-body,.home-page.editorial-page .elsewhere > a.link-button{transition:none}}
+
+/* Keep the original KB logo clean: remove the metallic backing plate. */
+.home-page.editorial-page .sculpture-plate{display:none}
+.home-page.editorial-page .profile-icon{border:0;box-shadow:none}
