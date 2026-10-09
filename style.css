@@ -424,9 +424,3 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
 
 /* Footer location on both pages */
 .editorial-page footer{justify-content:space-between}
-
-/* Pure Editorial homepage: no decorative logo, deliberate vertical rhythm */
-.home-page.editorial-page .profile-hero{margin-top:clamp(44px,12dvh,130px);padding-top:0;border-top:0}
-.home-page.editorial-page .profile-hero h1{margin-top:0}
-.home-page.editorial-page .elsewhere{margin-top:clamp(40px,8dvh,82px);margin-bottom:auto}
-@media(max-height:640px){.home-page.editorial-page .profile-hero{margin-top:clamp(28px,7dvh,50px)}.home-page.editorial-page .elsewhere{margin-top:28px}}
