@@ -357,3 +357,7 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
 .contact-page.editorial-page .contact-topline .editorial-back{display:inline-flex;align-items:center;gap:10px;line-height:1.2}
 .contact-page.editorial-page .contact-topline .back-arrow{display:inline-flex;align-items:center;justify-content:center;font-size:16px;line-height:1;transform:translateY(-1px)}
 .contact-page.editorial-page .editorial-monogram{font-family:Inter,Arial,sans-serif;font-weight:700;letter-spacing:-.09em;font-size:25px;line-height:1;padding-right:2px}
+
+/* Geometrically centered SVG back arrow */
+.contact-page.editorial-page .contact-topline .editorial-back{display:inline-flex;align-items:center;gap:10px;line-height:1}
+.contact-page.editorial-page .contact-topline .back-arrow{display:block;flex:none;width:18px;height:18px;transform:none;vertical-align:middle}
