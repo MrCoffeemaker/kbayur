@@ -14,7 +14,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
-  <link href="style.css?v=20261009-aurora1" rel="stylesheet">
+  <link href="style.css?v=20261010-editorial1" rel="stylesheet">
   <script defer data-domain="kaanbayur.com" src="https://plausible.io/js/script.outbound-links.tagged-events.js"></script>
   <!-- Hotjar Tracking Code for My Website -->
   <script>
@@ -29,40 +29,33 @@
   </script>
 </head>
 <body>
-  <main class="page-shell contact-page">
+  <main class="page-shell contact-page editorial-page">
+    <div class="editorial-topline contact-topline">
+      <a href="index.html" class="editorial-back">← BACK TO HOME</a>
+      <a href="index.html" class="editorial-monogram" aria-label="Home">KB</a>
+    </div>
     <header class="profile-hero">
-      <a href="index.html" class="profile-visual" aria-label="Back to Home" style="text-decoration:none;">
-        <div class="profile-glow" aria-hidden="true"></div>
-        <img class="profile-icon" src="https://gravatar.com/avatar/1428910d05010970d2d1fd5bf523e90a?size=256" alt="Kaan Bayur" />
-      </a>
-      <h1>Contact Me</h1>
-      <p class="bio">Have a project or question? I'd love to hear from you.</p>
+      <p class="editorial-kicker">02 / GET IN TOUCH</p>
+      <h1>Let's talk.</h1>
+      <p class="bio">Have a project, an idea, or just want to say hello? Drop me a message.</p>
     </header>
-
     <div id="form-container">
       <form id="contact-form" action="https://formspree.io/f/mvgqkzle" method="POST" novalidate>
-        <label for="name">Name<sup>*</sup></label>
-        <input type="text" name="name" id="name" autocomplete="name" required />
-        <label for="email">Email<sup>*</sup></label>
-        <input type="email" name="email" id="email" autocomplete="email" required />
-        <label for="message">Message<sup>*</sup></label>
-        <textarea name="message" id="message" rows="5" required></textarea>
-        <button type="submit" class="link-button">Send Message</button>
-        <div class="elsewhere contact-navigation">
-          <a href="index.html" class="link-button"><i class="fas fa-arrow-left" aria-hidden="true"></i><span>Back to Home</span></a>
-        </div>
+        <label for="name">01 / YOUR NAME</label>
+        <input type="text" name="name" id="name" autocomplete="name" placeholder="Your name" required />
+        <label for="email">02 / EMAIL ADDRESS</label>
+        <input type="email" name="email" id="email" autocomplete="email" placeholder="you@example.com" required />
+        <label for="message">03 / YOUR MESSAGE</label>
+        <textarea name="message" id="message" rows="3" placeholder="Tell me what's on your mind..." required></textarea>
+        <button type="submit" class="link-button">Send message ↗</button>
       </form>
     </div>
-
     <div id="thank-you" role="status" aria-live="polite">
       <h2>Thank you!</h2>
       <p>Your message has been sent successfully.</p>
-      <div class="elsewhere contact-navigation">
-        <a href="index.html" class="link-button"><i class="fas fa-arrow-left" aria-hidden="true"></i><span>Back to Home</span></a>
-      </div>
+      <a href="index.html" class="editorial-back">← BACK TO HOME</a>
     </div>
-
-    <footer>© 2026 Kaan Bayur</footer>
+    <footer><span>© 2026 Kaan Bayur</span><span>SYD / AU</span></footer>
   </main>
   <script src="form.js"></script>
 </body>
