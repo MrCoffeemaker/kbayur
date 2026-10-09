@@ -429,7 +429,7 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
 .home-page .profile-hero{text-align:left}
 .home-page .neon-name{display:block;width:100%;margin:clamp(24px,5dvh,46px) 0 0;font-family:var(--font-family);font-size:clamp(62px,18.5vw,112px);font-weight:900;line-height:.98;letter-spacing:-.055em}
 .home-page .neon-word{display:flex;justify-content:flex-start;align-items:baseline;width:100%;white-space:nowrap}
-.home-page .neon-letter{display:inline-block;flex:0 0 auto;color:transparent;-webkit-text-stroke:1.5px var(--color-fg);paint-order:stroke fill;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.home-page .neon-letter{display:inline-block;flex:0 0 auto;color:transparent;-webkit-text-stroke:1.5px var(--color-fg);cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation}
 .home-page .neon-word:nth-child(2){font-size:.91em}
 .home-page .neon-name+.bio{text-align:left;margin:clamp(14px,2.5dvh,24px) 0 0}
 @keyframes name-neon-flicker{0%,13%,28%,43%,61%,78%,100%{color:transparent;-webkit-text-stroke:1.5px var(--color-fg);text-shadow:none}5%,19%,35%,49%,68%,85%{color:#fff;-webkit-text-stroke:1px #fff;text-shadow:0 0 8px #fff,0 0 19px #9f7aea,0 0 35px #6b8cff}}
