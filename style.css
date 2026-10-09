@@ -71,13 +71,14 @@
 }
 .contact-page #contact-form label sup{color:var(--color-purple);margin-left:3px}
 .contact-page #contact-form input,.contact-page #contact-form textarea{
-  display:block;width:100%;margin:0;padding:14px 16px;
+  box-sizing:border-box;display:block;width:100%;margin:0;padding:14px 16px;
   border:1px solid rgba(255,255,255,.12);
   border-radius:16px;background:rgba(255,255,255,.035);
   color:var(--color-fg);font:400 16px/1.5 var(--font-family);
   transition:border-color .18s ease,background .18s ease;
 }
-.contact-page #contact-form textarea{min-height:126px;resize:vertical}
+.contact-page #contact-form input{height:56px}
+.contact-page #contact-form textarea{height:152px;min-height:140px;resize:vertical}
 .contact-page #contact-form input:focus,.contact-page #contact-form textarea:focus{
   border-color:rgba(159,122,234,.7);background:rgba(255,255,255,.055);
 }
@@ -86,9 +87,16 @@
   display:flex;align-items:center;justify-content:center;
   margin-top:24px;cursor:pointer;
 }
-.contact-page .contact-navigation{margin-top:12px;text-align:center}
+.contact-page .contact-navigation{margin-top:16px;text-align:center}
 .contact-page .contact-navigation .link-button{
-  display:flex;align-items:center;justify-content:center;gap:12px;
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  width:auto;max-width:100%;min-height:44px;
+  padding:8px 12px;border:0;border-radius:12px;
+  background:transparent;color:var(--color-text-secondary);
+  font:600 14px/1.4 var(--font-family);
+}
+.contact-page .contact-navigation .link-button:hover{
+  background:rgba(255,255,255,.045);border-color:transparent;color:var(--color-fg);
 }
 .contact-page .contact-navigation .link-button i{font-size:14px}
 .contact-page #thank-you{margin:32px auto 0}
