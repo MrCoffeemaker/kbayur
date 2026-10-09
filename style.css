@@ -215,3 +215,66 @@
 @media(min-width:700px){
   .home-page,.contact-page{padding-top:clamp(32px,5dvh,48px)}
 }
+
+
+/* Midnight Aurora: shared visual polish without changing adaptive geometry */
+.home-page,.contact-page{isolation:isolate;position:relative}
+.home-page::before,.contact-page::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 72% 33% at 50% 5%,rgba(103,93,208,.17),transparent 78%),
+    radial-gradient(ellipse 58% 37% at 96% 43%,rgba(70,120,202,.065),transparent 85%),
+    radial-gradient(ellipse 62% 30% at 4% 77%,rgba(137,82,187,.05),transparent 82%);
+}
+.home-page .profile-glow,.contact-page .profile-glow{
+  transform-origin:center;
+  animation:kb-ambient-breathe 7s ease-in-out infinite;
+}
+@keyframes kb-ambient-breathe{
+  0%,100%{opacity:.32;transform:scale(.96)}
+  50%{opacity:.56;transform:scale(1.1)}
+}
+/* Use a transparent border with two background layers to create a subtle gradient rim. */
+.home-page .elsewhere > a.link-button,
+.contact-page #contact-form > button.link-button{
+  border:1px solid transparent;
+  background:
+    linear-gradient(110deg,rgba(19,21,32,.98),rgba(14,16,25,.98)) padding-box,
+    linear-gradient(115deg,rgba(114,129,205,.35),rgba(255,255,255,.10) 53%,rgba(150,106,203,.28)) border-box;
+  box-shadow:0 5px 24px rgba(0,0,0,.08);
+  transition:background .25s ease,box-shadow .25s ease,transform .2s ease;
+}
+.home-page .elsewhere > a.link-button:hover,
+.home-page .elsewhere > a.link-button:focus-visible,
+.contact-page #contact-form > button.link-button:hover,
+.contact-page #contact-form > button.link-button:focus-visible{
+  background:
+    linear-gradient(110deg,rgba(29,34,55,.98),rgba(27,24,43,.98)) padding-box,
+    linear-gradient(115deg,rgba(114,144,242,.82),rgba(90,202,221,.48),rgba(170,114,225,.76)) border-box;
+  box-shadow:0 8px 30px rgba(91,104,199,.13);
+}
+.home-page .elsewhere > a.link-button:active,
+.contact-page #contact-form > button.link-button:active{transform:scale(.992)}
+.home-page .profile-hero,.contact-page .profile-hero{
+  animation:kb-reveal .55s both;
+}
+.home-page .elsewhere > a.link-button{
+  animation:kb-reveal .52s both;
+}
+.home-page .elsewhere > a.link-button:nth-of-type(1){animation-delay:.1s}
+.home-page .elsewhere > a.link-button:nth-of-type(2){animation-delay:.17s}
+.home-page .elsewhere > a.link-button:nth-of-type(3){animation-delay:.24s}
+.home-page .elsewhere > a.link-button:nth-of-type(4){animation-delay:.31s}
+.contact-page #form-container{animation:kb-reveal .55s .12s both}
+@keyframes kb-reveal{
+  from{opacity:0;transform:translateY(9px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media(prefers-reduced-motion:reduce){
+  .home-page .profile-glow,.contact-page .profile-glow,
+  .home-page .profile-hero,.contact-page .profile-hero,
+  .home-page .elsewhere > a.link-button,
+  .contact-page #form-container{animation:none}
+  .home-page .elsewhere > a.link-button,
+  .contact-page #contact-form > button.link-button{transition:none}
+}
