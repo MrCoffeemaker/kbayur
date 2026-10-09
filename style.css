@@ -498,3 +498,8 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
 @media (max-height: 640px) {
   .editorial-page > footer { min-height: 32px; }
 }
+
+/* Keep the homepage role description in two intentional mobile-friendly lines. */
+.home-page.editorial-page .profile-hero .bio .role-line { display: block; }
+.home-page.editorial-page .profile-hero .bio { max-width: 100%; font-size: clamp(10px, 2.9vw, 12px); letter-spacing: -.015em; }
+.home-page.editorial-page .profile-hero .bio .role-line { white-space: nowrap; }
