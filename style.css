@@ -278,3 +278,53 @@
   .home-page .elsewhere > a.link-button,
   .contact-page #contact-form > button.link-button{transition:none}
 }
+
+
+/* Experimental Editorial 2026: Home and Contact */
+body:has(.editorial-page){background:#101013;color:#f3f0eb}
+.editorial-page{max-width:390px;width:100%;min-height:100dvh;box-sizing:border-box;padding:24px 22px 18px!important;text-align:left;isolation:isolate}
+.editorial-page::before{display:none}
+.editorial-topline{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#aaa8a3;font-size:10px;font-weight:600;letter-spacing:1.4px}
+.editorial-page .profile-hero{text-align:left;animation:none}
+.editorial-page .editorial-kicker{margin:0;color:#a6a39e;font-size:10px;letter-spacing:2px;font-weight:600}
+.editorial-page h1{font-size:clamp(39px,7.5dvh,56px);line-height:1.04;letter-spacing:-.065em;margin:10px 0 6px;font-weight:700}
+.editorial-page .bio{margin:0;color:#aaa9a5;font-size:12px;line-height:1.6;max-width:310px}
+.editorial-page footer{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;margin-top:auto!important;padding-top:15px;border-top:1px solid #38383a;color:#888681;font-size:10px;letter-spacing:.2px}
+.home-page.editorial-page .profile-hero{margin-top:auto;border-top:1px solid #565451;padding-top:13px}
+.home-page.editorial-page .sculpture-visual{width:100%;height:clamp(150px,29dvh,235px);margin:0 0 10px;display:grid;place-items:center;perspective:650px;touch-action:none;cursor:grab}
+.home-page.editorial-page .sculpture-visual:active{cursor:grabbing}
+.editorial-page .sculpture-body{position:relative;display:grid;place-items:center;width:clamp(112px,21dvh,165px);height:clamp(112px,21dvh,165px);transform-style:preserve-3d;transition:transform .55s ease}
+.editorial-page .sculpture-plate{position:absolute;inset:5px;border-radius:29%;transform:rotate(-16deg) rotateX(12deg);background:linear-gradient(135deg,#e8e5df,#92918e 35%,#303136 70%,#bcbab5);box-shadow:13px 17px 25px #0009,inset 2px 2px 8px #fff8}
+.home-page.editorial-page .profile-icon{position:relative;z-index:2;width:69%;height:69%;object-fit:cover;border-radius:50%;border:3px solid #d6d2cb;box-shadow:0 8px 25px #0008;transform:translateZ(25px)}
+.home-page.editorial-page .elsewhere{display:flex;flex-direction:column;gap:0;margin:clamp(18px,3.5dvh,30px) 0 auto;width:100%}
+.home-page.editorial-page .elsewhere > a.link-button{display:grid;grid-template-columns:23px 1fr 20px;align-items:center;gap:12px;min-height:clamp(45px,6.4dvh,53px);padding:10px 2px;margin:0;border:0;border-bottom:1px solid #454446;border-radius:0;background:transparent;box-shadow:none;color:#eeeae5;font-size:14px;animation:none;transition:padding .2s ease,background .2s ease}
+.home-page.editorial-page .elsewhere > a.link-button:first-of-type{border-top:1px solid #454446}
+.home-page.editorial-page .elsewhere > a.link-button:hover,.home-page.editorial-page .elsewhere > a.link-button:focus-visible{padding-left:10px;background:#ffffff0b;box-shadow:none}
+.home-page.editorial-page .elsewhere .editorial-number{color:#92908b;font-size:10px;font-weight:500}
+.home-page.editorial-page .elsewhere > a.link-button > span:not(.editorial-number):not(.link-arrow){text-align:left}
+.home-page.editorial-page .elsewhere > a.link-button > .link-arrow{display:block;color:#e6e3dd;font-size:19px;width:auto;line-height:1;text-align:right}
+.home-page.editorial-page footer{margin-top:clamp(15px,3dvh,32px)!important}
+.contact-page.editorial-page .editorial-back{color:inherit;text-decoration:none;font-size:10px;letter-spacing:1.2px}
+.contact-page.editorial-page .editorial-back:hover{text-decoration:underline}
+.contact-page.editorial-page .editorial-monogram{font:900 25px/1 Georgia,serif;letter-spacing:-4px;color:#e4e0d9;text-decoration:none;padding-right:4px}
+.contact-page.editorial-page .profile-hero{margin-top:clamp(22px,5.5dvh,47px);border-top:1px solid #565451;padding-top:14px}
+.contact-page.editorial-page h1{font-size:clamp(43px,8dvh,60px);margin:13px 0 10px}
+.contact-page.editorial-page .bio{max-width:285px}
+.contact-page.editorial-page #form-container{margin-top:clamp(18px,3.8dvh,33px);animation:none}
+.contact-page.editorial-page #contact-form{max-width:none;margin:0}
+.contact-page.editorial-page #contact-form label{display:block;margin:clamp(10px,2.3dvh,18px) 0 7px;color:#aaa8a2;font-size:10px;font-weight:500;letter-spacing:1.3px}
+.contact-page.editorial-page #contact-form label:first-child{margin-top:0}
+.contact-page.editorial-page #contact-form input,.contact-page.editorial-page #contact-form textarea{height:auto;min-height:0;margin:0;padding:4px 0 10px;border:0;border-bottom:1px solid #555350;border-radius:0;background:transparent;color:#f3f0eb;font-size:14px;line-height:1.4;box-shadow:none;resize:vertical}
+.contact-page.editorial-page #contact-form input{height:clamp(31px,4.6dvh,41px)}
+.contact-page.editorial-page #contact-form textarea{height:clamp(57px,9dvh,85px);min-height:55px}
+.contact-page.editorial-page #contact-form input::placeholder,.contact-page.editorial-page #contact-form textarea::placeholder{color:#7c7a77}
+.contact-page.editorial-page #contact-form input:focus,.contact-page.editorial-page #contact-form textarea:focus{border-bottom-color:#eeeae5;background:transparent;outline-offset:2px}
+.contact-page.editorial-page #contact-form button.link-button{display:flex;justify-content:space-between;align-items:center;width:100%;min-height:clamp(45px,6dvh,53px);margin-top:clamp(16px,3dvh,26px);padding:12px 16px;border:0;border-radius:0;background:#e9e6df;color:#19191b;font-size:13px;font-weight:700;box-shadow:none}
+.contact-page.editorial-page #contact-form button.link-button:hover{background:#fff;transform:translateY(-1px)}
+.contact-page.editorial-page #contact-form button.link-button:disabled{opacity:.65}
+.contact-page.editorial-page #thank-you{margin-top:36px}
+.contact-page.editorial-page #thank-you .editorial-back{display:inline-block;margin-top:16px}
+.contact-page.editorial-page .error-message{font-size:11px;margin:5px 0 0}
+.contact-page.editorial-page #contact-form .input-error{border-bottom:1px solid #f08080!important}
+@media(max-height:640px){.editorial-page{padding:12px 18px!important}.home-page.editorial-page .sculpture-visual{height:120px}.home-page.editorial-page .sculpture-body{width:108px;height:108px}.editorial-page h1{font-size:36px}.contact-page.editorial-page .profile-hero{margin-top:14px}.contact-page.editorial-page #form-container{margin-top:12px}.contact-page.editorial-page #contact-form label{margin-top:8px}.contact-page.editorial-page #contact-form textarea{height:55px}.contact-page.editorial-page #contact-form button.link-button{margin-top:12px}}
+@media(prefers-reduced-motion:reduce){.editorial-page .sculpture-body,.home-page.editorial-page .elsewhere > a.link-button{transition:none}}
