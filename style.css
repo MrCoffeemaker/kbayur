@@ -17,3 +17,38 @@
 .home-page footer{margin-top:auto;padding-top:32px;border-top:0}
 @media(max-width:360px){.home-page .elsewhere .link-button{padding-inline:16px;gap:9px}.home-page .social-icons{gap:8px}}
 @media(min-width:700px){.home-page{padding-top:72px;padding-bottom:36px}}
+
+
+/* Homepage CTA layout fix: keep icon, label and chevron in distinct columns. */
+.home-page .elsewhere > a.link-button{
+  display:grid;
+  grid-template-columns:24px minmax(0,1fr) 16px;
+  align-items:center;
+  column-gap:12px;
+  text-align:left;
+  font-size:15px;
+  line-height:1.35;
+  font-weight:600;
+}
+.home-page .elsewhere > a.link-button > i:first-child{
+  display:block;
+  width:24px;
+  font-size:19px;
+  text-align:center;
+  justify-self:center;
+}
+.home-page .elsewhere > a.link-button > span{
+  display:block;
+  min-width:0;
+  text-align:left;
+}
+.home-page .elsewhere > a.link-button > i.link-arrow{
+  display:block;
+  width:16px;
+  font-size:12px;
+  text-align:right;
+  justify-self:end;
+}
+@media(max-width:360px){
+  .home-page .elsewhere > a.link-button{font-size:13px;column-gap:9px}
+}
