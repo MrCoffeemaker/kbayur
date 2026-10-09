@@ -3,11 +3,11 @@
 
 /* Shared page components: homepage and contact */
 .home-page,.contact-page{
-  padding-top:clamp(36px,8vh,72px);
+  padding-top:clamp(28px,5vh,48px);
   padding-bottom:28px;
 }
 .home-page .profile-visual,.contact-page .profile-visual{
-  width:112px;height:112px;margin-bottom:24px;
+  width:112px;height:112px;margin-bottom:16px;
 }
 .home-page .profile-icon,.contact-page .profile-icon{width:96px;height:96px}
 .home-page h1,.contact-page h1{
@@ -27,7 +27,7 @@
 .home-page .link-button,.contact-page .link-button,
 .contact-page #contact-form button.link-button{
   box-sizing:border-box;
-  width:100%;max-width:none;min-height:58px;
+  width:100%;max-width:none;min-height:56px;
   margin:0;padding:12px 20px;
   border:1px solid rgba(255,255,255,.11);
   border-radius:999px;
@@ -42,7 +42,7 @@
   background:rgba(107,140,255,.085);
   border-color:rgba(159,122,234,.55);
 }
-.home-page .elsewhere{margin-top:32px;display:grid;gap:12px}
+.home-page .elsewhere{margin-top:24px;display:grid;gap:12px}
 .home-page .elsewhere > a.link-button{
   display:grid;grid-template-columns:24px minmax(0,1fr) 16px;
   align-items:center;column-gap:12px;text-align:left;
@@ -58,12 +58,12 @@
   color:var(--color-text-secondary);text-align:right;justify-self:end;
 }
 .home-page footer,.contact-page footer{
-  margin-top:24px;padding-top:24px;
+  margin-top:24px;padding-top:20px;
   border-top:1px solid rgba(255,255,255,.06);
 }
 
 /* Contact-specific form layout only */
-.contact-page #form-container{margin-top:32px}
+.contact-page #form-container{margin-top:24px}
 .contact-page #contact-form{max-width:440px;margin:0 auto;text-align:left}
 .contact-page #contact-form label{
   display:block;margin:16px 0 6px;
@@ -98,5 +98,5 @@
   .home-page .elsewhere > a.link-button{padding-inline:16px;column-gap:9px;font-size:13px}
 }
 @media(min-width:700px){
-  .home-page,.contact-page{padding-top:72px;padding-bottom:36px}
+  .home-page,.contact-page{padding-top:48px;padding-bottom:36px}
 }
