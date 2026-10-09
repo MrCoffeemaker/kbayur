@@ -431,3 +431,8 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
 .home-page .neon-word{display:block;width:max-content;max-width:100%;white-space:nowrap;color:inherit;-webkit-text-stroke:0;cursor:inherit;user-select:text;-webkit-user-select:text}
 .home-page .neon-word:nth-child(2){font-size:.89em}
 .home-page .neon-name+.bio{text-align:left;margin:clamp(14px,2.5dvh,24px) 0 0}
+
+/* Mobile home: tighter vertical rhythm while keeping the footer anchored. */
+.home-page.editorial-page .profile-hero{margin-top:clamp(44px,7dvh,76px)}
+.home-page .profile-hero .neon-name{line-height:.98}
+@media(max-height:640px){.home-page.editorial-page .profile-hero{margin-top:24px}}
