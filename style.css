@@ -57,3 +57,27 @@
 /* Keep the homepage footer visually attached to the link stack. */
 .home-page{min-height:0}
 .home-page footer{margin-top:24px;padding-top:24px;border-top:1px solid rgba(255,255,255,.06)}
+
+
+/* Contact page: consistent compact dark design with homepage. */
+.contact-page{padding-top:clamp(32px,7vh,64px)}
+.contact-page .profile-visual{width:112px;height:112px;margin-bottom:24px}
+.contact-page .profile-icon{width:96px;height:96px}
+.contact-page h1{font-size:clamp(2rem,8vw,2.5rem)}
+.contact-page .bio{max-width:350px;margin:8px auto 0;font-size:.93rem;line-height:1.5}
+.contact-page #form-container{margin-top:32px}
+.contact-page #contact-form{max-width:440px;margin:0 auto;text-align:left}
+.contact-page #contact-form label{margin:16px 0 6px;color:var(--color-text-secondary);font-size:.85rem;font-weight:600}
+.contact-page #contact-form label sup{color:var(--color-purple);margin-left:3px}
+.contact-page #contact-form input,.contact-page #contact-form textarea{display:block;width:100%;margin:0;padding:14px 16px;border:1px solid rgba(255,255,255,.13);border-radius:16px;background:rgba(255,255,255,.035);color:var(--color-fg);font:400 16px/1.5 var(--font-family);transition:border-color .18s ease,background .18s ease}
+.contact-page #contact-form textarea{min-height:126px;resize:vertical}
+.contact-page #contact-form input:focus,.contact-page #contact-form textarea:focus{border-color:rgba(159,122,234,.7);background:rgba(255,255,255,.055)}
+.contact-page #contact-form .input-error{border-color:var(--color-error)!important}
+.contact-page #contact-form button.link-button{display:block;width:100%;min-height:56px;margin:24px 0 0;padding:13px 20px;border:1px solid rgba(159,122,234,.55);border-radius:999px;background:linear-gradient(110deg,rgba(107,140,255,.18),rgba(159,122,234,.13));color:var(--color-fg);font:600 15px var(--font-family);cursor:pointer}
+.contact-page .contact-navigation{margin-top:12px;text-align:center}
+.contact-page .contact-navigation .link-button{display:flex;align-items:center;justify-content:center;gap:12px;min-height:56px;margin:0;padding:12px 20px;border:1px solid var(--color-border);border-radius:999px;background:rgba(255,255,255,.025);color:var(--color-fg);font-size:15px;font-weight:600}
+.contact-page .contact-navigation .link-button i{font-size:14px}
+.contact-page #thank-you{margin:32px auto 0}
+.contact-page #thank-you h2{font-size:1.4rem}
+.contact-page #thank-you p{color:var(--color-text-secondary)}
+.contact-page footer{margin-top:24px;padding-top:24px}
