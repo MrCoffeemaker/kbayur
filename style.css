@@ -503,3 +503,27 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
 .home-page.editorial-page .profile-hero .bio .role-line { display: block; }
 .home-page.editorial-page .profile-hero .bio { max-width: 100%; font-size: clamp(10px, 2.9vw, 12px); letter-spacing: -.015em; }
 .home-page.editorial-page .profile-hero .bio .role-line { white-space: nowrap; }
+
+/* Subtle Midnight Aurora accents: preserve the monochrome editorial hierarchy. */
+body:has(.editorial-page) {
+  background:
+    radial-gradient(ellipse 85% 48% at 14% 12%, rgba(99,79,191,.25), transparent 78%),
+    radial-gradient(ellipse 76% 56% at 94% 62%, rgba(64,82,170,.15), transparent 82%),
+    radial-gradient(ellipse 90% 42% at 35% 100%, rgba(103,57,150,.11), transparent 82%),
+    #090b12;
+}
+.editorial-page::before {
+  background:
+    radial-gradient(ellipse 82% 42% at 36% 4%, rgba(117,95,223,.20), transparent 78%),
+    radial-gradient(ellipse 65% 40% at 100% 57%, rgba(76,112,203,.11), transparent 85%);
+  pointer-events: none;
+}
+.editorial-page .editorial-topline,
+.editorial-page .editorial-kicker { color: #b5a8ff; }
+.home-page.editorial-page .elsewhere .editorial-number { color: #a99ee0; }
+.home-page.editorial-page .elsewhere > a.link-button > .link-arrow { color: #b5a8ff; }
+.home-page.editorial-page .elsewhere > a.link-button:hover,
+.home-page.editorial-page .elsewhere > a.link-button:focus-visible {
+  background: rgba(129,117,217,.10);
+  border-bottom-color: rgba(181,168,255,.65);
+}
