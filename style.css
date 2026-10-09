@@ -368,3 +368,10 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
 .contact-page.editorial-page #contact-form .send-arrow{font-size:20px;line-height:1;flex:none}
 .contact-page.editorial-page #contact-form textarea{resize:none;overflow-y:auto}
 @media(min-height:700px){.home-page.editorial-page .sculpture-visual{height:clamp(140px,25dvh,205px);margin-bottom:4px}}
+
+/* Consistent header and footer dividers */
+.editorial-page .editorial-topline{padding-bottom:16px;border-bottom:1px solid rgba(155,149,208,.36);flex-shrink:0}
+.home-page.editorial-page .profile-hero{border-top:0;padding-top:0}
+.contact-page.editorial-page .profile-hero{border-top:0;padding-top:0;margin-top:clamp(22px,4dvh,38px)}
+.editorial-page footer{padding-top:16px}
+@media(max-height:640px){.editorial-page .editorial-topline{padding-bottom:12px}.editorial-page footer{padding-top:12px}.contact-page.editorial-page .profile-hero{margin-top:14px}}
