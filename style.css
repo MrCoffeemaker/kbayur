@@ -332,3 +332,23 @@ body:has(.editorial-page){background:#101013;color:#f3f0eb}
 /* Keep the original KB logo clean: remove the metallic backing plate. */
 .home-page.editorial-page .sculpture-plate{display:none}
 .home-page.editorial-page .profile-icon{border:0;box-shadow:none}
+
+/* Midnight Aurora palette on the editorial layout */
+body:has(.editorial-page){background:#090b12;color:#f4f5fa}
+.editorial-page{color:#f4f5fa}
+.editorial-page::before{display:block;background:radial-gradient(ellipse 78% 38% at 45% 4%,rgba(103,93,208,.16),transparent 80%),radial-gradient(ellipse 65% 43% at 100% 46%,rgba(70,120,202,.075),transparent 85%),radial-gradient(ellipse 60% 35% at 0% 85%,rgba(137,82,187,.055),transparent 85%)}
+.editorial-topline,.editorial-page .editorial-kicker{color:#a8a7c1}
+.editorial-page .bio{color:#adafc2}
+.editorial-page footer{border-top-color:rgba(147,146,189,.22);color:#9698ad}
+.home-page.editorial-page .profile-hero,.contact-page.editorial-page .profile-hero{border-top-color:rgba(155,149,208,.36)}
+.home-page.editorial-page .elsewhere > a.link-button,.home-page.editorial-page .elsewhere > a.link-button:first-of-type{border-color:rgba(147,146,189,.28);color:#f1f2fa}
+.home-page.editorial-page .elsewhere .editorial-number{color:#9c9cbd}
+.home-page.editorial-page .elsewhere > a.link-button > .link-arrow{color:#b9b5e0}
+.home-page.editorial-page .elsewhere > a.link-button:hover,.home-page.editorial-page .elsewhere > a.link-button:focus-visible{background:rgba(111,101,187,.105);border-bottom-color:rgba(157,139,228,.55)}
+.contact-page.editorial-page .editorial-monogram{color:#eceaf8}
+.contact-page.editorial-page #contact-form label{color:#aaaac4}
+.contact-page.editorial-page #contact-form input,.contact-page.editorial-page #contact-form textarea{color:#f4f5fa;border-bottom-color:rgba(147,146,189,.34)}
+.contact-page.editorial-page #contact-form input::placeholder,.contact-page.editorial-page #contact-form textarea::placeholder{color:#85869c}
+.contact-page.editorial-page #contact-form input:focus,.contact-page.editorial-page #contact-form textarea:focus{border-bottom-color:#a89ce7}
+.contact-page.editorial-page #contact-form button.link-button{background:#e8e6f4;color:#151524}
+.contact-page.editorial-page #contact-form button.link-button:hover{background:#fff}
