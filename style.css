@@ -149,9 +149,9 @@
   margin-top:auto;
   padding-top:clamp(12px,2dvh,20px);
 }
-.home-page .elsewhere + footer{
-  margin-top:auto;
-}
+/* Keep the Home footer at the viewport bottom when space is available. */
+.home-page .elsewhere{margin-bottom:auto}
+.home-page .elsewhere + footer{margin-top:24px}
 .contact-page #form-container{
   margin-top:clamp(12px,2.8dvh,24px);
 }
@@ -161,10 +161,10 @@
   font-size:clamp(.75rem,1.65dvh,.85rem);
 }
 .contact-page #contact-form input{
-  height:clamp(44px,6dvh,56px);
+  height:clamp(44px,5.7dvh,52px);
 }
 .contact-page #contact-form textarea{
-  height:clamp(78px,15dvh,152px);
+  height:clamp(78px,13.5dvh,136px);
   min-height:78px;
 }
 .contact-page #contact-form button.link-button{
