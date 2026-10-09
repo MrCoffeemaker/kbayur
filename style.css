@@ -52,3 +52,8 @@
 @media(max-width:360px){
   .home-page .elsewhere > a.link-button{font-size:13px;column-gap:9px}
 }
+
+
+/* Keep the homepage footer visually attached to the link stack. */
+.home-page{min-height:0}
+.home-page footer{margin-top:24px;padding-top:24px;border-top:1px solid rgba(255,255,255,.06)}
