@@ -436,3 +436,9 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
 .home-page.editorial-page .profile-hero{margin-top:clamp(44px,7dvh,76px)}
 .home-page .profile-hero .neon-name{line-height:.98}
 @media(max-height:640px){.home-page.editorial-page .profile-hero{margin-top:24px}}
+
+/* Center the complete name + role group between the header and link divider. */
+.home-page.editorial-page .profile-hero{flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;margin-top:0;padding-top:clamp(36px,5dvh,64px);padding-bottom:clamp(36px,5dvh,64px)}
+.home-page .profile-hero .neon-name{margin-top:0}
+.home-page.editorial-page .elsewhere{margin-top:0;margin-bottom:0}
+@media(max-height:640px){.home-page.editorial-page .profile-hero{margin-top:0;padding-top:28px;padding-bottom:28px}}
