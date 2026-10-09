@@ -361,3 +361,10 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
 /* Geometrically centered SVG back arrow */
 .contact-page.editorial-page .contact-topline .editorial-back{display:inline-flex;align-items:center;gap:10px;line-height:1}
 .contact-page.editorial-page .contact-topline .back-arrow{display:block;flex:none;width:18px;height:18px;transform:none;vertical-align:middle}
+
+/* Final editorial consistency refinements */
+.contact-page.editorial-page .editorial-monogram{font-size:21px;letter-spacing:-.08em}
+.contact-page.editorial-page #contact-form button.link-button{display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left}
+.contact-page.editorial-page #contact-form .send-arrow{font-size:20px;line-height:1;flex:none}
+.contact-page.editorial-page #contact-form textarea{resize:none;overflow-y:auto}
+@media(min-height:700px){.home-page.editorial-page .sculpture-visual{height:clamp(140px,25dvh,205px);margin-bottom:4px}}
