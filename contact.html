@@ -29,27 +29,18 @@
   </script>
 </head>
 <body>
-  <main class="page-shell">
+  <main class="page-shell contact-page">
     <header class="profile-hero">
       <a href="index.html" class="profile-visual" aria-label="Back to Home" style="text-decoration:none;">
         <div class="profile-glow" aria-hidden="true"></div>
         <img class="profile-icon" src="https://gravatar.com/avatar/1428910d05010970d2d1fd5bf523e90a?size=256" alt="Kaan Bayur" />
       </a>
-      <p class="eyebrow">UI/UX Designer + Design Engineer</p>
-      <h1>Kaan Bayur</h1>
-      <p class="hero-statement">Let’s make something <span>interesting.</span></p>
-      <p class="bio">Have a question, project idea or just want to get in touch? Send me a message below.</p>
-      <div class="social-icons">
-        <a href="https://www.instagram.com/kaanbayur/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="contact.html" aria-label="Contact Page" aria-current="page"><i class="fas fa-envelope"></i></a>
-        <a href="https://www.linkedin.com/in/kaanbayur/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-        <a href="https://kbayur.gumroad.com/" target="_blank" rel="noopener noreferrer" aria-label="Gumroad"><i class="fas fa-shopping-cart"></i></a>
-      </div>
+      <h1>Contact Me</h1>
+      <p class="bio">Have a question or project in mind? Send me a message.</p>
     </header>
 
-    <div id="form-container" style="margin-top:48px;">
+    <div id="form-container">
       <form id="contact-form" action="https://formspree.io/f/mvgqkzle" method="POST" novalidate>
-        <h2>Contact Me</h2>
         <label for="name">Name<sup>*</sup></label>
         <input type="text" name="name" id="name" autocomplete="name" required />
         <label for="email">Email<sup>*</sup></label>
@@ -57,8 +48,8 @@
         <label for="message">Message<sup>*</sup></label>
         <textarea name="message" id="message" rows="5" required></textarea>
         <button type="submit" class="link-button">Send Message</button>
-        <div class="elsewhere contact-navigation" style="margin-top:0;text-align:center;">
-          <a href="index.html" class="link-button" style="text-align:center;">Back to Home</a>
+        <div class="elsewhere contact-navigation">
+          <a href="index.html" class="link-button"><i class="fas fa-arrow-left" aria-hidden="true"></i><span>Back to Home</span></a>
         </div>
       </form>
     </div>
@@ -66,8 +57,8 @@
     <div id="thank-you" role="status" aria-live="polite">
       <h2>Thank you!</h2>
       <p>Your message has been sent successfully.</p>
-      <div class="elsewhere contact-navigation" style="margin-top:24px;text-align:center;">
-        <a href="index.html" class="link-button" style="text-align:center;">Back to Home</a>
+      <div class="elsewhere contact-navigation">
+        <a href="index.html" class="link-button"><i class="fas fa-arrow-left" aria-hidden="true"></i><span>Back to Home</span></a>
       </div>
     </div>
 
