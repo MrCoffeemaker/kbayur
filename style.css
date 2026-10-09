@@ -448,3 +448,8 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
 .editorial-page .editorial-topline{min-height:36px;padding-bottom:12px}
 .editorial-page footer{min-height:36px;padding-top:12px}
 @media(max-height:640px){.editorial-page{--editorial-rule-gap:10px}.editorial-page .editorial-topline{min-height:32px;padding-bottom:10px}.editorial-page footer{min-height:32px;padding-top:10px}}
+
+/* Compact hero section: eliminate oversized empty space above/below the name. */
+.home-page.editorial-page .profile-hero{flex:0 0 auto;margin-top:clamp(28px,4dvh,44px);padding-top:0;padding-bottom:clamp(28px,4dvh,44px)}
+.home-page.editorial-page .elsewhere{margin-top:0;margin-bottom:0}
+@media(max-height:640px){.home-page.editorial-page .profile-hero{margin-top:24px;padding-bottom:24px}}
