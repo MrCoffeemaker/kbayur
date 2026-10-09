@@ -425,13 +425,12 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
 /* Footer location on both pages */
 .editorial-page footer{justify-content:space-between}
 
-/* Interactive outlined lettering: natural glyph spacing, no overlapping strokes. */
+/* Clean uninterrupted live-text outline; tap each word for neon flicker. */
 .home-page .profile-hero{text-align:left}
-.home-page .profile-hero .neon-name{display:block;width:100%;margin:clamp(24px,5dvh,46px) 0 0;font-family:var(--font-family);font-size:clamp(50px,15vw,84px);font-weight:900;line-height:1.08;letter-spacing:0}
-.home-page .neon-word{display:block;white-space:nowrap;font-kerning:none;letter-spacing:0}
-.home-page .neon-letter{display:inline-block;letter-spacing:0;color:transparent;-webkit-text-stroke:1.2px var(--color-fg);cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation}
-.home-page .neon-word:nth-child(2){font-size:.93em}
+.home-page .profile-hero .neon-name{display:block;width:100%;margin:clamp(24px,5dvh,46px) 0 0;font-family:var(--font-family);font-size:clamp(52px,16vw,96px);font-weight:900;line-height:1.08;letter-spacing:-.045em}
+.home-page .neon-word{display:block;width:max-content;max-width:100%;white-space:nowrap;color:transparent;-webkit-text-stroke:1.3px var(--color-fg);cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.home-page .neon-word:nth-child(2){font-size:.89em}
 .home-page .neon-name+.bio{text-align:left;margin:clamp(14px,2.5dvh,24px) 0 0}
-@keyframes name-neon-flicker{0%,13%,28%,43%,61%,78%,100%{color:transparent;-webkit-text-stroke:1.2px var(--color-fg);text-shadow:none}5%,19%,35%,49%,68%,85%{color:#fff;-webkit-text-stroke:1px #fff;text-shadow:0 0 8px #fff,0 0 19px #9f7aea,0 0 35px #6b8cff}}
-.home-page .neon-letter.is-flashing{animation:name-neon-flicker .8s steps(1,end) both}
-@media(prefers-reduced-motion:reduce){.home-page .neon-letter.is-flashing{animation:none;color:#fff}}
+@keyframes name-neon-flicker{0%,13%,28%,43%,61%,78%,100%{color:transparent;-webkit-text-stroke:1.3px var(--color-fg);text-shadow:none}5%,19%,35%,49%,68%,85%{color:#fff;-webkit-text-stroke:1px #fff;text-shadow:0 0 8px #fff,0 0 19px #9f7aea,0 0 35px #6b8cff}}
+.home-page .neon-word.is-flashing{animation:name-neon-flicker .8s steps(1,end) both}
+@media(prefers-reduced-motion:reduce){.home-page .neon-word.is-flashing{animation:none;color:#fff}}
