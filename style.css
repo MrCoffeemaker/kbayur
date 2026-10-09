@@ -21,7 +21,7 @@
   line-height:1.5;
 }
 .home-page .bio{max-width:440px}
-.contact-page .bio{max-width:340px;text-wrap:balance}
+.contact-page .bio{max-width:290px;text-wrap:balance}
 
 /* Shared pill buttons, including links and form actions */
 .home-page .link-button,.contact-page .link-button,
