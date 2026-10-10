@@ -9,7 +9,7 @@
 <meta name="description" content="A free creative shader playground. Compose procedural artwork, images, text and shapes in layers and export your work. Built by Kaan Bayur.">
 <link rel="canonical" href="https://www.kaanbayur.com/shader-lab/">
 <link rel="icon" href="/images/favicon.ico">
-<link rel="stylesheet" href="./style.css?v=1">
+<link rel="stylesheet" href="./style.css?v=2">
 </head>
 <body>
 <div class="app">
@@ -78,7 +78,7 @@
         <span id="canvas-status"><span class="live-dot"></span> READY</span>
         <div class="canvas-footer-controls">
           <label for="aspect">FORMAT</label><select id="aspect" aria-label="Canvas aspect ratio"><option value="4:5">4:5 Portrait</option><option value="1:1">1:1 Square</option><option value="16:9">16:9 Landscape</option><option value="9:16">9:16 Story</option><option value="4:1">4:1 Banner</option></select>
-          <label for="export-size">SIZE</label><select id="export-size" aria-label="Export resolution"><option value="1">Standard</option><option value="2">2× HD</option></select>
+          <label for="export-size">SIZE</label><select id="export-size" aria-label="Export resolution"><option value="1">Standard</option><option value="2">2× HD</option><option value="3">3× Ultra</option></select>
         </div>
       </div>
       <div class="workspace-bottom"><span>REAL-TIME GENERATIVE ART</span><span>SCROLL THROUGH LAYERS · EXPERIMENT FREELY</span></div>
@@ -100,12 +100,41 @@
       <footer class="app-footer"><a href="/">© 2026 KAAN BAYUR</a><span>DESIGNED TO EXPERIMENT</span></footer>
     </aside>
   </div>
+  <div class="mobile-sheet-scrim" id="sheet-scrim" aria-hidden="true"></div>
+  <nav class="mobile-dock" aria-label="Creative tools">
+    <button type="button" data-dock="add" aria-label="Browse effects"><span class="dock-symbol">✦</span><span>Add</span></button>
+    <button type="button" data-dock="layers" aria-label="Open layer stack"><span class="dock-symbol">▤</span><span>Layers</span></button>
+    <button type="button" data-dock="controls" aria-label="Edit selected layer"><span class="dock-symbol">☷</span><span>Adjust</span></button>
+    <button type="button" data-dock="presets" aria-label="Browse presets"><span class="dock-symbol">◈</span><span>Looks</span></button>
+    <button type="button" data-dock="export" aria-label="Export artwork"><span class="dock-symbol">↥</span><span>Export</span></button>
+  </nav>
 </div>
+<dialog id="shader-browser" class="creative-dialog">
+  <div class="browser-shell">
+    <div class="browser-top"><div><p class="section-kicker">KAAN / CREATIVE LIBRARY</p><h2>Add something interesting.</h2></div><button type="button" id="close-browser" class="dialog-close" aria-label="Close effect browser">✕</button></div>
+    <input type="search" id="shader-search" placeholder="Search effects, shapes and styles…" autocomplete="off" aria-label="Find an effect">
+    <div class="browser-categories" id="browser-categories" role="group" aria-label="Effect categories"></div>
+    <div class="browser-grid" id="browser-grid" aria-live="polite"></div>
+  </div>
+</dialog>
+<dialog id="export-dialog" class="creative-dialog export-dialog">
+  <div class="browser-shell">
+    <div class="browser-top"><div><p class="section-kicker">OUTPUT / TAKE IT WITH YOU</p><h2>Export your artwork.</h2></div><button type="button" id="close-export" class="dialog-close" aria-label="Close export panel">✕</button></div>
+    <p class="export-intro">Create something worth sharing. Your work is processed locally, right in this browser.</p>
+    <div class="export-tile-grid">
+      <button type="button" data-export="png"><strong>↓ PNG</strong><span>High-quality still image</span></button>
+      <button type="button" data-export="webp"><strong>↓ WebP</strong><span>Compact still image</span></button>
+      <button type="button" data-export="webm"><strong>● WebM</strong><span>6-second animated clip</span></button>
+      <button type="button" data-export="project"><strong>▧ Save project</strong><span>Keep editing later</span></button>
+    </div>
+    <p class="helper">Exports may take a few seconds. Large effects run best on newer phones.</p>
+  </div>
+</dialog>
 <input id="media-input" type="file" accept="image/*,video/*" hidden>
 <input id="project-input" type="file" accept=".shaderlab,.json,application/json" hidden>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <dialog id="help-dialog"><div class="dialog-inner"><div class="section-split"><h2>SHADER LAB / NOTES</h2><button type="button" id="close-help" aria-label="Close dialog">✕</button></div><p>A layered generative canvas. Add shapes, images, text and procedural patterns, rearrange them, then dial in every layer from the inspector.</p><p>Image shaders and blur affect the layers beneath them. The default Liquid Gold artwork is generated live, not a static image.</p><p>Save a <strong>.shaderlab</strong> file to preserve settings. Images are embedded in the file; video clips are session-only and must be reimported. Export PNG for a still, or record a short WebM animation.</p><p><strong>Keys:</strong> Ctrl/⌘+Z undo, Ctrl/⌘+Shift+Z redo, Space play/pause (outside inputs). Drag an image or video onto the canvas to add it.</p><button type="button" class="button accent" id="close-help-bottom">Back to studio</button></div></dialog>
-<script src="./engine.js?v=1" defer></script>
-<script src="./app.js?v=1" defer></script>
+<script src="./engine.js?v=2" defer></script>
+<script src="./app.js?v=2" defer></script>
 </body>
 </html>
