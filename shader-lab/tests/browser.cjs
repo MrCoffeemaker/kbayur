@@ -113,6 +113,42 @@ async function captureDownload(page,action){
    await page.waitForTimeout(170);
    assert(await page.locator('#layer-list .layer-item').count()>=3);
   });
+  await test('Uploaded photos survive project save and IndexedDB reload',async()=>{
+   const png=await page.locator('#art').screenshot();
+   await page.locator('#media-input').setInputFiles({name:'test-photo.png',mimeType:'image/png',buffer:png});
+   await page.waitForTimeout(600);
+   assert((await page.locator('#layer-list').innerText()).includes('test-photo.png'));
+   await page.locator('[data-dock="export"]').click();
+   const saved=await captureDownload(page,()=>page.locator('[data-export="project"]').click());
+   const obj=JSON.parse(saved.buffer.toString());
+   assert(obj.layers.some(l=>l.type==='image'&&l.params.source.startsWith('data:image/')));
+   await page.waitForTimeout(1000);
+   await page.reload({waitUntil:'domcontentloaded'});
+   await page.waitForTimeout(1100);
+   assert((await page.locator('#layer-list').innerText()).includes('test-photo.png'),'Image should reload from IndexedDB');
+  });
+  await test('Small videos are embedded in saved project files',async()=>{
+   const source=await page.evaluate(async()=>{
+    if(typeof MediaRecorder==='undefined'||!HTMLCanvasElement.prototype.captureStream)return null;
+    const c=document.createElement('canvas');c.width=64;c.height=64;
+    const context=c.getContext('2d');context.fillStyle='#ba85fc';context.fillRect(0,0,64,64);
+    const stream=c.captureStream(10);
+    if(!MediaRecorder.isTypeSupported('video/webm'))return null;
+    const rec=new MediaRecorder(stream,{mimeType:'video/webm'}),chunks=[];
+    rec.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+    const complete=new Promise(resolve=>{rec.onstop=()=>resolve(new Blob(chunks,{type:'video/webm'}))});
+    rec.start();await new Promise(r=>setTimeout(r,400));rec.stop();
+    const blob=await complete;stream.getTracks().forEach(track=>track.stop());
+    return new Promise(resolve=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.readAsDataURL(blob)});
+   });
+   if(!source){console.log('NOTE MediaRecorder not supported, video fixture skipped');return;}
+   await page.locator('#media-input').setInputFiles({name:'test-clip.webm',mimeType:'video/webm',buffer:Buffer.from(source,'base64')});
+   await page.waitForTimeout(700);
+   await page.locator('[data-dock="export"]').click();
+   const saved=await captureDownload(page,()=>page.locator('[data-export="project"]').click());
+   const obj=JSON.parse(saved.buffer.toString());
+   assert(obj.layers.some(l=>l.type==='video'&&l.params.source.startsWith('data:video/')),'Small videos should be embedded');
+  });
   await test('Five 3D primitives selectable with no JavaScript crashes',async()=>{
    await page.locator('[data-dock="add"]').click();
    await page.locator('#shader-search').fill('3D Object');
