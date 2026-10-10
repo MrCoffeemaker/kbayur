@@ -527,3 +527,21 @@ body:has(.editorial-page) {
   background: rgba(129,117,217,.10);
   border-bottom-color: rgba(181,168,255,.65);
 }
+
+/* Contact form: distinguish permanent labels from example placeholders. */
+.contact-page.editorial-page #contact-form label {
+  color: #b5a8ff;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  margin-bottom: 12px;
+}
+.contact-page.editorial-page #contact-form input::placeholder,
+.contact-page.editorial-page #contact-form textarea::placeholder {
+  color: #77788e;
+  opacity: 1;
+  font-weight: 400;
+}
+.contact-page.editorial-page #contact-form input:focus,
+.contact-page.editorial-page #contact-form textarea:focus {
+  border-bottom-color: #b5a8ff;
+}
