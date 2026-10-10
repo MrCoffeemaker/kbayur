@@ -206,11 +206,30 @@ async function captureDownload(page,action){
    assert.equal(downloaded.buffer.readUInt32BE(20),1800);
    await page.locator('#export-size').selectOption('1');
   });
+  await test('Five GPU-rendered 3D objects produce different images',async()=>{
+   const signatures=await page.evaluate(()=>{
+    if(!window.Kaan3D)return null;
+    return ['sphere','torus','box','cylinder','plane'].map(geometry=>{
+     const canvas=window.Kaan3D.render({geometry,color1:'#ffc1e3',color2:'#3f318f',tilt:35,rotate:23,speed:.4},.4,210);
+     return canvas?canvas.toDataURL('image/png').slice(0,5000):null;
+    });
+   });
+   assert(signatures&&signatures.every(Boolean),'WebGL renderer must generate a canvas on Chromium');
+   assert.equal(new Set(signatures).size,5,'Each 3D primitive must render differently');
+  });
   await test('Preset library applies distinct composition',async()=>{
    await page.locator('[data-dock="presets"]').click();
    await page.locator('.browser-card[data-kind="looks"][data-shader="pixel"]').click();
    assert.equal(await page.locator('#project-name').inputValue(),'Pixel Flux');
    assert.equal(await page.locator('#layer-list .layer-item').count(),2);
+  });
+  await test('Animated video recording downloads playable video bytes',async()=>{
+   const support=await page.evaluate(()=>Boolean(HTMLCanvasElement.prototype.captureStream&&window.MediaRecorder));
+   if(!support){console.log('NOTE MediaRecorder unavailable, export scenario skipped');return;}
+   await page.locator('[data-dock="export"]').click();
+   const saved=await captureDownload(page,()=>page.locator('[data-export="webm"]').click());
+   assert.match(saved.name,/\.(webm|mp4)$/i);
+   assert(saved.buffer.length>900,'Video file should contain encoded frames');
   });
   await test('Canvas remains visibly accessible with controls open',async()=>{
    await page.locator('[data-dock="controls"]').click();
