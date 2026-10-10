@@ -83,7 +83,7 @@ function render(p,t,size){
  gl.bindBuffer(gl.ARRAY_BUFFER,r.buffer);gl.bufferData(gl.ARRAY_BUFFER,mesh,gl.STATIC_DRAW);
  gl.useProgram(r.program);const u=r.uniforms;
  gl.uniform1f(u.uTime,t);gl.uniform1f(u.uSpin,(Number(p.rotate)||0)*Math.PI/180);
- gl.uniform1f(u.uTilt,(Number(p.tilt)??25)*Math.PI/180);
+ gl.uniform1f(u.uTilt,Number(p.tilt??25)*Math.PI/180);
  gl.uniform1f(u.uSpeed,Number(p.speed??.4));gl.uniform1f(u.uMode,shape==='plane'?4:0);
  gl.uniform3fv(u.uLightColor,colour(p.color1||'#d6b4ff'));gl.uniform3fv(u.uDarkColor,colour(p.color2||'#1b1640'));
  gl.drawArrays(gl.TRIANGLES,0,mesh.length/6);gl.flush();
