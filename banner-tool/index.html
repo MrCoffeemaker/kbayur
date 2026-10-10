@@ -48,16 +48,28 @@ let detailVariant=0;
 function makeArtwork(regenerate=true){
 if(regenerate){detailVariant=0;const randomSeed=new Uint32Array(1);crypto.getRandomValues(randomSeed);seed=(randomSeed[0]^(++count*2654435761))>>>0;}let rand=rng(seed);const R=(a,b)=>a+(b-a)*rand();
 const qualityFactor=qualityMode==='eco'?.48:qualityMode==='ultra'?1.45:(matchMedia('(pointer:coarse)').matches?.7:1);const density=+$('density').value/100,depth=+$('depth').value/100,variation=+$('variation').value/100,influence=reference?+$('strength').value/100:0,structure=reference?+$('structure').value/100:.65;
-const followImage=!!reference&&$('referenceMode').value==='follow';const signature=reference&&!followImage?reference:null;const mode=followImage?5:signature?(signature.radial>signature.edgeEnergy*.54?3:signature.horizontal>signature.vertical*1.22?0:signature.vertical>signature.horizontal*1.22?4:signature.contrast>.22?2:1):6,phase=R(0,Math.PI*2),twist=R(1.2,3.8),turns=R(1.7,3.2),skew=R(-.5,.5),bend=R(.3,.7),traceStyle=Math.floor(R(0,4)),traceWarp=R(.55,1.25),traceFreq=R(1.5,4.8),traceAngle=R(-1.1,1.1),traceRelief=R(.65,1.6),shape=new T.Group();shape.userData.mode=mode;
+const followImage=!!reference&&$('referenceMode').value==='follow';const signature=reference&&!followImage?reference:null;const mode=followImage?5:6,phase=R(0,Math.PI*2),twist=R(1.2,3.8),turns=R(1.7,3.2),skew=R(-.5,.5),bend=R(.3,.7),traceStyle=Math.floor(R(0,4)),traceWarp=R(.55,1.25),traceFreq=R(1.5,4.8),traceAngle=R(-1.1,1.1),traceRelief=R(.65,1.6),shape=new T.Group();shape.userData.mode=mode;
 // Seeded multi-attractor flow field: each generation invents its own spatial structure.
 const attractors=Array.from({length:4+Math.floor(R(0,5))},()=>({x:R(-3.2,3.2),y:R(-1.8,1.8),z:R(-1.8,1.8),power:R(-1.7,1.7),spin:R(-1.5,1.5),radius:R(.35,1.8)}));
-const freeParams={curl:R(.6,2.9),freq:R(.65,2.8),fold:R(.25,1.4),phaseA:R(0,6.283),phaseB:R(0,6.283),stretch:R(.65,1.45),offset:R(-1.2,1.2)};
-function freeform(u,v){let x=u*3.8*freeParams.stretch,y=v*1.95,z=Math.sin(u*freeParams.freq*5+freeParams.phaseA)*freeParams.fold;
- for(let k=0;k<3;k++){let dx=0,dy=0,dz=0;for(const a of attractors){const rx=x-a.x,ry=y-a.y,rz=z-a.z,dist=a.radius+rx*rx+ry*ry+rz*rz;const force=a.power/dist,swirl=a.spin/dist;dx+=-rx*force-ry*swirl;dy+=-ry*force+rx*swirl;dz+=-rz*force+Math.sin(rx*freeParams.curl+freeParams.phaseB)*swirl;}
+const freeParams={curl:R(.6,2.9),freq:R(.65,3.4),fold:R(.25,1.7),phaseA:R(0,6.283),phaseB:R(0,6.283),stretch:R(.6,1.6),offset:R(-1.2,1.2),radial:R(.02,.95),coil:R(.5,2.35),ring:R(.7,2.0),braid:R(.1,1.5),foldU:R(1.5,6.0),foldV:R(1.5,5.8),tilt:R(-.65,.65),scatter:R(.3,1.2),orientation:signature?clamp((signature.horizontal-signature.vertical)/(signature.horizontal+signature.vertical+.0001),-1,1)*influence:0};
+function freeform(u,v){
+ const p=freeParams,angle=u*Math.PI*p.coil*2+p.phaseA,rad=p.ring+v*.46;
+ const sheetX=u*3.8*p.stretch*(1+p.orientation*.22),sheetY=v*1.95*(1-p.orientation*.15);
+ let x=T.MathUtils.lerp(sheetX,Math.cos(angle)*rad*2.1,p.radial);
+ let y=T.MathUtils.lerp(sheetY,Math.sin(angle)*rad*1.45,p.radial);
+ let z=T.MathUtils.lerp(Math.sin(u*p.freq*5+p.phaseA)*p.fold,Math.sin(angle*.7+v*3+p.phaseB)*1.4+u*p.tilt*3,p.radial*.78);
+ x+=Math.sin(v*p.foldV+p.phaseB)*p.braid*.35;
+ y+=Math.sin(u*p.foldU+p.phaseA)*p.braid*.32;
+ z+=Math.cos(u*p.foldU+v*p.foldV+p.phaseB)*p.fold*.48;
+ for(let k=0;k<3;k++){let dx=0,dy=0,dz=0;for(const a of attractors){
+ const rx=x-a.x,ry=y-a.y,rz=z-a.z,dist=a.radius+rx*rx+ry*ry+rz*rz,force=a.power/dist,swirl=a.spin/dist;
+ dx+=-rx*force-ry*swirl;dy+=-ry*force+rx*swirl;dz+=-rz*force+Math.sin(rx*p.curl+p.phaseB)*swirl;
+ }
  x+=clamp(dx,-1.8,1.8)*.19;y+=clamp(dy,-1.8,1.8)*.19;z+=clamp(dz,-1.8,1.8)*.25;
  }
- const w=Math.sin(x*freeParams.freq+freeParams.phaseB)*Math.cos(y*freeParams.curl+freeParams.phaseA);
- return[x+Math.sin(y*freeParams.curl+freeParams.phaseA)*variation*.35,y+w*variation*.55,z+w*freeParams.fold+freeParams.offset*.35];
+ const w=Math.sin(x*p.freq+p.phaseB)*Math.cos(y*p.curl+p.phaseA);
+ const ripple=Math.sin((u*p.foldU+v*p.foldV)*p.scatter+p.phaseA)*Math.cos(v*3+p.phaseB);
+ return[x+Math.sin(y*p.curl+p.phaseA)*variation*.35,y+w*variation*.55+u*p.tilt*.3,z+w*p.fold+p.offset*.35+ripple*variation*.55];
 }
 function surface(u,v){let x=0,y=0,z=0,a,b,rr;
 if(mode===6){[x,y,z]=freeform(u,v);
@@ -75,17 +87,7 @@ if(mode===6){[x,y,z]=freeform(u,v);
  x=px+Math.sin(v*5+phase)*amp*.35;y=py+Math.cos(u*5+phase)*amp*.35;z=relief*traceRelief+Math.sin(Math.hypot(u*3,v*3)*traceFreq+phase)*amp*1.45;
  }
  z*=.45+depth*.85;
-}else if(mode===0){ // woven architectural ribbon
- x=u*5.3;y=v*1.35+Math.sin(u*twist+phase)*bend;z=Math.sin(u*2.6+v*2.3+phase)*1.15+v*.6;
-}else if(mode===1){ // toroidal architecture
- a=u*Math.PI*2; b=v*Math.PI*2;rr=2.15+.68*Math.cos(b*2+phase);x=(rr+.55*Math.cos(b))*Math.cos(a);y=(rr+.55*Math.cos(b))*Math.sin(a)*.64;z=1.15*Math.sin(b)+.5*Math.sin(a*3+phase);
-}else if(mode===2){ // sculptural spiral helix
- a=(u+1)*Math.PI*turns;rr=1.4+.75*v;x=(u*2.5)+Math.cos(a+v*1.8)*rr*.68;y=Math.sin(a+v*1.8)*rr*.76;z=Math.cos(a*.65+phase)*1.1+v*.75;
-}else if(mode===3){ // crystalline radial fins
- a=u*Math.PI*2;rr=1.05+(v+1)*1.4;let facet=Math.floor((a+Math.PI)/(Math.PI/5));x=rr*Math.cos(a)+Math.sin(facet*2.3+phase)*.25;y=rr*Math.sin(a)*.67;z=Math.sin(a*5+phase)*1.1+(v+.2)*.65;
-}else{ // branching vault
- x=u*5.1;y=Math.sin(u*4.5+phase)*.85+v*1.15;z=Math.cos(u*3+phase)*1.25+Math.sin(v*5+u*3)*.85;x+=Math.sin(v*3+phase)*.4;
-}
+}else{[x,y,z]=freeform(u,v)}
 const f=dna(u,v);const fidelity=influence*(.3+structure*.7);if(reference&&!followImage){const contour=Math.min(1,f.e*3.4),flowX=f.gy*2.5,flowY=-f.gx*2.5;z+=(f.l-reference.mean)*fidelity*2.9+contour*fidelity*1.25;y+=flowY*fidelity*1.1+Math.sin(u*8+v*5)*contour*fidelity*.23;x+=flowX*fidelity*.95;const silhouette=(f.l-reference.mean)*fidelity*.35;x+=Math.cos(u*3.14)*silhouette;y+=Math.sin(v*3.14)*silhouette}z*=.55+depth*.75;x+=skew*y*.15;return[x,y,z]}
 // Preserve seed-driven architecture; vary only particle placement and surface micro-details.
 if(detailVariant)rand=rng((seed^Math.imul(detailVariant,0x9E3779B9))>>>0);
@@ -126,7 +128,7 @@ old.userData.fadeOut={start:performance.now(),duration:1350};
 transition={old};
 scene.add(shape)}
 else{scene.add(shape);shape.userData.birth={start:performance.now(),duration:2400}};
-group=shape;applyMotion();$('seedInput').value=seed.toString(16).toUpperCase().padStart(8,'0');$('seed').textContent='· '+['RIBBON','TORUS','HELIX','CRYSTAL','VAULT','IMAGE TRACE','FREEFORM'][mode];
+group=shape;applyMotion();$('seedInput').value=seed.toString(16).toUpperCase().padStart(8,'0');$('seed').textContent='· '+(followImage?'IMAGE TRACE':signature?'IMAGE INSPIRED':'FREEFORM');
 }
 function dispose(g){g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.userData?.glyphTexture)o.userData.glyphTexture.dispose();if(o.material){const mats=Array.isArray(o.material)?o.material:[o.material];mats.forEach(m=>m.dispose())}});scene.remove(g)}
 function setGroupOpacity(g,factor){g.traverse(o=>{const m=o.material;if(!m)return;if(m.uniforms?.uOpacity){m.uniforms.uOpacity.value=factor;return}if(m.uniforms?.uAlpha){m.uniforms.uAlpha.value=(m.userData?.baseAlpha??m.uniforms.uAlpha.value)*factor;return}if(m.uniforms?.uFlow){m.uniforms.uFlow.value=+$('flow').value/100*factor;return}if(m.transparent&&typeof m.opacity==='number'){if(m.userData.baseOpacity==null)m.userData.baseOpacity=m.opacity;m.opacity=m.userData.baseOpacity*factor}})}
