@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a0b10">
+<meta name="color-scheme" content="dark">
+<title>KAAN / Shader Lab</title>
+<meta name="description" content="A free creative shader playground. Compose procedural artwork, images, text and shapes in layers and export your work. Built by Kaan Bayur.">
+<link rel="canonical" href="https://www.kaanbayur.com/shader-lab/">
+<link rel="icon" href="/images/favicon.ico">
+<link rel="stylesheet" href="./style.css?v=1">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="identity"><a class="back" href="/" aria-label="Back to Kaan Bayur">↖ <span>KAAN BAYUR</span></a><span class="slash">/</span><span class="product">SHADER LAB</span><span class="version">BETA 01</span></div>
+    <div class="top-actions">
+      <span class="autosave" id="save-status">LOCAL STUDIO</span>
+      <button type="button" class="icon-button" id="undo" aria-label="Undo" title="Undo (Ctrl+Z)">↶</button>
+      <button type="button" class="icon-button" id="redo" aria-label="Redo" title="Redo (Ctrl+Shift+Z)">↷</button>
+      <button type="button" class="button subtle" id="new-project">New</button>
+      <button type="button" class="button subtle" id="open-project">Open</button>
+      <button type="button" class="button subtle" id="save-project">Save</button>
+      <button type="button" class="button accent" id="export-png">↓ <span>Export PNG</span></button>
+    </div>
+  </header>
+  <div class="mobile-switch" role="tablist" aria-label="Studio panels">
+    <button type="button" data-mobile="canvas" role="tab" aria-selected="true">Canvas</button>
+    <button type="button" data-mobile="layers" role="tab" aria-selected="false">Layers</button>
+    <button type="button" data-mobile="controls" role="tab" aria-selected="false">Controls</button>
+  </div>
+  <div class="studio" id="studio">
+    <aside class="sidebar layers-panel" aria-label="Layers">
+      <div class="panel-heading"><span>01 / COMPOSITION</span><button type="button" class="help-button" id="help" title="About this tool">?</button></div>
+      <div class="panel-title-row"><h2>Layers</h2><span id="layer-count" class="count">00</span></div>
+      <div class="add-panel">
+        <div class="add-row">
+          <button type="button" class="add-highlight" data-add="procedural">+ &nbsp; Procedural</button>
+          <button type="button" class="add-highlight" data-add="image-shader">+ &nbsp; Image Shader</button>
+        </div>
+        <div class="add-grid">
+          <button type="button" data-add="text"><span class="add-icon">T</span>Text</button>
+          <button type="button" data-add="shape"><span class="add-icon">□</span>Shape</button>
+          <button type="button" data-add="color"><span class="add-icon">◉</span>Color</button>
+          <button type="button" data-add="image"><span class="add-icon">▧</span>Image</button>
+          <button type="button" data-add="video"><span class="add-icon">▣</span>Video</button>
+          <button type="button" data-add="sphere"><span class="add-icon">⬡</span>3D</button>
+          <button type="button" data-add="blur"><span class="add-icon">◎</span>Blur</button>
+          <button type="button" id="browse-presets"><span class="add-icon">✧</span>Presets</button>
+        </div>
+      </div>
+      <p class="micro-heading">LAYER STACK <span>TOP FIRST</span></p>
+      <div class="layer-list" id="layer-list" aria-label="Layer stack"></div>
+      <div class="presets-area">
+        <div class="section-split"><h3>Quick presets</h3><span>START HERE</span></div>
+        <div class="preset-grid" id="preset-grid"></div>
+      </div>
+      <div class="aside-foot">DRAG TO REORDER <span>·</span> OR USE ARROWS</div>
+    </aside>
+    <main class="workspace" aria-label="Canvas workspace">
+      <div class="workspace-header">
+        <div class="project-title"><label for="project-name">PROJECT /</label><input id="project-name" spellcheck="false" maxlength="60" value="Liquid Gold"></div>
+        <div class="workspace-tools">
+          <button type="button" class="pill" id="randomize" title="Randomise the selected procedural layer">✳ Randomise</button>
+          <button type="button" class="pill" id="motion-toggle" aria-pressed="false">▶ Animate</button>
+          <button type="button" class="pill" id="reset-view">↺ Reset</button>
+        </div>
+      </div>
+      <div class="canvas-space" id="drop-zone">
+        <div class="canvas-outline" id="canvas-outline">
+          <canvas id="art" width="720" height="900" aria-label="Live composition preview"></canvas>
+          <div class="canvas-watermark">KAAN / SHADER LAB <span>LIVE CANVAS</span></div>
+        </div>
+        <div class="drop-indicator" id="drop-indicator">DROP IMAGE OR VIDEO TO ADD LAYER</div>
+      </div>
+      <div class="canvas-footer">
+        <span id="canvas-status"><span class="live-dot"></span> READY</span>
+        <div class="canvas-footer-controls">
+          <label for="aspect">FORMAT</label><select id="aspect" aria-label="Canvas aspect ratio"><option value="4:5">4:5 Portrait</option><option value="1:1">1:1 Square</option><option value="16:9">16:9 Landscape</option><option value="9:16">9:16 Story</option><option value="4:1">4:1 Banner</option></select>
+          <label for="export-size">SIZE</label><select id="export-size" aria-label="Export resolution"><option value="1">Standard</option><option value="2">2× HD</option></select>
+        </div>
+      </div>
+      <div class="workspace-bottom"><span>REAL-TIME GENERATIVE ART</span><span>SCROLL THROUGH LAYERS · EXPERIMENT FREELY</span></div>
+    </main>
+    <aside class="sidebar inspector-panel" aria-label="Selected layer controls">
+      <div class="panel-heading">02 / PARAMETERS <span>LIVE EDIT</span></div>
+      <div class="panel-title-row"><h2>Inspector</h2><span id="inspector-type" class="count">FX</span></div>
+      <div id="inspector" class="inspector-body"></div>
+      <section class="export-section">
+        <div class="section-split"><h3>Export & files</h3><span>YOUR CANVAS</span></div>
+        <div class="export-grid">
+          <button type="button" id="export-png-side">↓ PNG image</button>
+          <button type="button" id="export-webm">● Record WebM</button>
+          <button type="button" id="save-project-side">↓ Project file</button>
+          <button type="button" id="load-project-side">↑ Load project</button>
+        </div>
+        <p class="helper">Works in your browser. Your artwork and uploaded media stay on your device.</p>
+      </section>
+      <footer class="app-footer"><a href="/">© 2026 KAAN BAYUR</a><span>DESIGNED TO EXPERIMENT</span></footer>
+    </aside>
+  </div>
+</div>
+<input id="media-input" type="file" accept="image/*,video/*" hidden>
+<input id="project-input" type="file" accept=".shaderlab,.json,application/json" hidden>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<dialog id="help-dialog"><div class="dialog-inner"><div class="section-split"><h2>SHADER LAB / NOTES</h2><button type="button" id="close-help" aria-label="Close dialog">✕</button></div><p>A layered generative canvas. Add shapes, images, text and procedural patterns, rearrange them, then dial in every layer from the inspector.</p><p>Image shaders and blur affect the layers beneath them. The default Liquid Gold artwork is generated live, not a static image.</p><p>Save a <strong>.shaderlab</strong> file to preserve settings. Images are embedded in the file; video clips are session-only and must be reimported. Export PNG for a still, or record a short WebM animation.</p><p><strong>Keys:</strong> Ctrl/⌘+Z undo, Ctrl/⌘+Shift+Z redo, Space play/pause (outside inputs). Drag an image or video onto the canvas to add it.</p><button type="button" class="button accent" id="close-help-bottom">Back to studio</button></div></dialog>
+<script src="./app.js?v=1" defer></script>
+</body>
+</html>
