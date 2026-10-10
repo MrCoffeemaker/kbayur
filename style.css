@@ -149,9 +149,6 @@
   margin-top:auto;
   padding-top:clamp(12px,2dvh,20px);
 }
-/* Keep the Home footer at the viewport bottom when space is available. */
-.home-page .elsewhere{margin-bottom:auto}
-.home-page .elsewhere + footer{margin-top:24px}
 .contact-page #form-container{
   margin-top:clamp(12px,2.8dvh,24px);
 }
@@ -401,7 +398,9 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
   padding-top: 0;
   margin-top: var(--editorial-hero-gap);
 }
-.editorial-page footer {
+.editorial-page > footer {
+  position: static;
+  inset: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -411,6 +410,7 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
   margin-top: auto !important;
   padding-top: var(--editorial-rule-gap);
   border-top: 1px solid rgba(147,146,189,.22);
+  flex: 0 0 auto;
 }
 .editorial-page footer span { white-space: nowrap; }
 .home-page.editorial-page .profile-hero {
@@ -477,32 +477,17 @@ body:has(.editorial-page){background:#090b12;color:#f4f5fa}
     --editorial-rule-gap: 10px;
     --editorial-hero-gap: 24px;
   }
-  .editorial-page .editorial-topline,
-  .editorial-page footer { min-height: 32px; }
-}
-
-
-/* Home and Contact share the exact same footer layout and anchoring. */
-.editorial-page > footer {
-  position: static;
-  inset: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  min-height: 40px;
-  margin-top: auto !important;
-  padding-top: var(--editorial-rule-gap);
-  flex: 0 0 auto;
-}
-@media (max-height: 640px) {
+   .editorial-page .editorial-topline,
   .editorial-page > footer { min-height: 32px; }
 }
 
-/* Keep the homepage role description in two intentional mobile-friendly lines. */
-.home-page.editorial-page .profile-hero .bio .role-line { display: block; }
-.home-page.editorial-page .profile-hero .bio { max-width: 100%; font-size: clamp(10px, 2.9vw, 12px); letter-spacing: -.015em; }
-.home-page.editorial-page .profile-hero .bio .role-line { white-space: nowrap; }
+
+/* Home role: slightly clearer at mobile sizes; line break is in HTML. */
+.home-page.editorial-page .profile-hero .bio {
+  max-width: 100%;
+  font-size: clamp(12px, 3.4vw, 13px);
+  letter-spacing: -.015em;
+}
 
 /* Subtle Midnight Aurora accents: preserve the monochrome editorial hierarchy. */
 body:has(.editorial-page) {
