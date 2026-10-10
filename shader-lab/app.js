@@ -6,8 +6,8 @@ const TYPES=['procedural','image-shader','text','shape','color','image','video',
 const ICON={procedural:'✳','image-shader':'◈',text:'T',shape:'☆',color:'◉',image:'▧',video:'▣',sphere:'⬡',blur:'◎'};
 const TITLES={procedural:'Procedural', 'image-shader':'Image Shader',text:'Text',shape:'Shape',color:'Colour',image:'Image',video:'Video',sphere:'3D Sphere',blur:'Blur'};
 const FORMATS={'4:5':[720,900],'1:1':[900,900],'16:9':[1120,630],'9:16':[540,960],'4:1':[1200,300]};
-const MODES=[['silk','Silk Ribbons'],['topographic','Topographic'],['flow','Flow Field'],['halftone','Halftone'],['grid','Warped Grid'],['orbits','Orbit Lines'],['noise','Grain / Noise']];
-const EFFECTS=[['refract','Refraction'],['pixelate','Pixelate'],['chromatic','RGB Shift'],['halftone','Halftone Print'],['dither','Dither'],['invert','Invert']];
+const MODES=[['silk','Silk Ribbons'],['topographic','Topographic'],['flow','Flow Field'],['halftone','Halftone'],['grid','Warped Grid'],['orbits','Orbit Lines'],['noise','Grain / Noise'],['chladni','Chladni Cymatics'],['moire','Moiré Circles'],['pixelgrid','Pixel Mosaic'],['plasma','Plasma Field'],['waveform','Waveform Lines'],['sunburst','Radiant Beams'],['starfield','Starfield'],['interference','Wave Interference'],['ribbonmesh','Ribbon Mesh'],['checkers','Warped Checks']];
+const EFFECTS=[['fluted-glass','Fluted Glass'],['swirl','Swirl Glass'],['refract','Refraction'],['ripple','Water Ripple'],['pixelate','Pixelate'],['chromatic','RGB Shift'],['halftone','Halftone Print'],['hex-halftone','Hexagonal Halftone'],['dither','Dither'],['ascii','ASCII Art'],['posterize','Posterize'],['edge','Edge Detection'],['emboss','Emboss'],['duotone','Duotone'],['vignette','Vignette'],['scanlines','CRT Scanlines'],['grain','Film Grain'],['mirror','Mirror'],['invert','Invert']];
 const BLENDS=[['source-over','Normal'],['screen','Screen'],['multiply','Multiply'],['overlay','Overlay'],['lighten','Lighten'],['difference','Difference']];
 let serial=0;let state={name:'Liquid Gold',aspect:'4:5',layers:[]},selected=null;
 let isPlaying=false,elapsed=0,lastFrame=0,animationFrame=0,needsFrame=false,toastTimer=0,saveTimer=0,historyTimer=0;
@@ -25,7 +25,7 @@ function defaults(type){
  if(type==='shape')Object.assign(p,{shape:'star',size:33,color1:'#dfaeff',color2:'#170e28',stroke:0,motion:0});
  if(type==='sphere')Object.assign(p,{size:52,color1:'#e2b1fd',color2:'#383768'});
  if(type==='image'||type==='video')Object.assign(p,{size:100,fit:'cover',source:''});
- if(type==='image-shader')Object.assign(p,{effect:'refract',strength:26,frequency:5,speed:.5,color1:'#fff1d6',color2:'#1c1224'});
+ if(type==='image-shader')Object.assign(p,{effect:'fluted-glass',strength:26,frequency:5,speed:.5,color1:'#fff1d6',color2:'#1c1224'});
  if(type==='blur')Object.assign(p,{strength:12});
  return p;
 }
@@ -41,6 +41,10 @@ function preset(name){
   layer('procedural',{mode:'grid',count:36,frequency:5.5,amplitude:104,seed:8,color1:'#9dffb2',color2:'#00ddbd',opacity:.95},'Signal Field'),
   layer('procedural',{mode:'halftone',count:60,frequency:5,color1:'#30bdac',color2:'#0d242a',opacity:.23},'Signal Pixels'),
   layer('color',{gradient:'linear',color1:'#102f32',color2:'#041114'},'Carbon')];}
+ if(name==='aurora'){return [layer('procedural',{mode:'plasma',count:52,frequency:2.2,seed:33,color1:'#96ffe1',color2:'#5830ac',opacity:.7},'Aurora Plasma'),layer('procedural',{mode:'waveform',count:56,amplitude:90,frequency:2.2,color1:'#b9fff3',color2:'#855eff',opacity:.8},'Magnetic Ribbons'),layer('color',{gradient:'radial',color1:'#143f51',color2:'#07081b'},'Deep Space')];}
+ if(name==='pixel'){return [layer('procedural',{mode:'pixelgrid',count:82,frequency:4,amplitude:62,seed:34,color1:'#ffc18e',color2:'#663fff'},'Pixel Flux'),layer('color',{gradient:'radial',color1:'#272143',color2:'#090911'},'Night')];}
+ if(name==='cymatics'){return [layer('procedural',{mode:'chladni',count:100,frequency:5,amplitude:35,seed:17,color1:'#fff3c9',color2:'#c082a2'},'Sand Frequencies'),layer('color',{gradient:'radial',color1:'#65486a',color2:'#160d23'},'Velvet')];}
+ if(name==='retro'){return [layer('image-shader',{effect:'scanlines',strength:42},'CRT Lines'),layer('procedural',{mode:'waveform',count:80,frequency:3.5,color1:'#7bffdd',color2:'#ff84b8'},'Analog Signal'),layer('color',{gradient:'linear',color1:'#35325a',color2:'#070917'},'Night Gradient')];}
  if(name==='mono'){return [
   layer('procedural',{mode:'topographic',count:68,amplitude:73,frequency:5.3,seed:15,color1:'#ffffff',color2:'#888888',opacity:.9},'Contour Study'),
   layer('color',{gradient:'radial',color1:'#414141',color2:'#050505'},'Graphite')];}
@@ -79,7 +83,9 @@ function restore(index){
 }
 function updateAspect(){
  const wh=FORMATS[state.aspect]||FORMATS['4:5'];
- preview.width=wh[0];preview.height=wh[1];
+ const maxSide=window.innerWidth<691?540:850;
+ const previewScale=Math.min(1,maxSide/Math.max(wh[0],wh[1]));
+ preview.width=Math.round(wh[0]*previewScale);preview.height=Math.round(wh[1]*previewScale);
  $('canvas-outline').style.aspectRatio=wh[0]+'/'+wh[1];
  // An explicit height allows portrait and ultrawide canvases to fit without distortion.
  const avail=Math.min(window.innerWidth<691?window.innerHeight*.52:window.innerHeight*.68,760);
@@ -107,13 +113,13 @@ function startMotion(yes){
  else{cancelAnimationFrame(animationFrame);drawSoon();}
 }
 function setPreset(key){
- startMotion(false);elapsed=0;resetAssets();state.layers=preset(key);state.name={gold:'Liquid Gold',midnight:'Midnight Orbit',signal:'Signal Field',mono:'Monochrome Contours'}[key]||'Liquid Gold';selected=state.layers[0].id;
+ startMotion(false);elapsed=0;resetAssets();state.layers=preset(key);state.name={gold:'Liquid Gold',midnight:'Midnight Orbit',signal:'Signal Field',mono:'Monochrome Contours',aurora:'Aurora Waves',pixel:'Pixel Flux',cymatics:'Cymatic Sand',retro:'Retro Signal'}[key]||'Liquid Gold';selected=state.layers[0].id;
  sync();commit();notify('Preset applied: '+state.name);
 }
 function sync(){
  $('project-name').value=state.name;
  $('layer-count').textContent=String(state.layers.length).padStart(2,'0');
- $('preset-grid').innerHTML=[['gold','Liquid Gold'],['midnight','Midnight Orbit'],['signal','Signal Field'],['mono','Monochrome']].map(v=>'<button class="preset" type="button" data-preset="'+v[0]+'"><span class="preset-swatch"></span><span class="preset-label">'+v[1]+' <span>↗</span></span></button>').join('');
+ $('preset-grid').innerHTML=[['gold','Liquid Gold'],['midnight','Midnight Orbit'],['signal','Signal Field'],['mono','Monochrome'],['aurora','Aurora'],['pixel','Pixel Flux'],['cymatics','Cymatics'],['retro','Retro CRT']].map(v=>'<button class="preset" type="button" data-preset="'+v[0]+'"><span class="preset-swatch"></span><span class="preset-label">'+v[1]+' <span>↗</span></span></button>').join('');
  updateAspect();renderLayers();renderInspector();drawSoon();updateHistoryButtons();
 }
 function renderLayers(){
@@ -131,6 +137,7 @@ function renderLayers(){
 function add(type){
  if(!TYPES.includes(type))return;
  if(type==='image'||type==='video'){chooseMedia(type,null);return;}
+ if(type==='procedural'||type==='image-shader'){openBrowser(type);return;}
  const l=layer(type);state.layers.unshift(l);selected=l.id;
  renderLayers();renderInspector();drawSoon();commit();
  if(window.innerWidth<691)showMobile('controls');
@@ -149,7 +156,7 @@ function group(label,fields){return '<section class="inspector-group"><div class
 function field(label,body){return '<div class="control-field">'+body.replace('%%LABEL%%','<span>'+label+'</span>')+'</div>';}
 function range(key,label,min,max,step,unit){
  const l=visibleLayer(),v=num(l.params[key],0);
- return field(label,'<label class="control-label">%%LABEL%% <output>'+v+(unit||'')+'</output></label><input data-key="'+key+'" data-type="number" type="range" min="'+min+'" max="'+max+'" step="'+step+'" value="'+v+'">');
+ return field(label,'<label class="control-label">%%LABEL%% <input aria-label="'+label+' value" data-key="'+key+'" data-type="number" type="number" inputmode="decimal" min="'+min+'" max="'+max+'" step="'+step+'" value="'+v+'"></label><input aria-label="'+label+'" data-key="'+key+'" data-type="number" type="range" min="'+min+'" max="'+max+'" step="'+step+'" value="'+v+'">');
 }
 function input(key,label,placeholder,multiline){
  const l=visibleLayer(),v=esc(l.params[key]||'');
@@ -183,8 +190,8 @@ function renderInspector(){
   html+='<button type="button" class="inspector-command" data-command="randomize">✳ Randomise this pattern</button>';
  }else if(l.type==='image-shader'){
   html+=group('IMAGE SHADER',select('effect','Effect',EFFECTS)+range('strength','Intensity',0,100,1,'')+
-   (p.effect==='refract'?range('frequency','Flute count',.5,30,.5,'')+range('speed','Motion speed',0,3,.05,''):'')+
-   ((p.effect==='dither')?'<div class="dual-fields">'+color('color1','Light')+color('color2','Dark')+'</div>':'')+
+   (['refract','fluted-glass','swirl','ripple'].includes(p.effect)?range('frequency','Flute count / frequency',.5,30,.5,'')+range('speed','Motion speed',0,3,.05,''):'')+
+   (['dither','ascii','hex-halftone','duotone'].includes(p.effect)?'<div class="dual-fields">'+color('color1','Light')+color('color2','Dark')+'</div>':'')+
    '<p class="inspector-note">This effect processes the combined layers below it. Move it higher in the stack to apply it to more layers.</p>');
  }else if(l.type==='color'){
   html+=group('BACKGROUND',select('gradient','Fill type',[['solid','Solid'],['linear','Linear Gradient'],['radial','Radial Gradient']])+
@@ -320,12 +327,14 @@ $('layer-list').addEventListener('drop',e=>{
 });
 $('layer-list').addEventListener('dragend',()=>{dragId=null;document.querySelectorAll('.dragging').forEach(e=>e.classList.remove('dragging'));});
 document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>add(b.dataset.add)));
-$('browse-presets').addEventListener('click',()=>document.querySelector('.presets-area').scrollIntoView({behavior:'smooth',block:'nearest'}));
+$('browse-presets').addEventListener('click',()=>openBrowser('looks'));
 $('preset-grid').addEventListener('click',e=>{const b=e.target.closest('[data-preset]');if(b)setPreset(b.dataset.preset);});
 function fieldChanged(e){
  const element=e.target.closest('[data-key]');if(!element)return;
  const l=visibleLayer();if(!l||l.locked)return;
  const key=element.dataset.key,kind=element.dataset.type,raw=element.value,value=kind==='number'?Number(raw):raw;
+ if(kind==='number'&&!Number.isFinite(value))return;
+ inspector.querySelectorAll('[data-key="'+key+'"]').forEach(other=>{if(other!==element)other.value=raw;});
  if(key==='_name'){l.name=String(value).slice(0,70);renderLayers();}
  else{l.params[key]=value;}
  const output=element.closest('.control-field').querySelector('output');
