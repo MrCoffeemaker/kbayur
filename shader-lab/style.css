@@ -111,3 +111,14 @@
  .inspector-panel .inspector-body{padding-bottom:30px}
  .export-section{padding-bottom:20px}
 }
+
+
+/* Prevent iPhone Safari auto-zooming the page when a small form control is focused. */
+@media(max-width:690px){
+ input[type="text"],input[type="search"],input[type="number"],textarea,select{font-size:16px!important}
+ .project-title input{max-width:136px}
+ .canvas-footer select{max-width:164px}
+ .control-field .control-label input[type="number"]{font-size:16px!important}
+ .control-field textarea{line-height:1.5}
+ .mobile-dock button{touch-action:manipulation}
+}
