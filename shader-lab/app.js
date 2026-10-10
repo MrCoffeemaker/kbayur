@@ -13,6 +13,9 @@ let serial=0;let state={name:'Liquid Gold',aspect:'4:5',layers:[]},selected=null
 let isPlaying=false,elapsed=0,lastFrame=0,animationFrame=0,needsFrame=false,toastTimer=0,saveTimer=0,historyTimer=0;
 let media=new Map(),pendingMedia='image',replaceMediaId=null;
 let snapshots=[],historyIndex=-1,dragId=null,recording=false;
+let storageReady=false,autosaveQueue=Promise.resolve(),databasePromise=null;
+let imageQuality=1,slowFrames=0,frameTargetMs=33;
+const historyAssets=new Map(),historyByLayer=new Map();let historyAssetNumber=0;
 const preview=$('art'),studio=$('studio'),layerList=$('layer-list'),inspector=$('inspector');
 const esc=s=>String(s===undefined||s===null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=(a,f)=>Number.isFinite(+a)?+a:f;
@@ -53,16 +56,82 @@ function preset(name){
   layer('color',{gradient:'radial',color1:'#f6a54a',color2:'#140f16',x:62,y:34},'Amber Atmosphere')];
 }
 function visibleLayer(){return state.layers.find(l=>l.id===selected)||null;}
-function store(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{try{const str=JSON.stringify(state);if(str.length<2400000){localStorage.setItem('kaan-shader-lab-v1',str);$('save-status').textContent='SAVED LOCALLY';}else{$('save-status').textContent='PROJECT TOO LARGE FOR AUTOSAVE';}}catch(e){$('save-status').textContent='AUTOSAVE UNAVAILABLE';}},700);}
+const DATABASE_NAME='kaan-shader-lab-storage',DATABASE_KEY='current',DATABASE_STORE='projects';
+function projectForPersistence(){
+ const copy=JSON.parse(JSON.stringify(state));
+ copy.layers.forEach(l=>{if(l.type==='video')l.params.source='';});
+ return copy;
+}
+function openProjectDB(){
+ if(databasePromise)return databasePromise;
+ databasePromise=new Promise(resolve=>{
+  if(!('indexedDB' in window)){resolve(null);return;}
+  let request;try{request=window.indexedDB.open(DATABASE_NAME,1);}catch(e){resolve(null);return;}
+  request.onupgradeneeded=()=>{const db=request.result;if(!db.objectStoreNames.contains(DATABASE_STORE))db.createObjectStore(DATABASE_STORE);};
+  request.onsuccess=()=>resolve(request.result);
+  request.onerror=()=>resolve(null);request.onblocked=()=>resolve(null);
+ });
+ return databasePromise;
+}
+async function readAutoSave(){
+ const db=await openProjectDB();if(!db)return null;
+ return new Promise(resolve=>{
+  try{const tx=db.transaction(DATABASE_STORE,'readonly'),req=tx.objectStore(DATABASE_STORE).get(DATABASE_KEY);
+   req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>resolve(null);
+  }catch(e){resolve(null);}
+ });
+}
+async function persistProject(snapshot){
+ const db=await openProjectDB();if(!db)return false;
+ return new Promise(resolve=>{
+  try{const tx=db.transaction(DATABASE_STORE,'readwrite');
+   tx.objectStore(DATABASE_STORE).put(snapshot,DATABASE_KEY);
+   tx.oncomplete=()=>resolve(true);tx.onerror=()=>resolve(false);tx.onabort=()=>resolve(false);
+  }catch(e){resolve(false);}
+ });
+}
+function store(){
+ if(!storageReady)return;
+ clearTimeout(saveTimer);
+ saveTimer=setTimeout(()=>{
+  const snapshot=projectForPersistence(),json=JSON.stringify(snapshot);
+  $('save-status').textContent='SAVING…';
+  autosaveQueue=autosaveQueue.catch(()=>{}).then(async()=>{
+   const ok=await persistProject(snapshot);
+   if(ok){if(json.length<900000){try{localStorage.setItem('kaan-shader-lab-v1',json);}catch(e){}}
+    $('save-status').textContent='SAVED LOCALLY';
+   }else{
+    let fallback=false;
+    if(json.length<1800000){try{localStorage.setItem('kaan-shader-lab-v1',json);fallback=true;}catch(e){}}
+    $('save-status').textContent=fallback?'SAVED LOCALLY':'SAVE PROJECT TO KEEP YOUR WORK';
+   }
+  });
+ },650);
+}
+function historySnapshot(){
+ const copy=JSON.parse(JSON.stringify(state));
+ for(const l of copy.layers){
+  const source=l.params?.source;
+  if(!source||!['image','video'].includes(l.type))continue;
+  let record=historyByLayer.get(l.id);
+  if(!record||record.source!==source){record={source,key:'asset-'+(++historyAssetNumber)};historyByLayer.set(l.id,record);historyAssets.set(record.key,source);}
+  l.params.source='history:'+record.key;
+ }
+ return JSON.stringify(copy);
+}
 function commit(){
  clearTimeout(historyTimer);
- const snapshot=JSON.stringify(state);
- if(snapshots[historyIndex]!==snapshot){snapshots=snapshots.slice(0,historyIndex+1);snapshots.push(snapshot);if(snapshots.length>55)snapshots.shift();historyIndex=snapshots.length-1;}
+ const snapshot=historySnapshot();
+ if(snapshots[historyIndex]!==snapshot){
+  snapshots=snapshots.slice(0,historyIndex+1);snapshots.push(snapshot);
+  if(snapshots.length>55)snapshots.shift();
+  historyIndex=snapshots.length-1;
+ }
  updateHistoryButtons();store();
 }
 function delayedCommit(){clearTimeout(historyTimer);historyTimer=setTimeout(commit,420);store();}
 function updateHistoryButtons(){$('undo').disabled=historyIndex<1;$('redo').disabled=historyIndex>=snapshots.length-1;}
-function resetAssets(){media.forEach(a=>{if(a.tagName==='VIDEO')a.pause();});media.clear();}
+function resetAssets(){media.forEach(a=>{if(a.tagName==='VIDEO'){a.pause();a.removeAttribute('src');a.load();}});media.clear();}
 function createMedia(layerObj){
  if(!layerObj||!layerObj.params||!layerObj.params.source)return;
  if(media.has(layerObj.id))return;
@@ -78,12 +147,14 @@ function createMedia(layerObj){
 function rehydrate(){resetAssets();state.layers.forEach(createMedia);}
 function restore(index){
  if(index<0||index>=snapshots.length)return;
- historyIndex=index;state=JSON.parse(snapshots[index]);selected=state.layers[0]?state.layers[0].id:null;
- rehydrate();sync();notify('History restored');
+ historyIndex=index;state=JSON.parse(snapshots[index]);
+ state.layers.forEach(l=>{const src=l.params?.source;if(typeof src==='string'&&src.startsWith('history:'))l.params.source=historyAssets.get(src.slice(8))||'';});
+ selected=state.layers[0]?state.layers[0].id:null;
+ rehydrate();sync();store();notify('History restored');
 }
 function updateAspect(){
  const wh=FORMATS[state.aspect]||FORMATS['4:5'];
- const maxSide=window.innerWidth<691?540:850;
+ const maxSide=(window.innerWidth<691?440:850)*imageQuality;
  const previewScale=Math.min(1,maxSide/Math.max(wh[0],wh[1]));
  preview.width=Math.round(wh[0]*previewScale);preview.height=Math.round(wh[1]*previewScale);
  $('canvas-outline').style.aspectRatio=wh[0]+'/'+wh[1];
@@ -99,11 +170,17 @@ function drawSoon(){
  if(needsFrame)return;needsFrame=true;
  requestAnimationFrame(()=>{needsFrame=false;render();});
 }
-function render(){try{engine.draw(preview,state.layers,elapsed,media);$('canvas-status').innerHTML='<span class="live-dot"></span> '+(isPlaying?'LIVE / ANIMATING':'LIVE / READY');}catch(error){console.error('Shader Lab render:',error);$('canvas-status').textContent='RENDER ERROR';}}
+function render(){try{
+ const started=performance.now();engine.draw(preview,state.layers,elapsed,media);const cost=performance.now()-started;
+ if(cost>85){slowFrames++;if(slowFrames>=3&&imageQuality>.6){imageQuality=Math.max(.6,imageQuality*.76);updateAspect();slowFrames=0;notify('Preview quality adjusted for smoother editing');}}
+ else if(cost<55)slowFrames=Math.max(0,slowFrames-1);
+ frameTargetMs=cost>90?100:cost>48?66:33;
+ $('canvas-status').innerHTML='<span class="live-dot"></span> '+(isPlaying?'LIVE / ANIMATING':'LIVE / READY')+(imageQuality<1?' · ECO PREVIEW':'');
+ }catch(error){console.error('Shader Lab render:',error);$('canvas-status').textContent='RENDER ERROR';}}
 function animationLoop(time){
  if(!isPlaying)return;
  animationFrame=requestAnimationFrame(animationLoop);
- if(time-lastFrame<33)return;
+ if(time-lastFrame<frameTargetMs)return;
  elapsed+=(Math.min(60,time-lastFrame||33))/1000;lastFrame=time;render();
 }
 function startMotion(yes){
@@ -145,11 +222,12 @@ function add(type){
 }
 function layerAction(id,act){
  const index=state.layers.findIndex(l=>l.id===id),l=state.layers[index];if(!l)return;
- if(act==='up'&&index>0)[state.layers[index-1],state.layers[index]]=[state.layers[index],state.layers[index-1]];
- if(act==='down'&&index<state.layers.length-1)[state.layers[index+1],state.layers[index]]=[state.layers[index],state.layers[index+1]];
+ if(l.locked&&!['lock','eye'].includes(act)){notify('Unlock this layer before moving or deleting it');return;}
+ if(act==='up'&&index>0&&!state.layers[index-1].locked)[state.layers[index-1],state.layers[index]]=[state.layers[index],state.layers[index-1]];
+ if(act==='down'&&index<state.layers.length-1&&!state.layers[index+1].locked)[state.layers[index+1],state.layers[index]]=[state.layers[index],state.layers[index+1]];
  if(act==='eye')l.visible=l.visible===false?true:false;
  if(act==='lock')l.locked=!l.locked;
- if(act==='delete'){state.layers.splice(index,1);if(selected===id)selected=state.layers[0]?state.layers[0].id:null;}
+ if(act==='delete'){media.get(id)?.pause?.();media.delete(id);state.layers.splice(index,1);if(selected===id)selected=state.layers[0]?state.layers[0].id:null;}
  renderLayers();renderInspector();drawSoon();commit();
 }
 function group(label,fields){return '<section class="inspector-group"><div class="group-heading">'+label+'</div>'+fields+'</section>';}
@@ -334,13 +412,15 @@ $('layer-list').addEventListener('keydown',e=>{
  if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('layer-item')){e.preventDefault();selected=e.target.dataset.id;renderLayers();renderInspector();}
 });
 $('layer-list').addEventListener('dragstart',e=>{
- const row=e.target.closest('.layer-item');if(!row)return;dragId=row.dataset.id;row.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',dragId);
+ const row=e.target.closest('.layer-item');if(!row)return;
+ if(state.layers.find(l=>l.id===row.dataset.id)?.locked){e.preventDefault();notify('Unlock this layer first');return;}
+ dragId=row.dataset.id;row.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',dragId);
 });
 $('layer-list').addEventListener('dragover',e=>{if(dragId){e.preventDefault();e.dataTransfer.dropEffect='move';}});
 $('layer-list').addEventListener('drop',e=>{
  e.preventDefault();const target=e.target.closest('.layer-item');if(!target||!dragId||target.dataset.id===dragId)return;
  const from=state.layers.findIndex(l=>l.id===dragId),to=state.layers.findIndex(l=>l.id===target.dataset.id);
- if(from<0||to<0)return;const [moving]=state.layers.splice(from,1);state.layers.splice(to,0,moving);
+ if(from<0||to<0||state.layers[to].locked||state.layers[from].locked)return;const [moving]=state.layers.splice(from,1);state.layers.splice(to,0,moving);
  renderLayers();drawSoon();commit();
 });
 $('layer-list').addEventListener('dragend',()=>{dragId=null;document.querySelectorAll('.dragging').forEach(e=>e.classList.remove('dragging'));});
@@ -535,6 +615,13 @@ function initialise(){
  serial=Math.max(serial,0,...state.layers.map(l=>Number(String(l.id||'').match(/^layer-(\d+)$/)?.[1])||0));
  selected=state.layers[0]?state.layers[0].id:null;
  rehydrate();sync();commit();showMobile('canvas');
+ const bootSnapshot=JSON.stringify(state);
+ readAutoSave().then(saved=>{
+  if(saved&&Array.isArray(saved.layers)&&FORMATS[saved.aspect]&&JSON.stringify(state)===bootSnapshot){
+   state=saved;serial=Math.max(serial,0,...state.layers.map(l=>Number(String(l.id||'').match(/^layer-(\\d+)$/)?.[1])||0));
+   selected=state.layers[0]?.id||null;rehydrate();sync();snapshots=[];historyIndex=-1;commit();
+  }
+ }).catch(()=>{}).finally(()=>{storageReady=true;store();});
 }
 initialise();
 })();
