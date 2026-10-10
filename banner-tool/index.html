@@ -35,10 +35,22 @@ function dna(u,v){if(!reference)return{l:.5,e:0,gx:0,gy:0};const w=reference.wid
 function makeArtwork(regenerate=true){
 if(regenerate||!seed){const randomSeed=new Uint32Array(1);crypto.getRandomValues(randomSeed);seed=(randomSeed[0]^(++count*2654435761))>>>0;}const rand=rng(seed),R=(a,b)=>a+(b-a)*rand();
 const qualityFactor=qualityMode==='eco'?.48:qualityMode==='ultra'?1.45:(matchMedia('(pointer:coarse)').matches?.7:1);const density=+$('density').value/100,depth=+$('depth').value/100,variation=+$('variation').value/100,influence=reference?+$('strength').value/100:0,structure=reference?+$('structure').value/100:.65;
-const followImage=!!reference&&$('referenceMode').value==='follow';const signature=reference&&!followImage?reference:null;const mode=followImage?5:signature?(signature.radial>signature.edgeEnergy*.54?3:signature.horizontal>signature.vertical*1.22?0:signature.vertical>signature.horizontal*1.22?4:signature.contrast>.22?2:1):Math.floor(rand()*5),phase=R(0,Math.PI*2),twist=R(1.2,3.8),turns=R(1.7,3.2),skew=R(-.5,.5),bend=R(.3,.7),shape=new T.Group();shape.userData.mode=mode;
+const followImage=!!reference&&$('referenceMode').value==='follow';const signature=reference&&!followImage?reference:null;const mode=followImage?5:signature?(signature.radial>signature.edgeEnergy*.54?3:signature.horizontal>signature.vertical*1.22?0:signature.vertical>signature.horizontal*1.22?4:signature.contrast>.22?2:1):Math.floor(rand()*5),phase=R(0,Math.PI*2),twist=R(1.2,3.8),turns=R(1.7,3.2),skew=R(-.5,.5),bend=R(.3,.7),traceStyle=Math.floor(R(0,4)),traceWarp=R(.55,1.25),traceFreq=R(1.5,4.8),traceAngle=R(-1.1,1.1),traceRelief=R(.65,1.6),shape=new T.Group();shape.userData.mode=mode;
 function surface(u,v){let x=0,y=0,z=0,a,b,rr;
 if(mode===5){ // image-following particle surface
- x=u*5.9;y=-v*3.05;const f=dna(u,v),relief=(f.l-reference.mean)*1.9+Math.min(1,f.e*5)*.7;z=relief*(.35+depth*.85)+Math.sin(u*9+phase)*.11*variation;
+ const f=dna(u,v),relief=(f.l-reference.mean)*1.9+Math.min(1,f.e*5)*.7;
+ const px=u*5.4,py=-v*2.7,amp=traceWarp*(.3+variation*.8)*(.3+structure*.7);
+ if(traceStyle===0){ // folded wave sheet
+ x=px;y=py+Math.sin(u*traceFreq*3+phase)*amp*.55;z=relief*traceRelief+Math.sin(u*traceFreq*2+v*3+phase)*amp*1.15;
+ }else if(traceStyle===1){ // rolled image ribbon
+ const angle=u*traceAngle*2.5+Math.sin(v*2+phase)*amp*.2;
+ x=px;y=py*Math.cos(angle);z=py*Math.sin(angle)+relief*traceRelief;
+ }else if(traceStyle===2){ // flowing sculptural sheet
+ x=px+Math.sin(v*traceFreq+phase)*amp*.8;y=py+Math.sin(u*traceFreq+phase)*amp*.65;z=relief*traceRelief+Math.sin(u*4+v*traceFreq+phase)*amp;
+ }else{ // rippling depth sculpture
+ x=px+Math.sin(v*5+phase)*amp*.35;y=py+Math.cos(u*5+phase)*amp*.35;z=relief*traceRelief+Math.sin(Math.hypot(u*3,v*3)*traceFreq+phase)*amp*1.45;
+ }
+ z*=.45+depth*.85;
 }else if(mode===0){ // woven architectural ribbon
  x=u*5.3;y=v*1.35+Math.sin(u*twist+phase)*bend;z=Math.sin(u*2.6+v*2.3+phase)*1.15+v*.6;
 }else if(mode===1){ // toroidal architecture
