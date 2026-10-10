@@ -383,6 +383,7 @@ function initialise(){
  try{const raw=localStorage.getItem('kaan-shader-lab-v1');if(raw){const obj=JSON.parse(raw);if(obj&&Array.isArray(obj.layers)&&FORMATS[obj.aspect]){state=obj;restored=true;}}}catch(e){}
  if(!restored)state={name:'Liquid Gold',aspect:'4:5',layers:preset('gold')};
  state.layers=state.layers.filter(l=>l&&TYPES.includes(l.type)&&l.params&&typeof l.params==='object').slice(0,100);
+ serial=Math.max(serial,0,...state.layers.map(l=>Number(String(l.id||'').match(/^layer-(\d+)$/)?.[1])||0));
  selected=state.layers[0]?state.layers[0].id:null;
  rehydrate();sync();commit();showMobile('canvas');
 }
