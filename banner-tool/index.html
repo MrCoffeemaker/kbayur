@@ -36,9 +36,20 @@ let detailVariant=0;
 function makeArtwork(regenerate=true){
 if(regenerate||!seed){detailVariant=0;const randomSeed=new Uint32Array(1);crypto.getRandomValues(randomSeed);seed=(randomSeed[0]^(++count*2654435761))>>>0;}let rand=rng(seed);const R=(a,b)=>a+(b-a)*rand();
 const qualityFactor=qualityMode==='eco'?.48:qualityMode==='ultra'?1.45:(matchMedia('(pointer:coarse)').matches?.7:1);const density=+$('density').value/100,depth=+$('depth').value/100,variation=+$('variation').value/100,influence=reference?+$('strength').value/100:0,structure=reference?+$('structure').value/100:.65;
-const followImage=!!reference&&$('referenceMode').value==='follow';const signature=reference&&!followImage?reference:null;const mode=followImage?5:signature?(signature.radial>signature.edgeEnergy*.54?3:signature.horizontal>signature.vertical*1.22?0:signature.vertical>signature.horizontal*1.22?4:signature.contrast>.22?2:1):Math.floor(rand()*5),phase=R(0,Math.PI*2),twist=R(1.2,3.8),turns=R(1.7,3.2),skew=R(-.5,.5),bend=R(.3,.7),traceStyle=Math.floor(R(0,4)),traceWarp=R(.55,1.25),traceFreq=R(1.5,4.8),traceAngle=R(-1.1,1.1),traceRelief=R(.65,1.6),shape=new T.Group();shape.userData.mode=mode;
+const followImage=!!reference&&$('referenceMode').value==='follow';const signature=reference&&!followImage?reference:null;const mode=followImage?5:signature?(signature.radial>signature.edgeEnergy*.54?3:signature.horizontal>signature.vertical*1.22?0:signature.vertical>signature.horizontal*1.22?4:signature.contrast>.22?2:1):6,phase=R(0,Math.PI*2),twist=R(1.2,3.8),turns=R(1.7,3.2),skew=R(-.5,.5),bend=R(.3,.7),traceStyle=Math.floor(R(0,4)),traceWarp=R(.55,1.25),traceFreq=R(1.5,4.8),traceAngle=R(-1.1,1.1),traceRelief=R(.65,1.6),shape=new T.Group();shape.userData.mode=mode;
+// Seeded multi-attractor flow field: each generation invents its own spatial structure.
+const attractors=Array.from({length:4+Math.floor(R(0,5))},()=>({x:R(-3.2,3.2),y:R(-1.8,1.8),z:R(-1.8,1.8),power:R(-1.7,1.7),spin:R(-1.5,1.5),radius:R(.35,1.8)}));
+const freeParams={curl:R(.6,2.9),freq:R(.65,2.8),fold:R(.25,1.4),phaseA:R(0,6.283),phaseB:R(0,6.283),stretch:R(.65,1.45),offset:R(-1.2,1.2)};
+function freeform(u,v){let x=u*3.8*freeParams.stretch,y=v*1.95,z=Math.sin(u*freeParams.freq*5+freeParams.phaseA)*freeParams.fold;
+ for(let k=0;k<3;k++){let dx=0,dy=0,dz=0;for(const a of attractors){const rx=x-a.x,ry=y-a.y,rz=z-a.z,dist=a.radius+rx*rx+ry*ry+rz*rz;const force=a.power/dist,swirl=a.spin/dist;dx+=-rx*force-ry*swirl;dy+=-ry*force+rx*swirl;dz+=-rz*force+Math.sin(rx*freeParams.curl+freeParams.phaseB)*swirl;}
+ x+=clamp(dx,-1.8,1.8)*.19;y+=clamp(dy,-1.8,1.8)*.19;z+=clamp(dz,-1.8,1.8)*.25;
+ }
+ const w=Math.sin(x*freeParams.freq+freeParams.phaseB)*Math.cos(y*freeParams.curl+freeParams.phaseA);
+ return[x+Math.sin(y*freeParams.curl+freeParams.phaseA)*variation*.35,y+w*variation*.55,z+w*freeParams.fold+freeParams.offset*.35];
+}
 function surface(u,v){let x=0,y=0,z=0,a,b,rr;
-if(mode===5){ // image-following particle surface
+if(mode===6){[x,y,z]=freeform(u,v);
+}else if(mode===5){ // image-following particle surface
  const f=dna(u,v),relief=(f.l-reference.mean)*1.9+Math.min(1,f.e*5)*.7;
  const px=u*5.4,py=-v*2.7,amp=traceWarp*(.3+variation*.8)*(.3+structure*.7);
  if(traceStyle===0){ // folded wave sheet
@@ -103,7 +114,7 @@ old.userData.fadeOut={start:performance.now(),duration:1350};
 transition={old};
 scene.add(shape)}
 else{scene.add(shape);shape.userData.birth={start:performance.now(),duration:2400}};
-group=shape;applyMotion();$('seedInput').value=seed.toString(16).toUpperCase().padStart(8,'0');$('seed').textContent='· '+['RIBBON','TORUS','HELIX','CRYSTAL','VAULT','IMAGE TRACE'][mode];
+group=shape;applyMotion();$('seedInput').value=seed.toString(16).toUpperCase().padStart(8,'0');$('seed').textContent='· '+['RIBBON','TORUS','HELIX','CRYSTAL','VAULT','IMAGE TRACE','FREEFORM'][mode];
 }
 function dispose(g){g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){const mats=Array.isArray(o.material)?o.material:[o.material];mats.forEach(m=>m.dispose())}});scene.remove(g)}
 function setGroupOpacity(g,factor){g.traverse(o=>{const m=o.material;if(!m)return;if(m.uniforms?.uOpacity){m.uniforms.uOpacity.value=factor;return}if(m.uniforms?.uAlpha){m.uniforms.uAlpha.value=(m.userData?.baseAlpha??m.uniforms.uAlpha.value)*factor;return}if(m.uniforms?.uFlow){m.uniforms.uFlow.value=+$('flow').value/100*factor;return}if(m.transparent&&typeof m.opacity==='number'){if(m.userData.baseOpacity==null)m.userData.baseOpacity=m.opacity;m.opacity=m.userData.baseOpacity*factor}})}
