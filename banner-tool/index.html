@@ -84,7 +84,7 @@ old.userData.fadeOut={start:performance.now(),duration:1350};
 transition={old};
 scene.add(shape)}
 else{scene.add(shape);shape.userData.birth={start:performance.now(),duration:2400}};
-group=shape;applyMotion();$('seed').textContent=['RIBBON','TORUS','HELIX','CRYSTAL','VAULT'][mode]+' · '+seed.toString(16).toUpperCase().padStart(8,'0');
+group=shape;applyMotion();$('seed').textContent='SEED '+seed.toString(16).toUpperCase().padStart(8,'0')+' · '+['RIBBON','TORUS','HELIX','CRYSTAL','VAULT'][mode];
 }
 function dispose(g){g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){const mats=Array.isArray(o.material)?o.material:[o.material];mats.forEach(m=>m.dispose())}});scene.remove(g)}
 function setGroupOpacity(g,factor){g.traverse(o=>{const m=o.material;if(!m)return;if(m.uniforms?.uOpacity){m.uniforms.uOpacity.value=factor;return}if(m.uniforms?.uAlpha){m.uniforms.uAlpha.value=(m.userData?.baseAlpha??m.uniforms.uAlpha.value)*factor;return}if(m.uniforms?.uFlow){m.uniforms.uFlow.value=+$('flow').value/100*factor;return}if(m.transparent&&typeof m.opacity==='number'){if(m.userData.baseOpacity==null)m.userData.baseOpacity=m.opacity;m.opacity=m.userData.baseOpacity*factor}})}
