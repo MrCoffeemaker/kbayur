@@ -347,11 +347,32 @@ function download(blob,name){
  const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),120000);
 }
 const safeFileName=()=>String(state.name||'shader-lab').replace(/[^a-z0-9_-]+/gi,'-').replace(/^-|-$/g,'').slice(0,60)||'shader-lab';
-function exportPNG(){
- try{const multiplier=Number($('export-size').value)||1;
- const out=document.createElement('canvas');out.width=preview.width*multiplier;out.height=preview.height*multiplier;engine.draw(out,state.layers,elapsed,media);
- out.toBlob(blob=>{if(blob){download(blob,safeFileName()+'.png');notify('PNG exported: '+out.width+' × '+out.height);}else notify('Export failed');},'image/png');}catch(e){console.error(e);notify('Could not export PNG');}
+let exportBusy=false;
+async function exportImage(format){
+ if(exportBusy){notify('An export is already rendering');return;}
+ const mime=format==='webp'?'image/webp':'image/png';
+ const wh=FORMATS[state.aspect]||FORMATS['4:5'];
+ const chosen=Math.max(1,Math.min(3,Number($('export-size').value)||1));
+ const limit=window.innerWidth<691?4000000:8000000;
+ const multiplier=Math.min(chosen,Math.sqrt(limit/(wh[0]*wh[1])));
+ const width=Math.round(wh[0]*multiplier),height=Math.round(wh[1]*multiplier);
+ exportBusy=true;const button=$('export-png'),before=button.innerHTML;
+ button.disabled=true;button.textContent='Rendering…';
+ $('canvas-status').textContent='EXPORTING '+width+' × '+height;
+ if(multiplier<chosen)notify('Resolution reduced to protect device memory');
+ try{
+  await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,24)));
+  const output=document.createElement('canvas');output.width=width;output.height=height;
+  engine.draw(output,state.layers,elapsed,media);
+  const blob=await new Promise(resolve=>output.toBlob(resolve,mime,.95));
+  if(!blob){notify('Image export unsupported in this browser');return;}
+  const ext=blob.type==='image/webp'?'webp':'png';
+  download(blob,safeFileName()+'.'+ext);
+  notify(ext.toUpperCase()+' exported · '+width+' × '+height);
+ }catch(error){console.error('Shader Lab export:',error);notify('Export failed. Try Standard or fewer effects.');}
+ finally{exportBusy=false;button.innerHTML=before;button.disabled=false;drawSoon();}
 }
+function exportPNG(){return exportImage('png');}
 function saveProject(){
  const snapshot=JSON.parse(JSON.stringify(state));
  snapshot.layers.forEach(l=>{if(l.type==='video')l.params.source='';});
@@ -551,15 +572,7 @@ $('browser-grid').addEventListener('click',e=>{
  if(window.innerWidth<691)showMobile('controls');
  notify(label+' added');
 });
-function exportWebP(){
- try{
-  const wh=FORMATS[state.aspect]||FORMATS['4:5'],mul=Number($('export-size').value)||1;
-  const out=document.createElement('canvas');out.width=wh[0]*mul;out.height=wh[1]*mul;
-  engine.draw(out,state.layers,elapsed,media);
-  out.toBlob(blob=>{if(blob)download(blob,safeFileName()+'.webp');else notify('WebP export unavailable on this browser.');},'image/webp',.94);
-  notify('WebP exported');
- }catch(err){console.error(err);notify('WebP export failed');}
-}
+function exportWebP(){return exportImage('webp');}
 $('close-export').addEventListener('click',()=>$('export-dialog').close());
 $('export-dialog').addEventListener('click',e=>{
  const b=e.target.closest('[data-export]');if(!b)return;
@@ -618,7 +631,7 @@ function initialise(){
  const bootSnapshot=JSON.stringify(state);
  readAutoSave().then(saved=>{
   if(saved&&Array.isArray(saved.layers)&&FORMATS[saved.aspect]&&JSON.stringify(state)===bootSnapshot){
-   state=saved;serial=Math.max(serial,0,...state.layers.map(l=>Number(String(l.id||'').match(/^layer-(\\d+)$/)?.[1])||0));
+   state=saved;serial=Math.max(serial,0,...state.layers.map(l=>Number(String(l.id||'').match(/^layer-(\d+)$/)?.[1])||0));
    selected=state.layers[0]?.id||null;rehydrate();sync();snapshots=[];historyIndex=-1;commit();
   }
  }).catch(()=>{}).finally(()=>{storageReady=true;store();});
