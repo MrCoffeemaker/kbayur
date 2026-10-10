@@ -386,6 +386,7 @@ function saveProject(){
 }
 function loadProject(file){
  if(!file)return;
+ if(file.size>65000000){notify('Project file exceeds the 65 MB safety limit');return;}
  const reader=new FileReader();reader.onload=()=>{try{
   const obj=JSON.parse(String(reader.result));if(!obj||!Array.isArray(obj.layers)||obj.layers.length>100||!FORMATS[obj.aspect])throw new Error('Invalid file');
   const clean=obj.layers.map(l=>{
@@ -586,6 +587,8 @@ $('export-dialog').addEventListener('click',e=>{
  if(b.dataset.export==='webp')exportWebP();
  if(b.dataset.export==='webm')recordWebM();
  if(b.dataset.export==='project')saveProject();
+ if(b.dataset.export==='open')$('project-input').click();
+ if(b.dataset.export==='new')$('new-project').click();
 });
 document.querySelectorAll('[data-dock]').forEach(b=>b.addEventListener('click',()=>{
  const which=b.dataset.dock;
@@ -595,6 +598,8 @@ document.querySelectorAll('[data-dock]').forEach(b=>b.addEventListener('click',(
  else showMobile(studio.dataset.mobile===which?'canvas':which);
 }));
 $('sheet-scrim').addEventListener('click',()=>showMobile('canvas'));
+$('close-layers').addEventListener('click',()=>showMobile('canvas'));
+$('close-controls').addEventListener('click',()=>showMobile('canvas'));
 /* On-canvas pointer editing: drag text, shapes, images and 3D spheres. */
 const MOVE_TYPES=new Set(['text','shape','image','video','sphere']);
 preview.addEventListener('pointerdown',e=>{
