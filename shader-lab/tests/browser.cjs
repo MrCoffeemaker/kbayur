@@ -238,6 +238,25 @@ async function captureDownload(page,action){
    assert(panel.y>canvas.y+75,JSON.stringify({canvas,panel}));
    assert(panel.y<844-75,JSON.stringify({canvas,panel}));
   });
+  await test('Mobile native pull to refresh is not blocked by CSS',async()=>{
+   const info=await page.evaluate(()=>{
+    const root=getComputedStyle(document.documentElement),body=getComputedStyle(document.body);
+    return {htmlOverscroll:root.overscrollBehaviorY,bodyOverscroll:body.overscrollBehaviorY,
+      overflowY:body.overflowY,bodyHeight:document.body.scrollHeight,viewport:innerHeight};
+   });
+   assert.equal(info.htmlOverscroll,'auto',JSON.stringify(info));
+   assert.equal(info.bodyOverscroll,'auto',JSON.stringify(info));
+   assert.equal(info.overflowY,'auto',JSON.stringify(info));
+   assert(info.bodyHeight>=info.viewport,JSON.stringify(info));
+  });
+  await test('Refresh button reloads with cache buster and retains artwork',async()=>{
+   const originalTitle=await page.locator('#project-name').inputValue();
+   await page.locator('#refresh-page').click();
+   await page.waitForURL(/[\?&]refresh=/,{timeout:15000});
+   await page.waitForTimeout(1000);
+   assert.equal(await page.locator('#project-name').inputValue(),originalTitle);
+   assert(await page.locator('#refresh-page').isVisible(),'Refresh button remains visible');
+  });
   await test('Desktop layout has all three panels',async()=>{
    const desktop=await browser.newPage({viewport:{width:1440,height:900}});
    await desktop.goto(url,{waitUntil:'domcontentloaded'});
