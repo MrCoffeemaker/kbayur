@@ -54,7 +54,7 @@ function setup(){
  'attribute vec3 aPosition;attribute vec3 aNormal;uniform float uTime;uniform float uSpin;uniform float uTilt;uniform float uSpeed;uniform float uMode;varying vec3 vNormal;varying vec3 vPosition;void main(){vec3 p=aPosition;if(uMode>3.5){p.z+=.12*sin(p.x*11.0+uTime*uSpeed*2.0)*cos(p.y*8.0+uTime*uSpeed);}float a=uSpin+uTime*uSpeed*.65;float b=uTilt+sin(uTime*uSpeed*.5)*.06;mat3 ry=mat3(cos(a),0.0,-sin(a),0.0,1.0,0.0,sin(a),0.0,cos(a));mat3 rx=mat3(1.0,0.0,0.0,0.0,cos(b),sin(b),0.0,-sin(b),cos(b));mat3 rot=ry*rx;vec3 q=rot*p;vPosition=q;vNormal=normalize(rot*aNormal);gl_Position=vec4(q.xy*2.2,-q.z,3.3-q.z);}'
  );
  const fragment=shader(gl,gl.FRAGMENT_SHADER,
- 'precision mediump float;uniform vec3 uLightColor;uniform vec3 uDarkColor;varying vec3 vNormal;varying vec3 vPosition;void main(){vec3 n=normalize(vNormal),light=normalize(vec3(-.50,.74,1.15));float d=max(dot(n,light),0.0);float highlight=pow(max(dot(reflect(-light,n),normalize(vec3(.0,.0,1.0))),0.0),35.0);float rim=pow(1.0-abs(n.z),3.0);vec3 colour=mix(uDarkColor,uLightColor,clamp(.12+d*.86+highlight*.58,0.0,1.0));colour+=rim*uLightColor*.24;gl_FragColor=vec4(colour,1.0);}'
+ 'precision mediump float;uniform vec3 uLightColor;uniform vec3 uDarkColor;varying vec3 vNormal;varying vec3 vPosition;void main(){vec3 n=normalize(vNormal),light=normalize(vec3(-.50,.74,1.15));float d=max(dot(n,light),0.0);float highlight=pow(max(dot(reflect(-light,n),normalize(vec3(0.0,0.0,1.0))),0.0),35.0);float rim=pow(1.0-abs(n.z),3.0);vec3 colour=mix(uDarkColor,uLightColor,clamp(.12+d*.86+highlight*.58,0.0,1.0));colour+=rim*uLightColor*.24;gl_FragColor=vec4(colour,1.0);}'
  );
  const program=gl.createProgram();gl.attachShader(program,vertex);gl.attachShader(program,fragment);gl.linkProgram(program);
  if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program)||'WebGL link failed');
@@ -80,7 +80,7 @@ function render(p,t,size){
  gl.clearColor(0,0,0,0);gl.clearDepth(1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
  const shape=['sphere','torus','box','cylinder','plane'].includes(p.geometry)?p.geometry:'sphere';
  let mesh=geometryCache.get(shape);if(!mesh){mesh=makeGeometry(shape);geometryCache.set(shape,mesh);}
- gl.bindBuffer(gl.ARRAY_BUFFER,r.buffer);gl.bufferData(gl.ARRAY_BUFFER,mesh,gl.STATIC_DRAW);
+ gl.bindBuffer(gl.ARRAY_BUFFER,r.buffer);if(r.activeShape!==shape){gl.bufferData(gl.ARRAY_BUFFER,mesh,gl.STATIC_DRAW);r.activeShape=shape;}
  gl.useProgram(r.program);const u=r.uniforms;
  gl.uniform1f(u.uTime,t);gl.uniform1f(u.uSpin,(Number(p.rotate)||0)*Math.PI/180);
  gl.uniform1f(u.uTilt,Number(p.tilt??25)*Math.PI/180);
