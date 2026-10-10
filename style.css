@@ -530,3 +530,20 @@ body:has(.editorial-page) {
 .contact-page.editorial-page #contact-form textarea:focus {
   border-bottom-color: #b5a8ff;
 }
+
+/* A concise service proposition without changing the editorial layout. */
+.home-page.editorial-page .profile-hero .value-statement {
+  max-width: 330px;
+  margin: clamp(12px, 2dvh, 18px) 0 0;
+  color: #d4d0e5;
+  font-size: clamp(12px, 3.3vw, 13px);
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+@media (max-height: 640px) {
+  .home-page.editorial-page .profile-hero .value-statement {
+    margin-top: 9px;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+}
