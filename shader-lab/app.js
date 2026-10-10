@@ -1,0 +1,390 @@
+/* KAAN Shader Lab / Studio controller. No dependencies, local-only processing. */
+(function(){
+'use strict';
+const $=id=>document.getElementById(id),engine=window.ShaderEngine;
+const TYPES=['procedural','image-shader','text','shape','color','image','video','sphere','blur'];
+const ICON={procedural:'✳','image-shader':'◈',text:'T',shape:'☆',color:'◉',image:'▧',video:'▣',sphere:'⬡',blur:'◎'};
+const TITLES={procedural:'Procedural', 'image-shader':'Image Shader',text:'Text',shape:'Shape',color:'Colour',image:'Image',video:'Video',sphere:'3D Sphere',blur:'Blur'};
+const FORMATS={'4:5':[720,900],'1:1':[900,900],'16:9':[1120,630],'9:16':[540,960],'4:1':[1200,300]};
+const MODES=[['silk','Silk Ribbons'],['topographic','Topographic'],['flow','Flow Field'],['halftone','Halftone'],['grid','Warped Grid'],['orbits','Orbit Lines'],['noise','Grain / Noise']];
+const EFFECTS=[['refract','Refraction'],['pixelate','Pixelate'],['chromatic','RGB Shift'],['halftone','Halftone Print'],['dither','Dither'],['invert','Invert']];
+const BLENDS=[['source-over','Normal'],['screen','Screen'],['multiply','Multiply'],['overlay','Overlay'],['lighten','Lighten'],['difference','Difference']];
+let serial=0;let state={name:'Liquid Gold',aspect:'4:5',layers:[]},selected=null;
+let isPlaying=false,elapsed=0,lastFrame=0,animationFrame=0,needsFrame=false,toastTimer=0,saveTimer=0,historyTimer=0;
+let media=new Map(),pendingMedia='image',replaceMediaId=null;
+let snapshots=[],historyIndex=-1,dragId=null,recording=false;
+const preview=$('art'),studio=$('studio'),layerList=$('layer-list'),inspector=$('inspector');
+const esc=s=>String(s===undefined||s===null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=(a,f)=>Number.isFinite(+a)?+a:f;
+function notify(msg){const el=$('toast');el.textContent=msg;el.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('visible'),2700);}
+function defaults(type){
+ const p={opacity:1,blend:'source-over',x:50,y:50,size:50,rotate:0,speed:.4};
+ if(type==='procedural')Object.assign(p,{mode:'silk',count:66,amplitude:115,frequency:2.8,refraction:1.45,speed:.4,seed:23,color1:'#ffc16f',color2:'#682908',size:100});
+ if(type==='color')Object.assign(p,{gradient:'linear',color1:'#e68d34',color2:'#140c13',x:60,y:30});
+ if(type==='text')Object.assign(p,{text:'NEW ERA',size:11,font:'sans-serif',weight:'800',align:'center',color1:'#ffffff'});
+ if(type==='shape')Object.assign(p,{shape:'star',size:33,color1:'#dfaeff',color2:'#170e28',stroke:0,motion:0});
+ if(type==='sphere')Object.assign(p,{size:52,color1:'#e2b1fd',color2:'#383768'});
+ if(type==='image'||type==='video')Object.assign(p,{size:100,fit:'cover',source:''});
+ if(type==='image-shader')Object.assign(p,{effect:'refract',strength:26,frequency:5,speed:.5,color1:'#fff1d6',color2:'#1c1224'});
+ if(type==='blur')Object.assign(p,{strength:12});
+ return p;
+}
+function layer(type,overrides,name){
+ const id='layer-'+(++serial);return {id,type,name:name||TITLES[type],visible:true,locked:false,params:Object.assign(defaults(type),overrides||{})};
+}
+function preset(name){
+ if(name==='midnight'){return [
+  layer('procedural',{mode:'orbits',count:74,frequency:3.5,color1:'#c5b7ff',color2:'#4e8efe',opacity:.92,rotate:17},'Orbital Traces'),
+  layer('procedural',{mode:'flow',count:90,amplitude:93,color1:'#9e76ff',color2:'#a6f9ff',opacity:.58,seed:89},'Nebula Currents'),
+  layer('color',{gradient:'radial',color1:'#403275',color2:'#040817',x:47,y:40},'Midnight Glow')];}
+ if(name==='signal'){return [
+  layer('procedural',{mode:'grid',count:36,frequency:5.5,amplitude:104,seed:8,color1:'#9dffb2',color2:'#00ddbd',opacity:.95},'Signal Field'),
+  layer('procedural',{mode:'halftone',count:60,frequency:5,color1:'#30bdac',color2:'#0d242a',opacity:.23},'Signal Pixels'),
+  layer('color',{gradient:'linear',color1:'#102f32',color2:'#041114'},'Carbon')];}
+ if(name==='mono'){return [
+  layer('procedural',{mode:'topographic',count:68,amplitude:73,frequency:5.3,seed:15,color1:'#ffffff',color2:'#888888',opacity:.9},'Contour Study'),
+  layer('color',{gradient:'radial',color1:'#414141',color2:'#050505'},'Graphite')];}
+ return [
+  layer('procedural',{mode:'silk',count:66,amplitude:126,frequency:3,refraction:1.45,seed:21,speed:.38,color1:'#ffd28b',color2:'#67300e'},'Molten Ribbons'),
+  layer('color',{gradient:'radial',color1:'#f6a54a',color2:'#140f16',x:62,y:34},'Amber Atmosphere')];
+}
+function visibleLayer(){return state.layers.find(l=>l.id===selected)||null;}
+function store(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{try{const str=JSON.stringify(state);if(str.length<2400000){localStorage.setItem('kaan-shader-lab-v1',str);$('save-status').textContent='SAVED LOCALLY';}else{$('save-status').textContent='PROJECT TOO LARGE FOR AUTOSAVE';}}catch(e){$('save-status').textContent='AUTOSAVE UNAVAILABLE';}},700);}
+function commit(){
+ clearTimeout(historyTimer);
+ const snapshot=JSON.stringify(state);
+ if(snapshots[historyIndex]!==snapshot){snapshots=snapshots.slice(0,historyIndex+1);snapshots.push(snapshot);if(snapshots.length>55)snapshots.shift();historyIndex=snapshots.length-1;}
+ updateHistoryButtons();store();
+}
+function delayedCommit(){clearTimeout(historyTimer);historyTimer=setTimeout(commit,420);store();}
+function updateHistoryButtons(){$('undo').disabled=historyIndex<1;$('redo').disabled=historyIndex>=snapshots.length-1;}
+function resetAssets(){media.forEach(a=>{if(a.tagName==='VIDEO')a.pause();});media.clear();}
+function createMedia(layerObj){
+ if(!layerObj||!layerObj.params||!layerObj.params.source)return;
+ if(media.has(layerObj.id))return;
+ const source=layerObj.params.source;
+ if(layerObj.type==='image'){
+  if(!source.startsWith('data:image/'))return;
+  const img=new Image();img.onload=()=>drawSoon();img.onerror=()=>notify('Image could not be loaded');img.src=source;media.set(layerObj.id,img);
+ }else if(layerObj.type==='video'){
+  if(!source.startsWith('blob:'))return;
+  const video=document.createElement('video');video.src=source;video.muted=true;video.loop=true;video.playsInline=true;video.preload='auto';video.onloadeddata=()=>{if(isPlaying)video.play().catch(()=>{});drawSoon();};video.load();media.set(layerObj.id,video);
+ }
+}
+function rehydrate(){resetAssets();state.layers.forEach(createMedia);}
+function restore(index){
+ if(index<0||index>=snapshots.length)return;
+ historyIndex=index;state=JSON.parse(snapshots[index]);selected=state.layers[0]?state.layers[0].id:null;
+ rehydrate();sync();notify('History restored');
+}
+function updateAspect(){
+ const wh=FORMATS[state.aspect]||FORMATS['4:5'];
+ preview.width=wh[0];preview.height=wh[1];
+ $('canvas-outline').style.aspectRatio=wh[0]+'/'+wh[1];
+ // An explicit height allows portrait and ultrawide canvases to fit without distortion.
+ const avail=Math.min(window.innerWidth<691?window.innerHeight*.52:window.innerHeight*.68,760);
+ const fitWidth=Math.min(window.innerWidth<691?window.innerWidth-24:Math.max(300,$('drop-zone').clientWidth-60),avail*wh[0]/wh[1]);
+ $('canvas-outline').style.width=Math.max(1,fitWidth)+'px';
+ $('canvas-outline').style.height=(Math.max(1,fitWidth)*wh[1]/wh[0])+'px';
+ $('aspect').value=state.aspect;
+}
+function drawSoon(){
+ if(isPlaying)return;
+ if(needsFrame)return;needsFrame=true;
+ requestAnimationFrame(()=>{needsFrame=false;render();});
+}
+function render(){try{engine.draw(preview,state.layers,elapsed,media);$('canvas-status').innerHTML='<span class="live-dot"></span> '+(isPlaying?'LIVE / ANIMATING':'LIVE / READY');}catch(error){console.error('Shader Lab render:',error);$('canvas-status').textContent='RENDER ERROR';}}
+function animationLoop(time){
+ if(!isPlaying)return;
+ animationFrame=requestAnimationFrame(animationLoop);
+ if(time-lastFrame<33)return;
+ elapsed+=(Math.min(60,time-lastFrame||33))/1000;lastFrame=time;render();
+}
+function startMotion(yes){
+ isPlaying=!!yes;$('motion-toggle').setAttribute('aria-pressed',String(isPlaying));$('motion-toggle').textContent=isPlaying?'Ⅱ Pause':'▶ Animate';
+ media.forEach(a=>{if(a.tagName==='VIDEO'){if(isPlaying)a.play().catch(()=>{});else a.pause();}});
+ if(isPlaying){lastFrame=performance.now();cancelAnimationFrame(animationFrame);animationFrame=requestAnimationFrame(animationLoop);}
+ else{cancelAnimationFrame(animationFrame);drawSoon();}
+}
+function setPreset(key){
+ startMotion(false);elapsed=0;resetAssets();state.layers=preset(key);state.name={gold:'Liquid Gold',midnight:'Midnight Orbit',signal:'Signal Field',mono:'Monochrome Contours'}[key]||'Liquid Gold';selected=state.layers[0].id;
+ sync();commit();notify('Preset applied: '+state.name);
+}
+function sync(){
+ $('project-name').value=state.name;
+ $('layer-count').textContent=String(state.layers.length).padStart(2,'0');
+ $('preset-grid').innerHTML=[['gold','Liquid Gold'],['midnight','Midnight Orbit'],['signal','Signal Field'],['mono','Monochrome']].map(v=>'<button class="preset" type="button" data-preset="'+v[0]+'"><span class="preset-swatch"></span><span class="preset-label">'+v[1]+' <span>↗</span></span></button>').join('');
+ updateAspect();renderLayers();renderInspector();drawSoon();updateHistoryButtons();
+}
+function renderLayers(){
+ $('layer-count').textContent=String(state.layers.length).padStart(2,'0');
+ if(!state.layers.length){layerList.innerHTML='<div class="layer-empty">No layers yet. Add a procedural layer to start making something.</div>';return;}
+ layerList.innerHTML=state.layers.map((l,i)=>'<div class="layer-item'+(l.id===selected?' selected':'')+(l.visible===false?' muted':'')+'" data-id="'+esc(l.id)+'" draggable="true" role="button" tabindex="0" aria-label="'+esc(l.name)+' layer">'+
+ '<span class="drag-handle" title="Drag to reorder">⠿</span><span class="layer-label"><span class="layer-name">'+ICON[l.type]+' &nbsp;'+esc(l.name)+'</span><span class="layer-kind">'+esc(TITLES[l.type])+'</span></span>'+
+ '<span class="layer-actions">'+
+ '<button type="button" data-act="up" title="Move up" aria-label="Move layer up" '+(i===0?'disabled':'')+'>↑</button>'+
+ '<button type="button" data-act="down" title="Move down" aria-label="Move layer down" '+(i===state.layers.length-1?'disabled':'')+'>↓</button>'+
+ '<button type="button" data-act="eye" title="'+(l.visible===false?'Show':'Hide')+' layer" aria-label="Toggle visibility">'+(l.visible===false?'◌':'◉')+'</button>'+
+ '<button type="button" data-act="lock" title="Toggle lock" aria-label="Toggle edit lock">'+(l.locked?'▣':'♧')+'</button>'+
+ '<button type="button" data-act="delete" class="remove" title="Delete layer" aria-label="Delete layer">×</button></span></div>').join('');
+}
+function add(type){
+ if(!TYPES.includes(type))return;
+ if(type==='image'||type==='video'){chooseMedia(type,null);return;}
+ const l=layer(type);state.layers.unshift(l);selected=l.id;
+ renderLayers();renderInspector();drawSoon();commit();
+ if(window.innerWidth<691)showMobile('controls');
+ notify(TITLES[type]+' layer added');
+}
+function layerAction(id,act){
+ const index=state.layers.findIndex(l=>l.id===id),l=state.layers[index];if(!l)return;
+ if(act==='up'&&index>0)[state.layers[index-1],state.layers[index]]=[state.layers[index],state.layers[index-1]];
+ if(act==='down'&&index<state.layers.length-1)[state.layers[index+1],state.layers[index]]=[state.layers[index],state.layers[index+1]];
+ if(act==='eye')l.visible=l.visible===false?true:false;
+ if(act==='lock')l.locked=!l.locked;
+ if(act==='delete'){state.layers.splice(index,1);if(selected===id)selected=state.layers[0]?state.layers[0].id:null;}
+ renderLayers();renderInspector();drawSoon();commit();
+}
+function group(label,fields){return '<section class="inspector-group"><div class="group-heading">'+label+'</div>'+fields+'</section>';}
+function field(label,body){return '<div class="control-field">'+body.replace('%%LABEL%%','<span>'+label+'</span>')+'</div>';}
+function range(key,label,min,max,step,unit){
+ const l=visibleLayer(),v=num(l.params[key],0);
+ return field(label,'<label class="control-label">%%LABEL%% <output>'+v+(unit||'')+'</output></label><input data-key="'+key+'" data-type="number" type="range" min="'+min+'" max="'+max+'" step="'+step+'" value="'+v+'">');
+}
+function input(key,label,placeholder,multiline){
+ const l=visibleLayer(),v=esc(l.params[key]||'');
+ const elem=multiline?'<textarea data-key="'+key+'" data-type="string" rows="3" placeholder="'+esc(placeholder||'')+'">'+v+'</textarea>':'<input data-key="'+key+'" data-type="string" type="text" value="'+v+'" placeholder="'+esc(placeholder||'')+'">';
+ return field(label,'<label class="control-label">%%LABEL%%</label>'+elem);
+}
+function color(key,label){
+ const v=visibleLayer().params[key]||'#ffffff';
+ return field(label,'<label class="control-label">%%LABEL%% <output>'+esc(v)+'</output></label><input data-key="'+key+'" data-type="string" type="color" value="'+esc(v)+'">');
+}
+function select(key,label,options){
+ const v=visibleLayer().params[key];
+ return field(label,'<label class="control-label">%%LABEL%%</label><select data-key="'+key+'" data-type="string">'+options.map(o=>'<option value="'+esc(o[0])+'"'+(o[0]===v?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select>');
+}
+function positionFields(){return '<div class="dual-fields">'+range('x','X position',0,100,1,'%')+range('y','Y position',0,100,1,'%')+'</div>';}
+function renderInspector(){
+ const l=visibleLayer();$('inspector-type').textContent=l?ICON[l.type]+' FX':'NONE';
+ if(!l){inspector.innerHTML='<div class="empty-inspector">Select a layer to edit its parameters, or add one from the layer panel.</div>';return;}
+ const p=l.params;
+ let html='<div class="inspector-header"><strong>'+esc(l.name)+'</strong><small>'+esc(TITLES[l.type])+'</small></div>';
+ html+=group('LAYER',input('_name','Layer name','Name')+range('opacity','Opacity',0,1,.01,'')+select('blend','Blend mode',BLENDS));
+ if(l.type==='procedural'){
+  html+=group('PROCEDURAL GENERATOR',select('mode','Pattern',MODES)+
+    '<div class="dual-fields">'+color('color1','Primary')+color('color2','Secondary')+'</div>'+
+    range('count','Flute count / density',5,220,1,'')+
+    range('amplitude','Wave amplitude',0,220,1,'')+
+    range('frequency','Frequency',.2,10,.1,'')+
+    (p.mode==='silk'?range('refraction','Refraction',.2,3,.05,''):'')+
+    range('seed','Seed',0,999,1,''));
+  html+=group('MOTION & TRANSFORM',range('speed','Motion speed',0,3,.05,'')+range('rotate','Rotation',-180,180,1,'°'));
+  html+='<button type="button" class="inspector-command" data-command="randomize">✳ Randomise this pattern</button>';
+ }else if(l.type==='image-shader'){
+  html+=group('IMAGE SHADER',select('effect','Effect',EFFECTS)+range('strength','Intensity',0,100,1,'')+
+   (p.effect==='refract'?range('frequency','Flute count',.5,30,.5,'')+range('speed','Motion speed',0,3,.05,''):'')+
+   ((p.effect==='dither')?'<div class="dual-fields">'+color('color1','Light')+color('color2','Dark')+'</div>':'')+
+   '<p class="inspector-note">This effect processes the combined layers below it. Move it higher in the stack to apply it to more layers.</p>');
+ }else if(l.type==='color'){
+  html+=group('BACKGROUND',select('gradient','Fill type',[['solid','Solid'],['linear','Linear Gradient'],['radial','Radial Gradient']])+
+  '<div class="dual-fields">'+color('color1','Start colour')+(p.gradient==='solid'?'':color('color2','End colour'))+'</div>'+
+  (p.gradient==='radial'?positionFields():''));
+ }else if(l.type==='text'){
+  html+=group('TYPE',input('text','Content','Enter text',true)+
+   select('font','Typeface',[['sans-serif','Sans Serif'],['serif','Serif'],['monospace','Monospace'],['Georgia','Georgia']])+
+   select('weight','Weight',[['400','Regular'],['600','Semibold'],['700','Bold'],['800','Extra Bold'],['900','Black']])+
+   select('align','Alignment',[['left','Left'],['center','Centre'],['right','Right']])+color('color1','Text colour'));
+  html+=group('TRANSFORM',positionFields()+range('size','Font size',2,35,.5,'%')+range('rotate','Rotation',-180,180,1,'°'));
+ }else if(l.type==='shape'){
+  html+=group('SHAPE',select('shape','Geometry',[['circle','Circle'],['rectangle','Rectangle'],['ellipse','Ellipse'],['triangle','Triangle'],['star','Star'],['hexagon','Hexagon'],['ring','Ring'],['blob','Polygon Disc']])+
+   '<div class="dual-fields">'+color('color1','Fill')+color('color2','Outline')+'</div>'+range('stroke','Stroke width',0,25,1,'%'));
+  html+=group('TRANSFORM',positionFields()+range('size','Size',1,110,1,'%')+range('rotate','Rotation',-180,180,1,'°')+range('motion','Motion tilt',0,180,1,'°')+range('speed','Motion speed',0,3,.05,''));
+ }else if(l.type==='sphere'){
+  html+=group('3D SPHERE', '<div class="dual-fields">'+color('color1','Highlight')+color('color2','Shadow')+'</div>');
+  html+=group('TRANSFORM',positionFields()+range('size','Diameter',2,100,1,'%')+range('speed','Shimmer speed',0,3,.05,''));
+ }else if(l.type==='image'||l.type==='video'){
+  html+=group('MEDIA', '<p class="inspector-note">'+(p.source?(l.type==='video'?'Session video imported.':'Image ready.'):('No '+l.type+' selected.'))+'</p>'+
+  '<button type="button" class="inspector-command" data-command="replace-media">↑ '+(p.source?'Replace':'Choose')+' '+TITLES[l.type]+'</button>'+
+  select('fit','Fit image',[['cover','Fill / crop'],['contain','Contain']]));
+  html+=group('TRANSFORM',positionFields()+range('size','Scale',10,220,1,'%')+range('rotate','Rotation',-180,180,1,'°'));
+ }else if(l.type==='blur'){
+  html+=group('GAUSSIAN BLUR',range('strength','Blur radius',0,80,1,'px')+'<p class="inspector-note">Softens all visible layers underneath this blur layer.</p>');
+ }
+ if(l.locked)html='<div class="empty-inspector">This layer is locked. Unlock it in the stack to change settings.</div>';
+ inspector.innerHTML=html;
+ // Layer name is stored on layer itself, not on the parameter object.
+ const nameControl=inspector.querySelector('[data-key="_name"]');if(nameControl)nameControl.value=l.name;
+}
+function showMobile(which){
+ studio.dataset.mobile=which;
+ document.querySelectorAll('[data-mobile]').forEach(btn=>btn.setAttribute('aria-selected',String(btn.dataset.mobile===which)));
+}
+function chooseMedia(type,id){
+ pendingMedia=type;replaceMediaId=id;
+ $('media-input').accept=type==='video'?'video/*':'image/*';
+ $('media-input').value='';$('media-input').click();
+}
+function handleMedia(file){
+ if(!file)return;
+ const type=file.type.startsWith('video/')?'video':file.type.startsWith('image/')?'image':null;
+ if(!type){notify('Please choose an image or video file');return;}
+ if(type==='image'&&file.size>15000000){notify('Image limit: 15 MB. Please use a smaller file.');return;}
+ const apply=source=>{
+  let current=state.layers.find(l=>l.id===replaceMediaId);
+  if(!current||current.type!==type){current=layer(type,{},file.name.slice(0,42));state.layers.unshift(current);}
+  current.params.source=source;selected=current.id;
+  media.delete(current.id);createMedia(current);sync();commit();notify(type==='video'?'Video added. Video files are not embedded in saved projects.':'Image layer added.');
+  if(window.innerWidth<691)showMobile('controls');
+ };
+ if(type==='video'){apply(URL.createObjectURL(file));return;}
+ const reader=new FileReader();reader.onload=()=>apply(String(reader.result));reader.onerror=()=>notify('Image could not be read');reader.readAsDataURL(file);
+}
+function download(blob,name){
+ const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),120000);
+}
+const safeFileName=()=>String(state.name||'shader-lab').replace(/[^a-z0-9_-]+/gi,'-').replace(/^-|-$/g,'').slice(0,60)||'shader-lab';
+function exportPNG(){
+ try{const multiplier=Number($('export-size').value)||1;
+ const out=document.createElement('canvas');out.width=preview.width*multiplier;out.height=preview.height*multiplier;engine.draw(out,state.layers,elapsed,media);
+ out.toBlob(blob=>{if(blob){download(blob,safeFileName()+'.png');notify('PNG exported: '+out.width+' × '+out.height);}else notify('Export failed');},'image/png');}catch(e){console.error(e);notify('Could not export PNG');}
+}
+function saveProject(){
+ const snapshot=JSON.parse(JSON.stringify(state));
+ snapshot.layers.forEach(l=>{if(l.type==='video')l.params.source='';});
+ const file={format:'kaan-shaderlab',version:1,...snapshot};
+ download(new Blob([JSON.stringify(file,null,2)],{type:'application/json'}),safeFileName()+'.shaderlab');
+ notify('Project file saved');
+}
+function loadProject(file){
+ if(!file)return;
+ const reader=new FileReader();reader.onload=()=>{try{
+  const obj=JSON.parse(String(reader.result));if(!obj||!Array.isArray(obj.layers)||obj.layers.length>100||!FORMATS[obj.aspect])throw new Error('Invalid file');
+  const clean=obj.layers.map(l=>{
+   if(!l||!TYPES.includes(l.type)||!l.params||typeof l.params!=='object')throw new Error('Invalid layer');
+   const entry=layer(l.type,l.params,String(l.name||TITLES[l.type]).slice(0,70));entry.visible=l.visible!==false;entry.locked=!!l.locked;
+   if(l.type==='image'&&!String(entry.params.source||'').startsWith('data:image/'))entry.params.source='';
+   if(l.type==='video')entry.params.source='';
+   return entry;
+  });
+  startMotion(false);state={name:String(obj.name||'Untitled').slice(0,60),aspect:obj.aspect,layers:clean};selected=state.layers[0]?state.layers[0].id:null;rehydrate();sync();commit();notify('Project loaded');
+ }catch(e){notify('Invalid or unsupported .shaderlab file');}};reader.readAsText(file);
+}
+async function recordWebM(){
+ if(recording)return;
+ if(!preview.captureStream||!window.MediaRecorder){notify('WebM recording is not supported by this browser');return;}
+ const mime=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(m=>MediaRecorder.isTypeSupported(m));
+ if(!mime){notify('WebM export is not supported by this browser');return;}
+ try{
+  recording=true;const btn=$('export-webm'),wasPlaying=isPlaying;btn.textContent='● Recording 6s…';btn.disabled=true;
+  startMotion(true);
+  const stream=preview.captureStream(30),chunks=[],rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:4500000});
+  rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
+  rec.onstop=()=>{stream.getTracks().forEach(track=>track.stop());recording=false;btn.textContent='● Record WebM';btn.disabled=false;if(!wasPlaying)startMotion(false);
+    if(chunks.length)download(new Blob(chunks,{type:'video/webm'}),safeFileName()+'.webm');
+    notify(chunks.length?'WebM animation exported':'Recording did not produce video');
+  };
+  rec.onerror=()=>notify('WebM recording failed');rec.start();setTimeout(()=>{if(rec.state==='recording')rec.stop();},6000);
+ }catch(e){recording=false;$('export-webm').disabled=false;$('export-webm').textContent='● Record WebM';notify('Could not start recording');}
+}
+function randomize(){
+ const l=visibleLayer();
+ if(!l||l.type!=='procedural'){notify('Select a procedural layer to randomise');return;}
+ if(l.locked){notify('Unlock this layer first');return;}
+ l.params.seed=Math.floor(Math.random()*999);
+ l.params.frequency=Math.round((1.2+Math.random()*5)*10)/10;
+ l.params.amplitude=Math.round(40+Math.random()*145);
+ l.params.refraction=Math.round((.7+Math.random()*1.8)*100)/100;
+ l.params.rotate=Math.round(-32+Math.random()*64);
+ l.params.count=Math.round(35+Math.random()*90);
+ renderInspector();drawSoon();commit();notify('New pattern generated');
+}
+$('layer-list').addEventListener('click',e=>{
+ const row=e.target.closest('.layer-item');if(!row)return;
+ const button=e.target.closest('[data-act]');
+ if(button){e.stopPropagation();layerAction(row.dataset.id,button.dataset.act);return;}
+ selected=row.dataset.id;renderLayers();renderInspector();
+});
+$('layer-list').addEventListener('keydown',e=>{
+ if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('layer-item')){e.preventDefault();selected=e.target.dataset.id;renderLayers();renderInspector();}
+});
+$('layer-list').addEventListener('dragstart',e=>{
+ const row=e.target.closest('.layer-item');if(!row)return;dragId=row.dataset.id;row.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',dragId);
+});
+$('layer-list').addEventListener('dragover',e=>{if(dragId){e.preventDefault();e.dataTransfer.dropEffect='move';}});
+$('layer-list').addEventListener('drop',e=>{
+ e.preventDefault();const target=e.target.closest('.layer-item');if(!target||!dragId||target.dataset.id===dragId)return;
+ const from=state.layers.findIndex(l=>l.id===dragId),to=state.layers.findIndex(l=>l.id===target.dataset.id);
+ if(from<0||to<0)return;const [moving]=state.layers.splice(from,1);state.layers.splice(to,0,moving);
+ renderLayers();drawSoon();commit();
+});
+$('layer-list').addEventListener('dragend',()=>{dragId=null;document.querySelectorAll('.dragging').forEach(e=>e.classList.remove('dragging'));});
+document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>add(b.dataset.add)));
+$('browse-presets').addEventListener('click',()=>document.querySelector('.presets-area').scrollIntoView({behavior:'smooth',block:'nearest'}));
+$('preset-grid').addEventListener('click',e=>{const b=e.target.closest('[data-preset]');if(b)setPreset(b.dataset.preset);});
+function fieldChanged(e){
+ const element=e.target.closest('[data-key]');if(!element)return;
+ const l=visibleLayer();if(!l||l.locked)return;
+ const key=element.dataset.key,kind=element.dataset.type,raw=element.value,value=kind==='number'?Number(raw):raw;
+ if(key==='_name'){l.name=String(value).slice(0,70);renderLayers();}
+ else{l.params[key]=value;}
+ const output=element.closest('.control-field').querySelector('output');
+ if(output)output.textContent=raw+(element.type==='range'?(element.closest('.control-field').querySelector('.control-label').textContent.includes('Rotation')?'°':''):'');
+ const dependent=['mode','effect','gradient','shape'].includes(key);
+ if(dependent)renderInspector();
+ drawSoon();delayedCommit();
+}
+$('inspector').addEventListener('input',fieldChanged);
+$('inspector').addEventListener('change',e=>{
+ const el=e.target.closest('[data-key]');if(!el)return;
+ if(['SELECT','INPUT'].includes(el.tagName)&&el.type!=='range'&&el.type!=='color')fieldChanged(e);
+ commit();
+});
+$('inspector').addEventListener('click',e=>{
+ const b=e.target.closest('[data-command]');if(!b)return;
+ if(b.dataset.command==='randomize')randomize();
+ if(b.dataset.command==='replace-media'){const l=visibleLayer();if(l)chooseMedia(l.type,l.id);}
+});
+$('media-input').addEventListener('change',e=>handleMedia(e.target.files&&e.target.files[0]));
+$('project-input').addEventListener('change',e=>{loadProject(e.target.files&&e.target.files[0]);e.target.value='';});
+$('randomize').addEventListener('click',randomize);
+$('motion-toggle').addEventListener('click',()=>startMotion(!isPlaying));
+$('reset-view').addEventListener('click',()=>{elapsed=0;startMotion(false);drawSoon();notify('Animation reset');});
+$('aspect').addEventListener('change',e=>{state.aspect=e.target.value;updateAspect();drawSoon();commit();});
+$('project-name').addEventListener('input',e=>{state.name=e.target.value.slice(0,60);delayedCommit();});
+$('project-name').addEventListener('change',commit);
+$('export-png').addEventListener('click',exportPNG);$('export-png-side').addEventListener('click',exportPNG);
+$('save-project').addEventListener('click',saveProject);$('save-project-side').addEventListener('click',saveProject);
+$('open-project').addEventListener('click',()=>$('project-input').click());$('load-project-side').addEventListener('click',()=>$('project-input').click());
+$('export-webm').addEventListener('click',recordWebM);
+$('new-project').addEventListener('click',()=>{
+ if(!confirm('Start a new empty project? Save a .shaderlab file first if you want to keep the current composition.'))return;
+ startMotion(false);resetAssets();state={name:'Untitled Composition',aspect:'4:5',layers:[]};selected=null;sync();commit();notify('New project created');
+});
+$('undo').addEventListener('click',()=>{clearTimeout(historyTimer);restore(historyIndex-1);});
+$('redo').addEventListener('click',()=>{clearTimeout(historyTimer);restore(historyIndex+1);});
+document.querySelectorAll('[data-mobile]').forEach(btn=>btn.addEventListener('click',()=>showMobile(btn.dataset.mobile)));
+$('help').addEventListener('click',()=>$('help-dialog').showModal());
+$('close-help').addEventListener('click',()=>$('help-dialog').close());
+$('close-help-bottom').addEventListener('click',()=>$('help-dialog').close());
+window.addEventListener('resize',()=>{updateAspect();drawSoon();});
+window.addEventListener('keydown',e=>{
+ if(e.target.closest('input,textarea,select,[contenteditable]'))return;
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();restore(historyIndex+(e.shiftKey?1:-1));}
+ else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();restore(historyIndex+1);}
+ else if(e.key===' '){e.preventDefault();startMotion(!isPlaying);}
+});
+const drop=$('drop-zone');
+drop.addEventListener('dragover',e=>{e.preventDefault();if(e.dataTransfer.types.includes('Files'))drop.classList.add('is-drag-over');});
+drop.addEventListener('dragleave',e=>{if(!drop.contains(e.relatedTarget))drop.classList.remove('is-drag-over');});
+drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('is-drag-over');const f=Array.from(e.dataTransfer.files||[]).find(f=>f.type.startsWith('image/')||f.type.startsWith('video/'));if(f){replaceMediaId=null;handleMedia(f);}});
+function initialise(){
+ let restored=false;
+ try{const raw=localStorage.getItem('kaan-shader-lab-v1');if(raw){const obj=JSON.parse(raw);if(obj&&Array.isArray(obj.layers)&&FORMATS[obj.aspect]){state=obj;restored=true;}}}catch(e){}
+ if(!restored)state={name:'Liquid Gold',aspect:'4:5',layers:preset('gold')};
+ state.layers=state.layers.filter(l=>l&&TYPES.includes(l.type)&&l.params&&typeof l.params==='object').slice(0,100);
+ selected=state.layers[0]?state.layers[0].id:null;
+ rehydrate();sync();commit();showMobile('canvas');
+}
+initialise();
+})();
