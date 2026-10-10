@@ -205,6 +205,7 @@ function drawText(ctx,p,w,h){
 }
 function drawSphere(ctx,p,w,h,t){
  const s=Math.min(w,h)*(+p.size||50)/100,x=w*(+(p.x??50))/100,y=h*(+(p.y??50))/100;
+ if(window.Kaan3D){const three=window.Kaan3D.render(p,t,s*1.5);if(three){ctx.save();ctx.drawImage(three,x-s*.7,y-s*.7,s*1.4,s*1.4);ctx.restore();return;}}
  ctx.save();ellipseGlow(ctx,x+s*.17,y+s*.35,s*.68,s*.3,'#000000',.63);
  ctx.beginPath();ctx.arc(x,y,s*.5,0,TAU);ctx.clip();
  const g=ctx.createRadialGradient(x-s*.21,y-s*.26,s*.04,x+s*.12,y+s*.14,s*.82);
