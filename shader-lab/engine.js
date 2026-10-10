@@ -110,13 +110,14 @@ function extraPattern(ctx,p,w,h,t){
     for(let i=0;i<n;i++){ctx.beginPath();const r=(i+1)*Math.max(w,h)*1.4/n;ctx.ellipse(cx,cy,r,r,0,0,TAU);ctx.strokeStyle=rgba(k?a:b,.22+.55*i/n);ctx.stroke();}
    }ctx.restore();
  }else if(mode==='pixelgrid'){
+   const originalAlpha=ctx.globalAlpha;
    const cell=clamp(Math.round(Math.max(w,h)/n),4,80);
    for(let y=0;y<h;y+=cell)for(let x=0;x<w;x+=cell){
     const z=Math.sin(x/w*freq*TAU+Math.sin(y/h*7)+t*speed)*Math.cos(y/h*freq*TAU+seed*.1);
     const k=clamp((z+1)/2,0,1);
-    ctx.fillStyle=lerpColor(b,a,k);ctx.globalAlpha=.32+.65*k;
+    ctx.fillStyle=lerpColor(b,a,k);ctx.globalAlpha=originalAlpha*(.32+.65*k);
     const size=cell*(.2+.77*k);ctx.fillRect(x+(cell-size)/2,y+(cell-size)/2,size,size);
-   }ctx.globalAlpha=1;
+   }ctx.globalAlpha=originalAlpha;
  }else if(mode==='plasma'){
    const cell=Math.max(4,Math.ceil(Math.max(w,h)/155));
    for(let y=0;y<h;y+=cell)for(let x=0;x<w;x+=cell){
