@@ -15,7 +15,7 @@ renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));renderer.setSize(1584,39
 const scene=new T.Scene(),camera=new T.PerspectiveCamera(32,4,.1,120);camera.position.set(0,0,16.5);camera.lookAt(0,0,0);
 const palettes={original:{bg:0x090b12,front:0xe9ecff,back:0x69799f,accent:0x9f7aea},space:{bg:0x17191d,front:0xf1f3f7,back:0x89929d,accent:0xb4bac5}};
 let palette=palettes.original,seed=0,count=0,reference=null,group=null,transition=null;
-const home={x:1.55,y:0,z:0,rx:-.14,ry:.3,rz:0,zoom:1};let current={...home},target={...home};
+const home={x:2.6,y:0,z:0,rx:-.14,ry:.3,rz:0,zoom:1};let current={...home},target={...home};
 const pointerMap=new Map();let gesture=null;const touchMap=new Map();let touchGesture=null;
 function rng(n){return()=>{n|=0;n=n+0x6D2B79F5|0;let t=Math.imul(n^n>>>15,1|n);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -51,16 +51,19 @@ for(let k=0;k<3;k++){let v=-.65+k*.65,rail=[];for(let i=0;i<160;i++){let u=-1+i*
 shape.updateMatrixWorld(true);
 const bounds=new T.Box3().setFromObject(shape),size=new T.Vector3(),center=new T.Vector3();bounds.getSize(size);bounds.getCenter(center);
 const visibleHeight=2*Math.tan(T.MathUtils.degToRad(camera.fov*.5))*camera.position.z,visibleWidth=visibleHeight*camera.aspect;
-const fitScale=Math.min((visibleWidth*.63)/Math.max(.1,size.x),(visibleHeight*.77)/Math.max(.1,size.y),2.5);
-shape.userData.fitScale=fitScale;shape.userData.center=center.clone();
+// Fit width and height independently for the 4:1 banner. A circular torus must not remain a tiny circle.
+const fitX=clamp((visibleWidth*.65)/Math.max(.1,size.x),.5,4.8);
+const fitY=clamp((visibleHeight*.69)/Math.max(.1,size.y),.5,2.8);
+const fitZ=Math.min(fitX,fitY);
+shape.userData.fitScale=new T.Vector3(fitX,fitY,fitZ);shape.userData.center=center.clone();
 shape.children.forEach(child=>{child.position.sub(center)});
-shape.position.set(home.x,home.y,0);shape.rotation.set(home.rx,home.ry,home.rz);shape.scale.setScalar(fitScale);
+shape.position.set(home.x,home.y,0);shape.rotation.set(home.rx,home.ry,home.rz);shape.scale.copy(shape.userData.fitScale);
 if(transition){dispose(transition.old);transition=null}
 if(group){const old=group;const oldPositions=old.userData.points.attributes.position.array,newPositions=shape.userData.points.attributes.position.array,source=new Float32Array(newPositions.length);for(let i=0;i<newPositions.length/3;i++){let j=Math.floor(i*(oldPositions.length/3)/(newPositions.length/3))*3;source.set(oldPositions.subarray(j,j+3),i*3)}shape.userData.morph={from:source,to:newPositions.slice(),start:performance.now(),duration:1700};scene.add(shape);dispose(old)}else scene.add(shape);
 group=shape;$('seed').textContent='SEED '+seed.toString(16).toUpperCase().padStart(8,'0')+' · '+['RIBBON','TORUS','HELIX','CRYSTAL','VAULT'][mode];
 }
 function dispose(g){g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose()});scene.remove(g)}
-function frameTick(now){requestAnimationFrame(frameTick);const k=.09;for(const key of Object.keys(current))current[key]+=(target[key]-current[key])*k;if(group){group.position.set(current.x,current.y,current.z);group.rotation.set(current.rx,current.ry,current.rz);group.scale.setScalar(current.zoom*(group.userData.fitScale||1));group.traverse(o=>{if(o.material&&o.material.uniforms?.uTime)o.material.uniforms.uTime.value=now*.001});const morph=group.userData.morph;if(morph){const t=clamp((now-morph.start)/morph.duration,0,1),ease=t*t*(3-2*t),arr=group.userData.points.attributes.position.array;for(let i=0;i<arr.length;i++)arr[i]=morph.from[i]*(1-ease)+morph.to[i]*ease;group.userData.points.attributes.position.needsUpdate=true;if(t>=1)group.userData.morph=null}group.children.forEach((o,i)=>{if(o.isLine||o.isLineSegments){o.rotation.y=Math.sin(now*.00024+i*.7)*.025;o.rotation.x=Math.cos(now*.0002+i*.4)*.018}})}renderer.render(scene,camera)}
+function frameTick(now){requestAnimationFrame(frameTick);const k=.09;for(const key of Object.keys(current))current[key]+=(target[key]-current[key])*k;if(group){group.position.set(current.x,current.y,current.z);group.rotation.set(current.rx,current.ry,current.rz);group.scale.copy(group.userData.fitScale||new T.Vector3(1,1,1)).multiplyScalar(current.zoom);group.traverse(o=>{if(o.material&&o.material.uniforms?.uTime)o.material.uniforms.uTime.value=now*.001});const morph=group.userData.morph;if(morph){const t=clamp((now-morph.start)/morph.duration,0,1),ease=t*t*(3-2*t),arr=group.userData.points.attributes.position.array;for(let i=0;i<arr.length;i++)arr[i]=morph.from[i]*(1-ease)+morph.to[i]*ease;group.userData.points.attributes.position.needsUpdate=true;if(t>=1)group.userData.morph=null}group.children.forEach((o,i)=>{if(o.isLine||o.isLineSegments){o.rotation.y=Math.sin(now*.00024+i*.7)*.025;o.rotation.x=Math.cos(now*.0002+i*.4)*.018}})}renderer.render(scene,camera)}
 function pos(e){let r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
 function metrics(){const a=[...pointerMap.values()];if(a.length===1)return{x:a[0].x,y:a[0].y,d:0,angle:0};let p=a[0],q=a[1];return{x:(p.x+q.x)/2,y:(p.y+q.y)/2,d:Math.hypot(p.x-q.x,p.y-q.y),angle:Math.atan2(q.y-p.y,q.x-p.x)}}
 function startGesture(){gesture={...metrics(),state:{...target},count:pointerMap.size}}
