@@ -1,0 +1,35 @@
+name: Shader Lab browser QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'shader-lab/**'
+      - '.github/workflows/shaderlab-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mobile-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser test dependencies
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test mobile and desktop canvas, exports and project files
+        run: node shader-lab/tests/browser.cjs
+      - name: Upload QA screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shader-lab-mobile-qa
+          path: shader-lab/qa-results/
+          if-no-files-found: ignore
