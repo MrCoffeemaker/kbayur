@@ -4,7 +4,7 @@
 const $=id=>document.getElementById(id),engine=window.ShaderEngine;
 const TYPES=['procedural','image-shader','text','shape','color','image','video','sphere','blur'];
 const ICON={procedural:'✳','image-shader':'◈',text:'T',shape:'☆',color:'◉',image:'▧',video:'▣',sphere:'⬡',blur:'◎'};
-const TITLES={procedural:'Procedural', 'image-shader':'Image Shader',text:'Text',shape:'Shape',color:'Colour',image:'Image',video:'Video',sphere:'3D Sphere',blur:'Blur'};
+const TITLES={procedural:'Procedural', 'image-shader':'Image Shader',text:'Text',shape:'Shape',color:'Colour',image:'Image',video:'Video',sphere:'3D Object',blur:'Blur'};
 const FORMATS={'4:5':[720,900],'1:1':[900,900],'16:9':[1120,630],'9:16':[540,960],'4:1':[1200,300]};
 const MODES=[['silk','Silk Ribbons'],['topographic','Topographic'],['flow','Flow Field'],['halftone','Halftone'],['grid','Warped Grid'],['orbits','Orbit Lines'],['noise','Grain / Noise'],['chladni','Chladni Cymatics'],['moire','Moiré Circles'],['pixelgrid','Pixel Mosaic'],['plasma','Plasma Field'],['waveform','Waveform Lines'],['sunburst','Radiant Beams'],['starfield','Starfield'],['interference','Wave Interference'],['ribbonmesh','Ribbon Mesh'],['checkers','Warped Checks']];
 const EFFECTS=[['fluted-glass','Fluted Glass'],['swirl','Swirl Glass'],['refract','Refraction'],['ripple','Water Ripple'],['pixelate','Pixelate'],['chromatic','RGB Shift'],['halftone','Halftone Print'],['hex-halftone','Hexagonal Halftone'],['dither','Dither'],['ascii','ASCII Art'],['posterize','Posterize'],['edge','Edge Detection'],['emboss','Emboss'],['duotone','Duotone'],['vignette','Vignette'],['scanlines','CRT Scanlines'],['grain','Film Grain'],['mirror','Mirror'],['invert','Invert']];
@@ -23,7 +23,7 @@ function defaults(type){
  if(type==='color')Object.assign(p,{gradient:'linear',color1:'#e68d34',color2:'#140c13',x:60,y:30});
  if(type==='text')Object.assign(p,{text:'NEW ERA',size:11,font:'sans-serif',weight:'800',align:'center',color1:'#ffffff'});
  if(type==='shape')Object.assign(p,{shape:'star',size:33,color1:'#dfaeff',color2:'#170e28',stroke:0,motion:0});
- if(type==='sphere')Object.assign(p,{size:52,color1:'#e2b1fd',color2:'#383768'});
+ if(type==='sphere')Object.assign(p,{geometry:'sphere',tilt:25,size:52,color1:'#e2b1fd',color2:'#383768'});
  if(type==='image'||type==='video')Object.assign(p,{size:100,fit:'cover',source:''});
  if(type==='image-shader')Object.assign(p,{effect:'fluted-glass',strength:26,frequency:5,speed:.5,color1:'#fff1d6',color2:'#1c1224'});
  if(type==='blur')Object.assign(p,{strength:12});
@@ -208,8 +208,8 @@ function renderInspector(){
    '<div class="dual-fields">'+color('color1','Fill')+color('color2','Outline')+'</div>'+range('stroke','Stroke width',0,25,1,'%'));
   html+=group('TRANSFORM',positionFields()+range('size','Size',1,110,1,'%')+range('rotate','Rotation',-180,180,1,'°')+range('motion','Motion tilt',0,180,1,'°')+range('speed','Motion speed',0,3,.05,''));
  }else if(l.type==='sphere'){
-  html+=group('3D SPHERE', '<div class="dual-fields">'+color('color1','Highlight')+color('color2','Shadow')+'</div>');
-  html+=group('TRANSFORM',positionFields()+range('size','Diameter',2,100,1,'%')+range('speed','Shimmer speed',0,3,.05,''));
+  html+=group('WEBGL / 3D OBJECT',select('geometry','Primitive',[['sphere','Sphere'],['torus','Torus'],['box','Cube'],['cylinder','Cylinder'],['plane','Wobbling Plane']])+'<div class="dual-fields">'+color('color1','Highlight')+color('color2','Shadow')+'</div>');
+  html+=group('3D TRANSFORM',positionFields()+range('size','Size',2,100,1,'%')+range('rotate','Y rotation',-180,180,1,'°')+range('tilt','X tilt',-90,90,1,'°')+range('speed','Spin speed',0,3,.05,''));
  }else if(l.type==='image'||l.type==='video'){
   html+=group('MEDIA', '<p class="inspector-note">'+(p.source?(l.type==='video'?'Session video imported.':'Image ready.'):('No '+l.type+' selected.'))+'</p>'+
   '<button type="button" class="inspector-command" data-command="replace-media">↑ '+(p.source?'Replace':'Choose')+' '+TITLES[l.type]+'</button>'+
@@ -419,7 +419,7 @@ function browserItems(){
  ...MODES.map(([id,title])=>({kind:'procedural',id,title,detail:'GENERATIVE PATTERN'})),
  ...EFFECTS.map(([id,title])=>({kind:'image-shader',id,title,detail:'IMAGE PROCESSING'})),
  ...[['gold','Liquid Gold'],['midnight','Midnight Orbit'],['signal','Signal Field'],['mono','Monochrome'],['aurora','Aurora Waves'],['pixel','Pixel Flux'],['cymatics','Cymatic Sand'],['retro','Retro CRT']].map(([id,title])=>({kind:'looks',id,title,detail:'READY-TO-EDIT LOOK'})),
- ...[['text','Typography'],['shape','Geometry'],['color','Colour / Gradient'],['image','Upload Image'],['video','Upload Video'],['sphere','3D Sphere'],['blur','Blur']].map(([id,title])=>({kind:'layers',id,title,detail:'COMPOSITION ELEMENT'}))
+ ...[['text','Typography'],['shape','Geometry'],['color','Colour / Gradient'],['image','Upload Image'],['video','Upload Video'],['sphere','3D Object'],['blur','Blur']].map(([id,title])=>({kind:'layers',id,title,detail:'COMPOSITION ELEMENT'}))
  ];
 }
 function browserSample(item){
