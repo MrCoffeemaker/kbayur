@@ -59,7 +59,7 @@ function visibleLayer(){return state.layers.find(l=>l.id===selected)||null;}
 const DATABASE_NAME='kaan-shader-lab-storage',DATABASE_KEY='current',DATABASE_STORE='projects';
 function projectForPersistence(){
  const copy=JSON.parse(JSON.stringify(state));
- copy.layers.forEach(l=>{if(l.type==='video')l.params.source='';});
+ copy.layers.forEach(l=>{if(l.type==='video'&&!String(l.params.source||'').startsWith('data:video/'))l.params.source='';});
  return copy;
 }
 function openProjectDB(){
@@ -140,7 +140,7 @@ function createMedia(layerObj){
   if(!source.startsWith('data:image/'))return;
   const img=new Image();img.onload=()=>drawSoon();img.onerror=()=>notify('Image could not be loaded');img.src=source;media.set(layerObj.id,img);
  }else if(layerObj.type==='video'){
-  if(!source.startsWith('blob:'))return;
+  if(!source.startsWith('blob:')&&!source.startsWith('data:video/'))return;
   const video=document.createElement('video');video.src=source;video.muted=true;video.loop=true;video.playsInline=true;video.preload='auto';video.onloadeddata=()=>{if(isPlaying)video.play().catch(()=>{});drawSoon();};video.load();media.set(layerObj.id,video);
  }
 }
@@ -321,10 +321,14 @@ function handleMedia(file){
   let current=state.layers.find(l=>l.id===replaceMediaId);
   if(!current||current.type!==type){current=layer(type,{},file.name.slice(0,42));state.layers.unshift(current);}
   current.params.source=source;selected=current.id;
-  media.delete(current.id);createMedia(current);sync();commit();notify(type==='video'?'Video added. Video files are not embedded in saved projects.':'Image layer added.');
+  media.delete(current.id);createMedia(current);sync();commit();notify(type==='video'?(source.startsWith('data:')?'Video added and included in project saves.':'Video added for this session only.'):'Image layer added.');
   if(window.innerWidth<691)showMobile('controls');
  };
- if(type==='video'){apply(URL.createObjectURL(file));return;}
+ if(type==='video'){
+  if(file.size<=18000000){const reader=new FileReader();reader.onload=()=>apply(String(reader.result));reader.onerror=()=>notify('Video could not be loaded');reader.readAsDataURL(file);}
+  else{apply(URL.createObjectURL(file));notify('Large video loaded for this session only. Clips under 18 MB save inside projects.');}
+  return;
+ }
  const reader=new FileReader();
  reader.onload=()=>{
   const raw=String(reader.result),img=new Image();
@@ -375,7 +379,7 @@ async function exportImage(format){
 function exportPNG(){return exportImage('png');}
 function saveProject(){
  const snapshot=JSON.parse(JSON.stringify(state));
- snapshot.layers.forEach(l=>{if(l.type==='video')l.params.source='';});
+ snapshot.layers.forEach(l=>{if(l.type==='video'&&!String(l.params.source||'').startsWith('data:video/'))l.params.source='';});
  const file={format:'kaan-shaderlab',version:1,...snapshot};
  download(new Blob([JSON.stringify(file,null,2)],{type:'application/json'}),safeFileName()+'.shaderlab');
  notify('Project file saved');
@@ -388,7 +392,7 @@ function loadProject(file){
    if(!l||!TYPES.includes(l.type)||!l.params||typeof l.params!=='object')throw new Error('Invalid layer');
    const entry=layer(l.type,l.params,String(l.name||TITLES[l.type]).slice(0,70));entry.visible=l.visible!==false;entry.locked=!!l.locked;
    if(l.type==='image'&&!String(entry.params.source||'').startsWith('data:image/'))entry.params.source='';
-   if(l.type==='video')entry.params.source='';
+   if(l.type==='video'&&!String(entry.params.source||'').startsWith('data:video/'))entry.params.source='';
    return entry;
   });
   startMotion(false);state={name:String(obj.name||'Untitled').slice(0,60),aspect:obj.aspect,layers:clean};selected=state.layers[0]?state.layers[0].id:null;rehydrate();sync();commit();notify('Project loaded');
@@ -489,7 +493,7 @@ $('new-project').addEventListener('click',()=>{
  if(!confirm('Start a new empty project? Save a .shaderlab file first if you want to keep the current composition.'))return;
  startMotion(false);resetAssets();state={name:'Untitled Composition',aspect:'4:5',layers:[]};selected=null;sync();commit();notify('New project created');
 });
-$('undo').addEventListener('click',()=>{clearTimeout(historyTimer);restore(historyIndex-1);});
+$('undo').addEventListener('click',()=>{if(historyTimer){clearTimeout(historyTimer);commit();}restore(historyIndex-1);});
 $('redo').addEventListener('click',()=>{clearTimeout(historyTimer);restore(historyIndex+1);});
 document.querySelectorAll('[data-mobile]').forEach(btn=>btn.addEventListener('click',()=>showMobile(btn.dataset.mobile)));
 $('help').addEventListener('click',()=>$('help-dialog').showModal());
@@ -498,7 +502,7 @@ $('close-help-bottom').addEventListener('click',()=>$('help-dialog').close());
 window.addEventListener('resize',()=>{updateAspect();drawSoon();});
 window.addEventListener('keydown',e=>{
  if(e.target.closest('input,textarea,select,[contenteditable]'))return;
- if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();restore(historyIndex+(e.shiftKey?1:-1));}
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();if(!e.shiftKey&&historyTimer){clearTimeout(historyTimer);commit();}restore(historyIndex+(e.shiftKey?1:-1));}
  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();restore(historyIndex+1);}
  else if(e.key===' '){e.preventDefault();startMotion(!isPlaying);}
 });
