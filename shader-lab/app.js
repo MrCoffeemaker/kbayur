@@ -400,20 +400,21 @@ function loadProject(file){
 }
 async function recordWebM(){
  if(recording)return;
- if(!preview.captureStream||!window.MediaRecorder){notify('WebM recording is not supported by this browser');return;}
- const mime=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(m=>MediaRecorder.isTypeSupported(m));
- if(!mime){notify('WebM export is not supported by this browser');return;}
+ if(!preview.captureStream||!window.MediaRecorder){notify('Video recording is unsupported by this browser');return;}
+ const mime=['video/mp4;codecs=avc1.42E01E','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].find(m=>MediaRecorder.isTypeSupported(m));
+ if(!mime){notify('Video export unsupported by this browser');return;}
  try{
   recording=true;const btn=$('export-webm'),wasPlaying=isPlaying;btn.textContent='● Recording 6s…';btn.disabled=true;
   startMotion(true);
   const stream=preview.captureStream(30),chunks=[],rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:4500000});
   rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data);};
-  rec.onstop=()=>{stream.getTracks().forEach(track=>track.stop());recording=false;btn.textContent='● Record WebM';btn.disabled=false;if(!wasPlaying)startMotion(false);
-    if(chunks.length)download(new Blob(chunks,{type:'video/webm'}),safeFileName()+'.webm');
-    notify(chunks.length?'WebM animation exported':'Recording did not produce video');
+  rec.onstop=()=>{stream.getTracks().forEach(track=>track.stop());recording=false;btn.textContent='● Record video';btn.disabled=false;if(!wasPlaying)startMotion(false);
+    const ext=mime.startsWith('video/mp4')?'mp4':'webm';
+    if(chunks.length)download(new Blob(chunks,{type:mime}),safeFileName()+'.'+ext);
+    notify(chunks.length?'Video animation exported':'Recording did not produce video');
   };
   rec.onerror=()=>notify('WebM recording failed');rec.start();setTimeout(()=>{if(rec.state==='recording')rec.stop();},6000);
- }catch(e){recording=false;$('export-webm').disabled=false;$('export-webm').textContent='● Record WebM';notify('Could not start recording');}
+ }catch(e){recording=false;$('export-webm').disabled=false;$('export-webm').textContent='● Record video';notify('Could not start recording');}
 }
 function randomize(){
  const l=visibleLayer();
