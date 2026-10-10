@@ -247,7 +247,23 @@ function handleMedia(file){
   if(window.innerWidth<691)showMobile('controls');
  };
  if(type==='video'){apply(URL.createObjectURL(file));return;}
- const reader=new FileReader();reader.onload=()=>apply(String(reader.result));reader.onerror=()=>notify('Image could not be read');reader.readAsDataURL(file);
+ const reader=new FileReader();
+ reader.onload=()=>{
+  const raw=String(reader.result),img=new Image();
+  img.onload=()=>{
+   try{
+    if(file.size<1800000&&Math.max(img.naturalWidth,img.naturalHeight)<=1800){apply(raw);return;}
+    const scale=Math.min(1,1800/Math.max(img.naturalWidth,img.naturalHeight));
+    const out=document.createElement('canvas');out.width=Math.max(1,Math.round(img.naturalWidth*scale));out.height=Math.max(1,Math.round(img.naturalHeight*scale));
+    out.getContext('2d').drawImage(img,0,0,out.width,out.height);
+    const compressed=out.toDataURL('image/webp',.88);
+    apply(compressed.startsWith('data:image/')?compressed:raw);
+   }catch(error){console.warn('Image optimization skipped:',error);apply(raw);}
+  };
+  img.onerror=()=>notify('This image format could not be decoded');
+  img.src=raw;
+ };
+ reader.onerror=()=>notify('Image could not be read');reader.readAsDataURL(file);
 }
 function download(blob,name){
  const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),120000);
@@ -384,6 +400,11 @@ window.addEventListener('keydown',e=>{
  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();restore(historyIndex+(e.shiftKey?1:-1));}
  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){e.preventDefault();restore(historyIndex+1);}
  else if(e.key===' '){e.preventDefault();startMotion(!isPlaying);}
+});
+/* Clipboard imports work with photos and transparent PNGs. */
+window.addEventListener('paste',e=>{
+ const item=Array.from(e.clipboardData?.items||[]).find(i=>i.type.startsWith('image/'));
+ if(!item)return;const file=item.getAsFile();if(file){replaceMediaId=null;handleMedia(file);notify('Pasted image added');}
 });
 const drop=$('drop-zone');
 drop.addEventListener('dragover',e=>{e.preventDefault();if(e.dataTransfer.types.includes('Files'))drop.classList.add('is-drag-over');});
