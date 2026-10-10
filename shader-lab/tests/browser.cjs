@@ -125,6 +125,51 @@ async function captureDownload(page,action){
     assert(!(await page.locator('#canvas-status').innerText()).includes('ERROR'),shape);
    }
   });
+  await test('All 17 procedural styles generate distinct canvas images',async()=>{
+   const checks=await page.evaluate(()=>{
+    const styles=['silk','topographic','flow','halftone','grid','orbits','noise','chladni','moire','pixelgrid','plasma','waveform','sunburst','starfield','interference','ribbonmesh','checkers'];
+    const c=document.createElement('canvas');c.width=160;c.height=195;
+    const fingerprint=()=>{
+     const data=c.getContext('2d').getImageData(0,0,160,195).data;let hash=2166136261;
+     for(let i=0;i<data.length;i+=12){hash=Math.imul(hash^data[i],16777619);hash=Math.imul(hash^data[i+1],16777619);hash=Math.imul(hash^data[i+2],16777619);}
+     return hash>>>0;
+    };
+    return styles.map(mode=>{
+     window.ShaderEngine.draw(c,[
+       {id:'fx',type:'procedural',visible:true,params:{mode,opacity:1,count:54,seed:23,amplitude:115,frequency:3.8,refraction:1.5,speed:.4,color1:'#ffd2a0',color2:'#784ab0'}},
+       {id:'bg',type:'color',visible:true,params:{gradient:'linear',color1:'#442e58',color2:'#130b1a'}}],.75,new Map());
+     return {mode,hash:fingerprint()};
+    });
+   });
+   assert.equal(checks.length,17);
+   const unique=new Set(checks.map(x=>x.hash));
+   assert.equal(unique.size,17,'Different procedural styles should generate different output. '+JSON.stringify(checks));
+  });
+  await test('All 19 image shaders produce visibly different output',async()=>{
+   const checks=await page.evaluate(()=>{
+    const modes=['fluted-glass','swirl','refract','ripple','pixelate','chromatic','halftone','hex-halftone','dither','ascii','posterize','edge','emboss','duotone','vignette','scanlines','grain','mirror','invert'];
+    const base=[{id:'lines',type:'procedural',visible:true,params:{mode:'silk',opacity:1,count:34,seed:21,amplitude:112,frequency:3.7,refraction:1.3,speed:.4,color1:'#ffdf9a',color2:'#9545b3'}},
+      {id:'bg',type:'color',visible:true,params:{gradient:'radial',color1:'#c29459',color2:'#180e34'}}];
+    const c=document.createElement('canvas');c.width=160;c.height=195;
+    const hash=()=>{const data=c.getContext('2d').getImageData(0,0,160,195).data;let n=2166136261;
+      for(let i=0;i<data.length;i+=12){n=Math.imul(n^data[i],16777619);n=Math.imul(n^data[i+1],16777619);n=Math.imul(n^data[i+2],16777619);}return n>>>0;};
+    window.ShaderEngine.draw(c,base,.6,new Map());const original=hash();
+    return {original,changes:modes.map(effect=>{
+       window.ShaderEngine.draw(c,[{id:'fx',type:'image-shader',visible:true,params:{effect,opacity:1,strength:70,frequency:6,speed:.6,color1:'#ffe7ed',color2:'#150f3e'}},...base],.6,new Map());
+       return {effect,hash:hash()};
+     })};
+   });
+   const unchanged=checks.changes.filter(c=>c.hash===checks.original).map(c=>c.effect);
+   assert.deepEqual(unchanged,[],'Shader effects without any rendered difference: '+unchanged.join(', '));
+  });
+  await test('Two-times PNG exports twice native output dimensions',async()=>{
+   await page.locator('#export-size').selectOption('2');
+   await page.locator('[data-dock="export"]').click();
+   const downloaded=await captureDownload(page,()=>page.locator('[data-export="png"]').click());
+   assert.equal(downloaded.buffer.readUInt32BE(16),1440);
+   assert.equal(downloaded.buffer.readUInt32BE(20),1800);
+   await page.locator('#export-size').selectOption('1');
+  });
   await test('Preset library applies distinct composition',async()=>{
    await page.locator('[data-dock="presets"]').click();
    await page.locator('.browser-card[data-kind="looks"][data-shader="pixel"]').click();
