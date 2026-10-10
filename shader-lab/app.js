@@ -491,6 +491,32 @@ $('export-png').addEventListener('click',exportPNG);$('export-png-side').addEven
 $('save-project').addEventListener('click',saveProject);$('save-project-side').addEventListener('click',saveProject);
 $('open-project').addEventListener('click',()=>$('project-input').click());$('load-project-side').addEventListener('click',()=>$('project-input').click());
 $('export-webm').addEventListener('click',recordWebM);
+/* Explicit cache-busting refresh for phones and in-app browsers.
+   Wait for the latest project to be saved before leaving the page. */
+$('refresh-page').addEventListener('click',async()=>{
+ const button=$('refresh-page');if(button.disabled)return;
+ button.disabled=true;button.setAttribute('aria-busy','true');
+ const original=button.textContent;button.textContent='…';
+ try{
+  clearTimeout(historyTimer);if(historyTimer){commit();historyTimer=0;}
+  clearTimeout(saveTimer);
+  await autosaveQueue.catch(()=>{});
+  const snapshot=projectForPersistence(),saved=await persistProject(snapshot);
+  let fallback=false;
+  if(!saved){
+   try{
+    const data=JSON.stringify(snapshot);
+    if(data.length<1800000){localStorage.setItem('kaan-shader-lab-v1',data);fallback=true;}
+   }catch(err){}
+  }
+  if(!saved&&!fallback&&!window.confirm('Your current changes could not be saved. Refresh anyway?'))return;
+  const address=new URL(window.location.href);
+  address.searchParams.set('refresh',Date.now().toString(36));
+  window.location.assign(address.toString());
+ }catch(error){
+  console.error('Refresh:',error);notify('Refresh failed. Try the browser reload button.');
+ }finally{button.disabled=false;button.removeAttribute('aria-busy');button.textContent=original;}
+});
 $('new-project').addEventListener('click',()=>{
  if(!confirm('Start a new empty project? Save a .shaderlab file first if you want to keep the current composition.'))return;
  startMotion(false);resetAssets();state={name:'Untitled Composition',aspect:'4:5',layers:[]};selected=null;sync();commit();notify('New project created');
