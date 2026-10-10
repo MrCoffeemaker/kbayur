@@ -122,3 +122,20 @@
  .control-field textarea{line-height:1.5}
  .mobile-dock button{touch-action:manipulation}
 }
+
+
+/* Native Android pull-to-refresh restoration.
+   Keep browser-level vertical overscroll active while preserving the editor's
+   individual canvas drag gestures and scrollable bottom-sheet panels. */
+@media(max-width:690px){
+ html,body{overscroll-behavior-y:auto!important;overflow-x:clip;overflow-y:auto!important}
+ body{min-height:calc(100dvh + 1px)}
+ .app{height:auto!important;min-height:100dvh;overflow:visible!important}
+ .studio{height:calc(100dvh - 134px);flex:0 0 auto;min-height:0;overflow:hidden}
+ .workspace{min-height:0}
+ .mobile-dock{position:sticky;bottom:0}
+ .refresh-button{display:inline-flex!important;align-items:center;justify-content:center}
+ .top-actions .refresh-button{min-width:29px;min-height:34px;font-size:23px;font-weight:450;padding:0 5px;color:#d7c1ff}
+ .top-actions .refresh-button:hover{background:#342844}
+ .version{display:none}
+}
