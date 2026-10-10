@@ -88,3 +88,8 @@
  .export-intro{margin-bottom:3px}
 }
 @media(max-width:360px){.topbar{gap:4px}.top-actions{gap:1px}.top-actions .icon-button{min-width:25px;padding:4px}.mobile-dock{padding-left:3px;padding-right:3px}.mobile-dock button{font-size:9px}}
+
+.preset[data-preset="aurora"] .preset-swatch{background:radial-gradient(ellipse at 35% 80%,#4b327f 1%,#78d4b9 34%,#092237 76%)}
+.preset[data-preset="pixel"] .preset-swatch{background:repeating-linear-gradient(90deg,#ab7aff 0 8px,#5b3abf 8px 16px,#ffad9f 16px 24px)}
+.preset[data-preset="cymatics"] .preset-swatch{background:radial-gradient(circle at center,#fae0a6 1%,#bf83bd 36%,#160c27 84%)}
+.preset[data-preset="retro"] .preset-swatch{background:repeating-linear-gradient(0deg,#0f1a25 0 3px,#207577 3px 6px,#de77aa 6px 8px)}
